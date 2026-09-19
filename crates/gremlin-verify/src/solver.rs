@@ -29,15 +29,28 @@ fn invoke(
     payload: Vec<u8>,
     timeout_ms: u64,
 ) -> Result<Option<String>, String> {
-    let mut child = Command::new(path)
+    let mut command = Command::new(path);
+    command
         .args(args)
         .env_clear()
         .process_group(0)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .map_err(|e| format!("solver unavailable: {e}"))?;
+        .stderr(Stdio::null());
+    // A concurrent fork can briefly retain a just-written executable descriptor.
+    let launch = Instant::now();
+    let mut child = loop {
+        match command.spawn() {
+            Ok(child) => break child,
+            Err(e)
+                if e.raw_os_error() == Some(libc::ETXTBSY)
+                    && launch.elapsed() < Duration::from_millis(100) =>
+            {
+                thread::sleep(Duration::from_millis(2))
+            }
+            Err(e) => return Err(format!("solver unavailable: {e}")),
+        }
+    };
     let mut stdin = child.stdin.take().unwrap();
     let stdout = child.stdout.take().unwrap();
     let writer = thread::spawn(move || stdin.write_all(&payload));
