@@ -1,0 +1,121 @@
+{
+  "artifact": {
+    "artifact_bytes": 13288,
+    "artifact_hash": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
+    "candidate_hash": "f85dd8b7d0184feb35d6d65dcd7c622a5daa0d496e2f101568e7666fa85b4a64",
+    "compile_seconds": 0.142092727,
+    "compiler_hash": "8ef402d453d1ba4902e4ee0f0f847f6cfa01400c95aa43c24e97818b9c0e3f45",
+    "compiler_path": "/usr/bin/clang-18",
+    "compiler_version": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+    "flags": [
+      "-x",
+      "ir",
+      "-O2",
+      "-shared",
+      "-nostdlib",
+      "-fPIC",
+      "-Wl,-z,noexecstack",
+      "-target",
+      "x86_64-unknown-linux-gnu",
+      "-o",
+      "runs/native-affine/candidate.so",
+      "runs/native-affine/candidate.ll"
+    ],
+    "llvm_hash": "a8407c24bf41aa497dcdfbef1e624b02f79548949ba7a51ab7963a91717c0008",
+    "max_steps": 256,
+    "path": "runs/native-affine/candidate.so"
+  },
+  "artifact_evidence_level": "E2",
+  "artifact_evidence_scope": "native_artifact_differential",
+  "candidate_evidence_level": "E4",
+  "candidate_evidence_scope": "binary",
+  "candidate_hash": "f85dd8b7d0184feb35d6d65dcd7c622a5daa0d496e2f101568e7666fa85b4a64",
+  "corpus_count": 257,
+  "holdout_count": 256,
+  "holdout_domain_exhausted": false,
+  "imported_corpus_hash": null,
+  "label": "TESTED",
+  "native_status_identity": {
+    "binary_sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
+    "contract": {
+      "abi": "sysv64",
+      "architecture": "x86_64",
+      "cpu_seconds": 2,
+      "environment": "empty",
+      "format": "elf",
+      "memory_mb": 256,
+      "path": "runs/native-affine/candidate.so",
+      "sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
+      "symbol": "gremlin_status",
+      "wall_timeout_ms": 5000
+    },
+    "kernel": "Linux 6.8.0-134-generic #134-Ubuntu SMP PREEMPT_DYNAMIC Fri Jun 26 18:43:11 UTC 2026 x86_64",
+    "runtime_files": {
+      "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+    },
+    "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
+    "sandbox_version": "bubblewrap 0.9.0",
+    "worker_sha256": "31c5759a5ebabf04f41a64f315310aa1ca5d3c4b03a85b7f0afd5b3377fe7a10"
+  },
+  "native_validation_seconds": 0.081765403,
+  "native_validation_timing_scope": "isolated batch validation including startup and repeated observations; not intrinsic function latency",
+  "native_value_identity": {
+    "binary_sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
+    "contract": {
+      "abi": "sysv64",
+      "architecture": "x86_64",
+      "cpu_seconds": 2,
+      "environment": "empty",
+      "format": "elf",
+      "memory_mb": 256,
+      "path": "runs/native-affine/candidate.so",
+      "sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
+      "symbol": "gremlin_target",
+      "wall_timeout_ms": 5000
+    },
+    "kernel": "Linux 6.8.0-134-generic #134-Ubuntu SMP PREEMPT_DYNAMIC Fri Jun 26 18:43:11 UTC 2026 x86_64",
+    "runtime_files": {
+      "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+    },
+    "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
+    "sandbox_version": "bubblewrap 0.9.0",
+    "worker_sha256": "31c5759a5ebabf04f41a64f315310aa1ca5d3c4b03a85b7f0afd5b3377fe7a10"
+  },
+  "oracle": {
+    "binary_sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
+    "contract": {
+      "abi": "sysv64",
+      "architecture": "x86_64",
+      "cpu_seconds": 2,
+      "environment": "empty",
+      "format": "elf",
+      "memory_mb": 256,
+      "path": "/root/gremlin/runs/formal-example/affine.so",
+      "sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
+      "symbol": "affine_u64",
+      "wall_timeout_ms": 3000
+    },
+    "kernel": "Linux 6.8.0-134-generic #134-Ubuntu SMP PREEMPT_DYNAMIC Fri Jun 26 18:43:11 UTC 2026 x86_64",
+    "runtime_files": {
+      "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+    },
+    "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
+    "sandbox_version": "bubblewrap 0.9.0",
+    "worker_sha256": "31c5759a5ebabf04f41a64f315310aa1ca5d3c4b03a85b7f0afd5b3377fe7a10"
+  },
+  "requested_minimum_candidate_evidence": "E4",
+  "runtime_seconds": 0.357383241,
+  "schema_version": 1,
+  "semantics_version": "gremlin-2",
+  "source_hash": "ff82dfc61865cc9234a69d5f5c030f3bcc7563b1c50b3d17bb6ef426b200c442",
+  "status": "validated"
+}
