@@ -1,19 +1,21 @@
 # Validation record
 
-Implemented scope: M0–M2 from `PLAN.md`. Validation ran locally on Linux x86-64 with Rust/Cargo 1.90.0. The environment initially had neither Rust nor a C linker; the pinned toolchain and Ubuntu `build-essential` were installed before compiling. No existing implementation or Git repository was present. `Cargo.lock` is included; no Git commit was created.
+Scope: all nine gates (M0, M1, M2, D1–D6), following the user's expansion of the original assignment. CPU/native/formal/fuzzer validation runs on Linux x86-64 with Rust 1.90.0, Bubblewrap 0.9.0, Z3 4.8.12, Clang 18.1.3 and LLVM 18 libFuzzer. CUDA tests run on the supplied RTX A4000 with NVCC 13.0.88. Dependencies and tool identities are recorded in the implementation, reports and lockfile.
 
-## Acceptance commands
+## Verification commands
 
-The following commands were executed using `/root/.cargo/bin/cargo`:
+```sh
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --locked -- -D warnings
+cargo test --workspace --locked
+cargo test --workspace --release --locked
+# On the GPU machine:
+cargo clippy --workspace --all-targets --features cuda --locked -- -D warnings
+cargo test --release --locked -p gremlin-cuda --features cuda
+cargo test --release --locked -p gremlin-cli --features cuda --test cuda
+```
 
-| Command | Result |
-| --- | --- |
-| `cargo fmt --all --check` | Passed |
-| `cargo clippy --workspace --all-targets -- -D warnings` | Passed, no warnings |
-| `cargo test --workspace` | Passed, 23 tests |
-| `cargo test --workspace --release` | Passed, 23 tests |
-
-The initial build failed because the environment lacked a linker; installing it resolved that failure. Implementation checks caught and fixed a Rust parsing ambiguity, a Clippy style warning, and stricter literal/hash encoding details before the final runs. CI configuration is supplied but was not executed on a remote CI service.
+Final local results: **54 tests passed in debug and 54 in release**, plus documentation tests. Formatting and workspace Clippy checks passed with warnings denied. The final import normalization regression was also rerun in both profiles. GPU parity and the CUDA synthesis/watchdog/resource tests passed on the A4000. The default build's CUDA-unavailable test is separate from the required hardware gate; it is not a substitute for GPU execution.
 
 ## Mandatory synthesis gate
 
@@ -31,7 +33,7 @@ Generation 1 includes generic initialization; the first four fixtures can be exp
 
 Additional tests cover all operators and integer widths, signed faults, wrapping arithmetic, modulo shifts/rotations, eager select, strict literal encoding, source round trips, ID normalization, CFG dominance/edge validation, simultaneous edge binding, terminating/infinite loops and exact budgets, generated programs, typed mutations, deletion repair, correctness-first fitness, execution failures, provenance deduplication, conflicting labels, finite-domain holdouts, serialized checkpoint continuation, strict configuration, CLI errors, artifact integrity, and deliberately failed holdout reporting.
 
-## Exercised CLI and retained artifacts
+## Original CPU baseline artifacts
 
 These commands completed successfully:
 
@@ -47,6 +49,25 @@ The affine source returned `0x000000007f6e5d6e` in seven steps. The retained com
 
 Artifacts: `runs/composed_u64/config.json`, `corpus.json`, `provenance.json`, `best.gremlin`, `best.ir.json`, `checkpoint.json`, `report.json`, and `integrity.json`. Runtime output is ignored by `.gitignore`; the source, configurations, tests, and documentation are repository deliverables.
 
-## Remaining limits
+## Expanded milestone evidence
 
-Only checked-in Rust fixtures are available as target adapters. Source/search remain straight-line; direct IR has CFG interpretation. Evidence is sampled fixture evidence, not proof. Large affine synthesis is a non-gating benchmark and was not run; only its source checking/execution was exercised. Binary isolation, CEGIS, CUDA, formal verification, native compilation, and external fuzzing remain deferred as requested. Search can exhaust its budget, and unknown large constants are not recovered without configured hints. Checkpoints retain per-case results and can be large (the retained checkpoint is approximately 8.4 MiB).
+| Gate | Measured result |
+| --- | --- |
+| D1 | Isolated ELF ABI and resource/forbidden-operation tests; affine CEGIS retains 256 replayed counterexamples, converges at generation 79, passes 256 fresh holdouts and resumes |
+| D2 | Typed structured source and bounded recursion; branch fixtures converge at generations 2/4/3 and loop fixtures at 2/4/2 for seeds 1/2/3; 3,000 structural mutations preserve valid IR and budget behavior |
+| D3 | 10,000 seeded programs, all integer widths/operators, divergent CFGs and partial warps: 4,860,000 exact CPU/GPU outcome/step comparisons; full search states agree; watchdog/memory/device errors are explicit |
+| D4 | Equivalent/inequivalent ELF fixtures; concrete oracle counterexample replay; explicit Unsupported/Unknown/Timeout; reference-model evidence cannot become binary evidence |
+| D5 | All supported operators and widths, eager traps, modulo shifts, CFG edges and budgets match isolated native output; E4-gated affine source produces separately TESTED/E2 native artifact |
+| D6 | Replay/dedup/provenance/import-to-search tests; actual libFuzzer lifecycle; an affine mismatch is exported and replayed into a canonical corpus |
+
+A final complete pipeline used a CUDA-enabled executable on the local namespace-capable host: replayed fuzz corpus → affine refinement → resume → binary-scoped E4 → LLVM artifact validated against CPU and the original ELF. It retained 256 counterexamples, converged at generation 79 after 5,037,456 candidate-case executions, and checked the native artifact on 257 corpus plus 256 fresh holdout cases. The source candidate is binary E4 under the narrow model assumptions; the compiled artifact remains TESTED/E2.
+
+Checked-in measurements: `docs/measurements/cuda-parity.json`, `cuda-synthesis.json`, `affine-proof.json`, `affine-counterexample.json`, `native-affine.json`, `fuzzer-affine.json`, and `final-pipeline.json`. Full local pipeline artifacts, including the fixed executable, source, checkpoints, query, LLVM IR, ELF and all observations, are in `runs/final-pipeline/`. Local test logs are `runs/final-debug.log` and `runs/final-release.log`. Generated run directories are intentionally gitignored.
+
+## Limits and deployment observations
+
+See [supported features](support.md) and the D1–D6 design notes. Calls remain CPU/module-only; the binary proof subset is deliberately narrow; LLVM artifacts retain their configured semantic budget; external fuzzing does not provide target coverage. Search is bounded and unknown large constants still need configured hints. A mutation-only affine trial exhausted its 1,000-generation budget before explicit generic enumeration was enabled.
+
+CUDA was slower on the measured small synthesis workload: 4.263 seconds versus CPU 0.948 seconds. Setup, transfers, serialization and fresh worker/context startup are included. No general acceleration claim is made.
+
+The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test. The separately contributed documentation site builds, but GitHub Pages deployment returns 404 until Pages is enabled in repository settings; this is separate from the Rust gates.

@@ -58,7 +58,7 @@ fn import_replays_deduplicates_preserves_provenance_and_seeds_search() {
     let temp = Temp::new();
     let config = config(&temp);
     let input = temp.0.join("import.json");
-    let document = json!({"schema_version":1,"signature":{"arguments":["u64"],"return_type":"u64"},"cases":[{"input":["0x123456789abcdef0"],"expected":"0x123456789abcdef0","provenance":["external campaign A"]},{"input":["0x123456789abcdef0"],"provenance":["external campaign B"]}]});
+    let document = json!({"schema_version":1,"signature":{"arguments":["u64"],"return_type":"u64"},"cases":[{"input":["0x123456789abcdef0"],"expected":"0x123456789ABCDEF0","provenance":["external campaign A"]},{"input":["0x123456789abcdef0"],"provenance":["external campaign B"]}]});
     fs::write(&input, serde_json::to_vec(&document).unwrap()).unwrap();
     let first = temp.0.join("first");
     let second = temp.0.join("second");

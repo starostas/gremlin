@@ -113,8 +113,10 @@ pub fn replay(
         .collect::<Result<Vec<_>, String>>()?;
     let values = oracle.observe(&inputs)?;
     for (case, value) in document.cases.iter().zip(values) {
-        if case.expected.as_ref().is_some_and(|e| *e != value.hex()) {
-            return Err("import expected output disagrees with oracle replay".into());
+        if let Some(expected) = &case.expected {
+            if Value::from_hex(document.signature.return_type, expected)? != value {
+                return Err("import expected output disagrees with oracle replay".into());
+            }
         }
         corpus.add(
             case.input.clone(),
