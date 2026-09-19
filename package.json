@@ -1,0 +1,16 @@
+{
+  "name": "gremlin-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:dev": "astro dev",
+    "docs:build": "astro build",
+    "docs:preview": "astro preview"
+  },
+  "packageManager": "pnpm@10.15.0",
+  "devDependencies": {
+    "@astrojs/starlight": "^0.37.0",
+    "astro": "^5.0.0"
+  }
+}
