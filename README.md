@@ -16,6 +16,8 @@ cargo run --release -p gremlin-cli -- resume runs/composed_u64/checkpoint.json
 
 The composed fixture is `x * 3 + 1` with wrapping u64 arithmetic. Five mandatory fixture configurations live in `tests/fixtures/`; each is tested with seeds 1, 2, and 3. `examples/affine.toml` is a larger, non-gating benchmark. Search sees only the signature, observations, configured operators, and configured constant hints. It does not receive oracle expressions.
 
+For a larger experiment with a recorded bounded-search failure and a successful synthesized component, see the [cksum CRC demo](examples/cksum-crc/README.md).
+
 Normalized configuration records all defaults; unknown fields and unsupported target kinds fail. Output paths are relative to the current working directory. A run refuses to overwrite an existing directory. CLI results go to stdout as JSON, and evolution progress goes to stderr. `run` defaults to 256 steps and accepts comma-separated exact-width hexadecimal arguments. Booleans are internal; signatures accept 0–4 integer arguments.
 
 ## Run artifacts and resume
