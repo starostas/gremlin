@@ -72,6 +72,7 @@ dependencies = [
  "gremlin-native",
  "gremlin-search",
  "gremlin-verify",
+ "libc",
  "serde",
  "serde_json",
 ]

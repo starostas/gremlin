@@ -1,11 +1,29 @@
+mod campaign;
 mod compile;
 mod gpu;
+mod import;
 mod oracle;
 mod runs;
 mod verify;
 use gremlin_core::*;
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.len() == 2 && args[0] == "--campaign-worker" {
+        if let Err(e) = campaign::worker(std::path::Path::new(&args[1])) {
+            eprintln!("{e}");
+            std::process::exit(4);
+        }
+        return;
+    }
+    if args.len() == 3 && args[0] == "--fuzz-observe" {
+        match campaign::observe(std::path::Path::new(&args[1]), &args[2]) {
+            Ok(code) => std::process::exit(code),
+            Err(e) => {
+                eprintln!("{e}");
+                std::process::exit(4);
+            }
+        }
+    }
     if args.as_slice() == ["--cuda-worker"] {
         std::process::exit(gpu::worker());
     }
@@ -27,12 +45,14 @@ fn input(e: impl ToString) -> Error {
 }
 fn command(args: &[String]) -> Result<i32, Error> {
     if args.is_empty() || matches!(args[0].as_str(), "--help" | "-h" | "help") {
-        println!("gremlin: program synthesis\nNative artifact: compile --config <toml> --candidate <source> --min-evidence E1|E2|E4 --compiler <clang18> --timeout-ms <n> --output <directory> [--solver <z3>] [--corpus <json>]\nCommands: check <source> | run <source> --args <hex,...> --max-steps <n> --max-call-depth <n> | synthesize --config <toml> | resume <checkpoint.json> | refine --config <toml> --candidate <source> | verify --config <toml> --candidate <source> --solver <path> --timeout-ms <n> --output <json> | verify-reference --reference <source> --candidate <source> --solver <path> --timeout-ms <n> --output <json>");
+        println!("gremlin: program synthesis\nExternal data: import --config <toml> --input <v1.json> --output <directory> [--corpus <json>] | campaign create/start/stop/poll/export (see docs/design/D6.md)\nNative artifact: compile --config <toml> --candidate <source> --min-evidence E1|E2|E4 --compiler <clang18> --timeout-ms <n> --output <directory> [--solver <z3>] [--corpus <json>]\nCommands: check <source> | run <source> --args <hex,...> --max-steps <n> --max-call-depth <n> | synthesize --config <toml> | resume <checkpoint.json> | refine --config <toml> --candidate <source> | verify --config <toml> --candidate <source> --solver <path> --timeout-ms <n> --output <json> | verify-reference --reference <source> --candidate <source> --solver <path> --timeout-ms <n> --output <json>");
         return Ok(0);
     }
     match args[0].as_str() {
         "verify" | "verify-reference" => verify::command(args),
         "compile" => compile::command(args),
+        "import" => import::command(args),
+        "campaign" => campaign::command(args),
         "check" if args.len() == 2 => {
             let module = read_module(&args[1])?;
             let f = &module.functions[&module.entry];

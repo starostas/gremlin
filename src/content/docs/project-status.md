@@ -14,6 +14,8 @@ Additional capabilities are available with explicit prerequisites:
 - Isolated observation and counterexample-guided refinement for a supported Linux x86-64 ELF target.
 - CUDA evaluation when built with the optional feature and run on a supported NVIDIA device.
 - Formal equivalence checks for a deliberately narrow, straight-line ELF register subset.
+- LLVM output for selected candidates after an explicit evidence gate, with isolated native validation.
+- Replayed corpus import and external libFuzzer campaign control; target coverage is unavailable for uninstrumented isolated binaries.
 
 ## Important boundaries
 
@@ -25,4 +27,4 @@ Additional capabilities are available with explicit prerequisites:
 
 ## Future directions
 
-Potential future work includes LLVM/native-code output and external fuzzing. The project documentation keeps these distinct from the implemented workflows above.
+Future work can expand the supported binary model and backend call support, and investigate GPU performance on larger workloads. The current measured CUDA path is slower than CPU for the small synthesis example; no general acceleration claim is made.
