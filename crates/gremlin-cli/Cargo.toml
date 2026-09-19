@@ -18,6 +18,8 @@ gremlin-verify = { path = "../gremlin-verify" }
 
 gremlin-codegen = { path = "../gremlin-codegen" }
 
+libc = "=0.2.177"
+
 [features]
 default = []
 cuda = ["gremlin-cuda/cuda"]

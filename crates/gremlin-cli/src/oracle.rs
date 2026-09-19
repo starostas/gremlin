@@ -69,6 +69,9 @@ impl Oracle {
                 provenance,
             )?;
         }
+        if let Some(path) = &c.corpus.initial_corpus {
+            crate::import::merge_stored(self, &mut corpus, std::path::Path::new(path))?;
+        }
         corpus.validate()?;
         Ok(corpus)
     }

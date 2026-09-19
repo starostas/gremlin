@@ -63,6 +63,8 @@ pub struct CudaConfig {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CorpusConfig {
+    #[serde(default)]
+    pub initial_corpus: Option<String>,
     pub random_cases: usize,
     pub holdout_cases: usize,
 }

@@ -24,7 +24,7 @@ pub struct Artifact {
     pub artifact_bytes: u64,
     pub max_steps: u64,
 }
-fn command(path: &Path, args: &[String], timeout_ms: u64) -> Result<String, String> {
+pub fn run_compiler(path: &Path, args: &[String], timeout_ms: u64) -> Result<String, String> {
     let mut command = Command::new(path);
     command
         .args(args)
@@ -119,7 +119,7 @@ pub fn compile(
     }
     let compiler_hash =
         hash(&fs::read(compiler).map_err(|e| format!("compiler unavailable: {e}"))?);
-    let version = command(compiler, &["--version".into()], timeout_ms)?;
+    let version = run_compiler(compiler, &["--version".into()], timeout_ms)?;
     if !version.contains("clang version 18.") {
         return Err("LLVM backend requires Clang 18".into());
     }
@@ -143,7 +143,7 @@ pub fn compile(
         ir.to_string_lossy().into_owned(),
     ])
     .collect();
-    command(compiler, &flags, timeout_ms)?;
+    run_compiler(compiler, &flags, timeout_ms)?;
     if hash(&fs::read(compiler).map_err(|e| e.to_string())?) != compiler_hash {
         return Err("compiler changed during compilation".into());
     }
