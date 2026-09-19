@@ -1,0 +1,24 @@
+schema_version = 1
+seed = 1
+[target]
+kind = "fixture"
+name = "min_u8"
+arguments = ["u8", "u8"]
+return_type = "u8"
+[search]
+population = 256
+generations = 1000
+max_instructions = 16
+max_blocks = 8
+structural_mutation_percent = 50
+loop_bound = 0
+max_steps = 256
+elite = 8
+tournament_size = 4
+operators = ["ult"]
+constants = ["0u8", "1u8", "8u8"]
+[corpus]
+random_cases = 64
+holdout_cases = 256
+[output]
+directory = "runs/min_u8"

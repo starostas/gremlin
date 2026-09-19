@@ -59,6 +59,7 @@ pub struct Failures {
 pub struct SearchState {
     pub generation: usize,
     pub rng: Rng,
+    pub enumeration_cursor: u64,
     pub population: Vec<Individual>,
     pub best: Individual,
     pub evaluation_count: u64,
@@ -92,6 +93,9 @@ impl Engine {
         })
     }
     pub fn evaluate(&self, g: &Genome) -> Result<Fitness, String> {
+        if !g.valid(&self.signature, &self.config) {
+            return Err("genome violates signature or structural limits".into());
+        }
         let f = g.lower(&self.signature);
         let bytes = f.canonical_bytes()?;
         let mut evaluator = Evaluator::new(&f)?;
@@ -100,7 +104,7 @@ impl Engine {
             noncompleted_case_count: 0,
             mismatching_completed_case_count: 0,
             summed_bit_error: 0,
-            instruction_count: g.genes.len(),
+            instruction_count: g.instruction_count(),
             total_executed_steps: 0,
             canonical_program_bytes: bytes,
             cases: Vec::with_capacity(self.cases.len()),
@@ -163,6 +167,7 @@ impl Engine {
         Ok(SearchState {
             generation: 1,
             rng,
+            enumeration_cursor: 0,
             best: population[0].clone(),
             population,
             evaluation_count: count,
@@ -171,6 +176,20 @@ impl Engine {
     }
     pub fn advance(&self, state: &mut SearchState) -> Result<(), String> {
         let mut next = state.population[..self.config.elite].to_vec();
+        for _ in 0..self.config.enumeration_proposals {
+            let proposal = chain_proposal(&self.signature, &self.config, state.enumeration_cursor);
+            state.enumeration_cursor = state
+                .enumeration_cursor
+                .checked_add(1)
+                .ok_or("enumeration cursor exhausted")?;
+            if let Some(genome) = proposal {
+                next.push(self.individual(
+                    genome,
+                    &mut state.evaluation_count,
+                    &mut state.failures,
+                )?);
+            }
+        }
         while next.len() < self.config.population {
             let mut selected = state.rng.index(state.population.len());
             for _ in 1..self.config.tournament_size {
@@ -193,6 +212,18 @@ impl Engine {
         state.best = state.population[0].clone();
         Ok(())
     }
+    pub fn regrade(&self, state: &mut SearchState) -> Result<(), String> {
+        for individual in &mut state.population {
+            *individual = self.individual(
+                individual.genome.clone(),
+                &mut state.evaluation_count,
+                &mut state.failures,
+            )?;
+        }
+        state.population.sort_by(|a, b| a.fitness.cmp(&b.fitness));
+        state.best = state.population[0].clone();
+        Ok(())
+    }
     pub fn validate_state(&self, state: &SearchState) -> Result<(), String> {
         if state.generation == 0
             || state.generation > self.config.generations
@@ -201,7 +232,7 @@ impl Engine {
             return Err("checkpoint generation or population mismatch".into());
         }
         for i in &state.population {
-            if i.genome.genes.len() > self.config.max_instructions
+            if !i.genome.valid(&self.signature, &self.config)
                 || self.evaluate(&i.genome)? != i.fitness
             {
                 return Err("checkpoint fitness or genome mismatch".into());

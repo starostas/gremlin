@@ -168,6 +168,7 @@ fn edge(block: u32, args: Vec<u32>) -> Edge {
 }
 fn loop_ir() -> Function {
     Function {
+        callees: std::collections::BTreeMap::new(),
         schema_version: 1,
         parameters: vec![p(0, Type::U8)],
         return_type: Type::U8,
@@ -236,6 +237,7 @@ fn cfg_loop_and_exact_budgets() {
 #[test]
 fn simultaneous_binding() {
     let f = Function {
+        callees: std::collections::BTreeMap::new(),
         schema_version: 1,
         parameters: vec![],
         return_type: Type::U8,
