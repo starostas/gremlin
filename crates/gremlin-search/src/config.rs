@@ -33,6 +33,8 @@ pub struct RefinementConfig {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SearchConfig {
+    #[serde(default, skip_serializing_if = "crate::ComparatorConfig::is_default")]
+    pub comparator: crate::ComparatorConfig,
     #[serde(default)]
     pub cuda: Option<CudaConfig>,
     pub population: usize,
@@ -133,6 +135,7 @@ impl Config {
             }
         }
         let s = &self.search;
+        s.comparator.program()?;
         if s.population < 2
             || s.generations == 0
             || s.max_instructions == 0

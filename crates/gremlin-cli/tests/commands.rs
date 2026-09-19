@@ -156,3 +156,64 @@ fn exhaustion_disabled_holdout_and_bad_configuration() {
         Some(2)
     );
 }
+
+#[test]
+fn comparator_configuration_resume_and_error_evidence() {
+    let temp = Temp::new();
+    let c = config(&temp, "composed_u64", 16, 256);
+    let source = "fn score(actual:u64,expected:u64)->u64{return 0u64;}";
+    let configuration = format!(
+        "{}\n[search.comparator]\nkind='gremlin'\nmax_steps=16\nsource='{source}'\n",
+        fs::read_to_string(&c).unwrap()
+    );
+    fs::write(&c, &configuration).unwrap();
+    let output = run(&["synthesize", "--config", c.to_str().unwrap()]);
+    assert_eq!(
+        output.status.code(),
+        Some(3),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(json(&output)["evidence_level"].is_null());
+    let report: Value =
+        serde_json::from_slice(&fs::read(temp.0.join("run/report.json")).unwrap()).unwrap();
+    assert_eq!(
+        report["configuration"]["search"]["comparator"]["source"],
+        source
+    );
+    assert_eq!(
+        report["best_fitness"]["selection_cost"],
+        serde_json::json!([0, 0])
+    );
+    let checkpoint = temp.0.join("run/checkpoint.json");
+    assert_eq!(
+        run(&["resume", checkpoint.to_str().unwrap()]).status.code(),
+        Some(3)
+    );
+    let stored = temp.0.join("run/config.json");
+    let mut config: Value = serde_json::from_slice(&fs::read(&stored).unwrap()).unwrap();
+    config["search"]["comparator"]["source"] = Value::String(source.replace("0u64", "1u64"));
+    fs::write(stored, serde_json::to_vec(&config).unwrap()).unwrap();
+    assert_eq!(
+        run(&["resume", checkpoint.to_str().unwrap()]).status.code(),
+        Some(2)
+    );
+
+    let temp = Temp::new();
+    let c = config_path_for_comparator(&temp);
+    let output = run(&["synthesize", "--config", c.to_str().unwrap()]);
+    assert_eq!(output.status.code(), Some(4));
+    let report: Value =
+        serde_json::from_slice(&fs::read(temp.0.join("run/report.json")).unwrap()).unwrap();
+    assert!(report["evidence_level"].is_null());
+    assert!(report["error"]
+        .as_str()
+        .unwrap()
+        .contains("comparator execution failed"));
+}
+fn config_path_for_comparator(temp: &Temp) -> PathBuf {
+    let c = config(temp, "identity_u64", 16, 256);
+    let text=format!("{}\n[search.comparator]\nkind='gremlin'\nmax_steps=16\nsource='fn score(actual:u64,expected:u64)->u64{{return udiv(actual,0u64);}}'\n",fs::read_to_string(&c).unwrap());
+    fs::write(&c, text).unwrap();
+    c
+}

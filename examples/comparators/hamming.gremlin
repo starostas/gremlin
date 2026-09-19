@@ -1,0 +1,7 @@
+fn score(actual: u64, expected: u64) -> u64 {
+    let d0: u64 = xor(actual, expected);
+    let d1: u64 = sub(d0, and(lshr(d0, 1u64), 0x5555555555555555u64));
+    let d2: u64 = add(and(d1, 0x3333333333333333u64), and(lshr(d1, 2u64), 0x3333333333333333u64));
+    let d3: u64 = and(add(d2, lshr(d2, 4u64)), 0x0f0f0f0f0f0f0f0fu64);
+    return lshr(mul(d3, 0x0101010101010101u64), 56u64);
+}

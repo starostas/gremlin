@@ -18,6 +18,8 @@ The composed fixture is `x * 3 + 1` with wrapping u64 arithmetic. Five mandatory
 
 For a larger experiment with a recorded bounded-search failure and a successful synthesized component, see the [cksum CRC demo](examples/cksum-crc/README.md).
 
+Search ranking is configurable: use built-in bit-error-first ordering or a bounded custom Gremlin scoring function. See [fitness comparators](docs/comparators.md). Exact correctness checks remain independent of scoring.
+
 Normalized configuration records all defaults; unknown fields and unsupported target kinds fail. Output paths are relative to the current working directory. A run refuses to overwrite an existing directory. CLI results go to stdout as JSON, and evolution progress goes to stderr. `run` defaults to 256 steps and accepts comma-separated exact-width hexadecimal arguments. Booleans are internal; signatures accept 0–4 integer arguments.
 
 ## Run artifacts and resume
