@@ -211,8 +211,8 @@ fn thirty_two_bit_writes_and_initializers() {
     let mut contract = target(&temp, "mov %edi,%eax\nadd $1,%eax\nret");
     let f = parse("fn f(x:u64)->u64{return and(add(x,1u64),4294967295u64);}").unwrap();
     assert_eq!(
-        proof::verify_binary(&f, &contract, Path::new("/usr/bin/z3"), 5000, |_| panic!(
-            "equivalent"
+        proof::verify_binary(&f, &contract, Path::new("/usr/bin/z3"), 5000, |input| Ok(
+            Value::new(Type::U64, input[0].bits.wrapping_add(1) & 0xffff_ffff)
         ))
         .unwrap()
         .status,
@@ -231,4 +231,83 @@ fn thirty_two_bit_writes_and_initializers() {
     })
     .unwrap();
     assert_eq!(r.status, Status::Unsupported);
+}
+#[test]
+fn loader_metadata_must_bind_the_modeled_symbol() {
+    let temp = Temp::new();
+    let original = target(&temp, "mov %rdi,%rax\nret");
+    let pristine = fs::read(&original.path).unwrap();
+    let f = parse("fn f(x:u64)->u64{return x;}").unwrap();
+    let u16le = |b: &[u8]| u16::from_le_bytes(b.try_into().unwrap()) as usize;
+    let u32le = |b: &[u8]| u32::from_le_bytes(b.try_into().unwrap()) as usize;
+    let u64le = |b: &[u8]| u64::from_le_bytes(b.try_into().unwrap()) as usize;
+    for mode in 0..3 {
+        let mut bytes = pristine.clone();
+        if mode == 0 {
+            let phoff = u64le(&bytes[32..40]);
+            let count = u16le(&bytes[56..58]);
+            for n in 0..count {
+                let ph = phoff + n * 56;
+                if u32le(&bytes[ph..ph + 4]) != 2 {
+                    continue;
+                }
+                let off = u64le(&bytes[ph + 8..ph + 16]);
+                let size = u64le(&bytes[ph + 32..ph + 40]);
+                for row in (off..off + size).step_by(16) {
+                    if u64le(&bytes[row..row + 8]) == 6 {
+                        let address = u64le(&bytes[row + 8..row + 16]) as u64 + 24;
+                        bytes[row + 8..row + 16].copy_from_slice(&address.to_le_bytes());
+                        break;
+                    }
+                }
+            }
+        } else {
+            let shoff = u64le(&bytes[40..48]);
+            let count = u16le(&bytes[60..62]);
+            for n in 0..count {
+                let sh = shoff + n * 64;
+                let kind = u32le(&bytes[sh + 4..sh + 8]);
+                if mode == 1 && kind == 0x6fff_fff6 {
+                    let off = u64le(&bytes[sh + 24..sh + 32]);
+                    bytes[off + 16..off + 24].fill(0);
+                    break;
+                }
+                if mode == 2 && kind == 11 {
+                    let off = u64le(&bytes[sh + 24..sh + 32]);
+                    let size = u64le(&bytes[sh + 32..sh + 40]);
+                    let mut copy = bytes[off..off + size].to_vec();
+                    let address = u64le(&copy[32..40]) as u64 + 1;
+                    copy[32..40].copy_from_slice(&address.to_le_bytes());
+                    let new = bytes.len() as u64;
+                    bytes.extend(copy);
+                    bytes[sh + 24..sh + 32].copy_from_slice(&new.to_le_bytes());
+                    break;
+                }
+            }
+        }
+        fs::write(&original.path, &bytes).unwrap();
+        let mut contract = original.clone();
+        contract.sha256 = hash(&bytes);
+        let r = proof::verify_binary(&f, &contract, Path::new("/usr/bin/z3"), 5000, |_| {
+            panic!("malformed binding must fail before oracle execution")
+        })
+        .unwrap();
+        assert_eq!(r.status, Status::Unsupported, "mode {mode}: {r:?}");
+        assert!(r.evidence_level.is_none());
+    }
+    assert!(Command::new("cc")
+        .args(["-shared", "-nostdlib", "-Wl,--hash-style=sysv", "-o"])
+        .arg(&original.path)
+        .arg(temp.0.join("target.s"))
+        .status()
+        .unwrap()
+        .success());
+    let mut contract = original;
+    contract.sha256 = hash(&fs::read(&contract.path).unwrap());
+    let r = proof::verify_binary(&f, &contract, Path::new("/usr/bin/z3"), 5000, |input| {
+        Ok(input[0])
+    })
+    .unwrap();
+    assert_eq!(r.status, Status::Equivalent);
+    assert!(r.model_probe.is_some());
 }

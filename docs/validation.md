@@ -15,7 +15,7 @@ cargo test --release --locked -p gremlin-cuda --features cuda
 cargo test --release --locked -p gremlin-cli --features cuda --test cuda
 ```
 
-Final local results: **54 tests passed in debug and 54 in release**, plus documentation tests. Formatting and workspace Clippy checks passed with warnings denied. The final import normalization regression was also rerun in both profiles. GPU parity and the CUDA synthesis/watchdog/resource tests passed on the A4000. The default build's CUDA-unavailable test is separate from the required hardware gate; it is not a substitute for GPU execution.
+Final local results: **55 tests passed in debug and 55 in release**, plus documentation tests. Formatting and workspace Clippy checks passed with warnings denied. The suites include import normalization and malformed ELF loader-metadata regressions. GPU parity and the CUDA synthesis/watchdog/resource tests passed on the A4000. The default build's CUDA-unavailable test is separate from the required hardware gate; it is not a substitute for GPU execution.
 
 ## Mandatory synthesis gate
 
@@ -56,13 +56,13 @@ Artifacts: `runs/composed_u64/config.json`, `corpus.json`, `provenance.json`, `b
 | D1 | Isolated ELF ABI and resource/forbidden-operation tests; affine CEGIS retains 256 replayed counterexamples, converges at generation 79, passes 256 fresh holdouts and resumes |
 | D2 | Typed structured source and bounded recursion; branch fixtures converge at generations 2/4/3 and loop fixtures at 2/4/2 for seeds 1/2/3; 3,000 structural mutations preserve valid IR and budget behavior |
 | D3 | 10,000 seeded programs, all integer widths/operators, divergent CFGs and partial warps: 4,860,000 exact CPU/GPU outcome/step comparisons; full search states agree; watchdog/memory/device errors are explicit |
-| D4 | Equivalent/inequivalent ELF fixtures; concrete oracle counterexample replay; explicit Unsupported/Unknown/Timeout; reference-model evidence cannot become binary evidence |
+| D4 | Equivalent/inequivalent ELF fixtures; bound GNU/SysV loader metadata and malformed-table rejection; concrete oracle counterexample replay; explicit Unsupported/Unknown/Timeout; reference-model evidence cannot become binary evidence |
 | D5 | All supported operators and widths, eager traps, modulo shifts, CFG edges and budgets match isolated native output; E4-gated affine source produces separately TESTED/E2 native artifact |
 | D6 | Replay/dedup/provenance/import-to-search tests; actual libFuzzer lifecycle; an affine mismatch is exported and replayed into a canonical corpus |
 
 A final complete pipeline used a CUDA-enabled executable on the local namespace-capable host: replayed fuzz corpus → affine refinement → resume → binary-scoped E4 → LLVM artifact validated against CPU and the original ELF. It retained 256 counterexamples, converged at generation 79 after 5,037,456 candidate-case executions, and checked the native artifact on 257 corpus plus 256 fresh holdout cases. The source candidate is binary E4 under the narrow model assumptions; the compiled artifact remains TESTED/E2.
 
-Checked-in measurements: `docs/measurements/cuda-parity.json`, `cuda-synthesis.json`, `affine-proof.json`, `affine-counterexample.json`, `native-affine.json`, `fuzzer-affine.json`, and `final-pipeline.json`. Full local pipeline artifacts, including the fixed executable, source, checkpoints, query, LLVM IR, ELF and all observations, are in `runs/final-pipeline/`. Local test logs are `runs/final-debug.log` and `runs/final-release.log`. Generated run directories are intentionally gitignored.
+Checked-in measurements: `docs/measurements/cuda-parity.json`, `cuda-synthesis.json`, `affine-proof.json`, `affine-counterexample.json`, `native-affine.json`, `fuzzer-affine.json`, and `final-pipeline.json`. Full local pipeline artifacts, including the fixed executable, source, checkpoints, query, LLVM IR, ELF and all observations, are in `runs/final-v1/`. Local test logs are `runs/final-debug.log` and `runs/final-release.log`. Generated run directories are intentionally gitignored.
 
 ## Limits and deployment observations
 
@@ -70,4 +70,4 @@ See [supported features](support.md) and the D1–D6 design notes. Calls remain 
 
 CUDA was slower on the measured small synthesis workload: 4.263 seconds versus CPU 0.948 seconds. Setup, transfers, serialization and fresh worker/context startup are included. No general acceleration claim is made.
 
-The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test. The separately contributed documentation site builds, but GitHub Pages deployment returns 404 until Pages is enabled in repository settings; this is separate from the Rust gates.
+The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test and the complete CPU workflow (commit `9620da1`). The separately contributed documentation site builds, but GitHub Pages deployment returns 404 until Pages is enabled in repository settings; this is separate from the Rust gates.
