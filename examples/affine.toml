@@ -1,0 +1,21 @@
+schema_version = 1
+seed = 1
+[target]
+kind = "fixture"
+name = "affine_u64"
+arguments = ["u64"]
+return_type = "u64"
+[search]
+population = 256
+generations = 1000
+max_instructions = 12
+max_steps = 256
+elite = 8
+tournament_size = 4
+operators = ["add", "mul", "xor"]
+constants = ["0u64", "1u64", "3u64", "7u64", "0x12345678u64"]
+[corpus]
+random_cases = 64
+holdout_cases = 256
+[output]
+directory = "runs/affine"

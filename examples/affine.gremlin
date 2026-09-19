@@ -1,0 +1,5 @@
+fn candidate(x: u64) -> u64 {
+    let a: u64 = xor(x, 0x12345678u64);
+    let b: u64 = mul(a, 7u64);
+    return add(b, 3u64);
+}
