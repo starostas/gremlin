@@ -6,9 +6,14 @@ use std::cmp::Ordering;
 pub struct CaseResult {
     pub execution: Execution,
     pub bit_error: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub custom_cost: Option<u64>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Fitness {
+    /// Unsigned 128-bit sum as [high, low] words; lower is preferred.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selection_cost: Option<[u64; 2]>,
     pub corpus_hash: String,
     pub noncompleted_case_count: u64,
     pub mismatching_completed_case_count: u64,
@@ -35,7 +40,12 @@ impl Fitness {
 }
 impl Ord for Fitness {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.rank().cmp(&other.rank())
+        self.noncompleted_case_count
+            .cmp(&other.noncompleted_case_count)
+            // A custom score cannot outrank an exact solution or reward failure.
+            .then_with(|| other.matches().cmp(&self.matches()))
+            .then_with(|| self.selection_cost.cmp(&other.selection_cost))
+            .then_with(|| self.rank().cmp(&other.rank()))
     }
 }
 impl PartialOrd for Fitness {
@@ -99,10 +109,12 @@ pub struct Engine {
     config: SearchConfig,
     corpus_hash: String,
     cases: Vec<(Vec<Value>, Value)>,
+    comparator: Option<Function>,
 }
 impl Engine {
     pub fn new(config: SearchConfig, corpus: &Corpus) -> Result<Self, String> {
         corpus.validate()?;
+        let comparator = config.comparator.program()?;
         let signature = corpus.target.signature.clone();
         let cases = corpus
             .cases
@@ -120,6 +132,7 @@ impl Engine {
             config,
             corpus_hash: corpus.content_hash()?,
             cases,
+            comparator,
         })
     }
     pub fn with_backend(mut self, backend: Box<dyn Backend>) -> Self {
@@ -150,6 +163,7 @@ impl Engine {
             return Err("backend returned wrong case count".into());
         }
         let mut fitness = Fitness {
+            selection_cost: None,
             corpus_hash: self.corpus_hash.clone(),
             noncompleted_case_count: 0,
             mismatching_completed_case_count: 0,
@@ -159,6 +173,8 @@ impl Engine {
             canonical_program_bytes: bytes,
             cases: Vec::with_capacity(self.cases.len()),
         };
+        let mut scorer = self.comparator.as_ref().map(Evaluator::new).transpose()?;
+        let mut custom_sum = 0u128;
         for ((_, expected), e) in self.cases.iter().zip(executions) {
             if e.steps > self.config.max_steps {
                 return Err("backend exceeded step budget".into());
@@ -169,6 +185,33 @@ impl Engine {
                 }
             }
             fitness.total_executed_steps += e.steps;
+            let custom_cost = match (&mut scorer, &e.outcome, &self.config.comparator) {
+                (
+                    Some(scorer),
+                    Outcome::Completed(actual),
+                    crate::ComparatorConfig::Gremlin { max_steps, .. },
+                ) => {
+                    // Preserve the target's raw two's-complement bit patterns,
+                    // zero-extended to u64; no host signed arithmetic or floats.
+                    let result = scorer.execute(
+                        &[
+                            Value::new(Type::U64, actual.bits),
+                            Value::new(Type::U64, expected.bits),
+                        ],
+                        *max_steps,
+                    );
+                    match result.outcome {
+                        Outcome::Completed(cost) => {
+                            custom_sum = custom_sum
+                                .checked_add(u128::from(cost.bits))
+                                .ok_or("comparator cost sum overflow")?;
+                            Some(cost.bits)
+                        }
+                        outcome => return Err(format!("comparator execution failed: {outcome:?}")),
+                    }
+                }
+                _ => None,
+            };
             let bit_error = if let Outcome::Completed(v) = &e.outcome {
                 let error = ((v.bits ^ expected.bits) & expected.ty.mask()).count_ones();
                 fitness.mismatching_completed_case_count += u64::from(error != 0);
@@ -181,8 +224,16 @@ impl Engine {
             fitness.cases.push(CaseResult {
                 execution: e,
                 bit_error,
+                custom_cost,
             });
         }
+        fitness.selection_cost = match self.config.comparator {
+            crate::ComparatorConfig::CorrectnessFirst { .. } => None,
+            crate::ComparatorConfig::BitErrorFirst { .. } => Some([0, fitness.summed_bit_error]),
+            crate::ComparatorConfig::Gremlin { .. } => {
+                Some([(custom_sum >> 64) as u64, custom_sum as u64])
+            }
+        };
         Ok(fitness)
     }
     fn individuals(
