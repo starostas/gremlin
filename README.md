@@ -1,6 +1,6 @@
 # gremlin
 
-gremlin searches for small integer programs matching observed behavior. This repository implements all nine milestones, M0–M2 and D1–D6, of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, optional CUDA evaluation, and narrow binary-scoped formal verification. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
+gremlin searches for small integer programs matching observed behavior. This repository implements all nine milestones (M0–M2 and D1–D6) of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, optional CUDA evaluation, and narrow binary-scoped formal verification. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
 
 ## Build and use
 
@@ -41,4 +41,4 @@ Reports keep `run_status`, `evidence_level`, and `evidence_scope` separate. A co
 
 Source supports mutable locals, structured branches and loops, and module calls/recursion with explicit depth limits. Canonical CFG source round trips preserve step counts. Search can generate bounded CFGs when structural mutation is configured. Binary execution requires Linux x86-64, Bubblewrap, and working namespaces/seccomp; see [D1](docs/design/D1.md). CUDA is opt-in and requires a toolkit build and supported NVIDIA device; see [D3](docs/design/D3.md) for configuration, parity results, timing, and limitations. Formal verification supports the documented straight-line ELF register subset; see [D4](docs/design/D4.md). Selected candidates can be lowered through LLVM after an explicit evidence gate and checked as isolated native artifacts; see [D5](docs/design/D5.md). Versioned corpus import and an external libFuzzer campaign adapter are available; see [D6](docs/design/D6.md). Search is single-threaded, bounded, and not guaranteed to find arbitrary programs or unknown constants.
 
-See [language semantics](docs/semantics.md), [development and search design](docs/development.md), and [validation results](docs/validation.md).
+See the [supported-feature matrix](docs/support.md), [language semantics](docs/semantics.md), [development and search design](docs/development.md), and [validation results](docs/validation.md).

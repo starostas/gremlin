@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "signature": {"arguments": ["u64"], "return_type": "u64"},
+  "cases": [
+    {"input": ["0x0000000000000000"], "provenance": ["manual boundary: zero"]},
+    {"input": ["0x0000000000000001"], "provenance": ["manual boundary: one"]}
+  ]
+}
