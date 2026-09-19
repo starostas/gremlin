@@ -1,21 +1,28 @@
 ---
 title: Project status
-description: What the current CPU baseline supports and what remains future work.
+description: What gremlin supports today and the boundaries of each workflow.
 ---
 
 ## Available now
 
-The current CPU baseline can parse and execute typed integer programs, validate their control-flow representation, search for small straight-line candidates, and save reproducible run reports and checkpoints.
+The default CPU workflow can parse and execute typed integer programs, validate their control-flow representation, search for small candidates (including bounded CFGs when configured), and save reproducible reports and checkpoints.
 
-It includes examples and fixture configurations for identity, increment, XOR, addition, and a composed arithmetic function. These are useful for exercising the workflow end to end.
+It includes fixture configurations for identity, increment, XOR, addition, bounded sums, and composed arithmetic. These are useful for exercising the workflow end to end.
+
+Additional capabilities are available with explicit prerequisites:
+
+- Isolated observation and counterexample-guided refinement for a supported Linux x86-64 ELF target.
+- CUDA evaluation when built with the optional feature and run on a supported NVIDIA device.
+- Formal equivalence checks for a deliberately narrow, straight-line ELF register subset.
 
 ## Important boundaries
 
-- Search results are tested against examples and holdout inputs, not formally proven equivalent.
-- Source programs are straight-line; the project does not currently accept source-level loops or branches.
-- The target adapters are checked-in Rust fixtures, not arbitrary binaries.
-- Runs are CPU-only and single-threaded.
+- Most search results are tested against examples and holdout inputs, not formally proven equivalent.
+- Binary observation is restricted to a documented ABI and isolation environment; it is not support for arbitrary binaries.
+- CUDA is opt-in, and CPU remains the default evaluation path.
+- The formal verifier is intentionally limited to its documented binary subset and assumptions.
+- Search is bounded and single-threaded, and it is not guaranteed to recover arbitrary programs or unknown constants.
 
 ## Future directions
 
-Potential future work includes binary targets, counterexample-guided refinement, GPU evaluation, formal verification, native-code output, and broader program structures. Those are not part of the current baseline, so the docs avoid presenting them as available features.
+Potential future work includes LLVM/native-code output and external fuzzing. The project documentation keeps these distinct from the implemented workflows above.

@@ -7,11 +7,11 @@ gremlin is a Rust project that searches for small integer programs matching exam
 
 ## What you can do today
 
-- Check and run small, typed gremlin programs locally.
-- Search for compact programs that match a checked-in reference fixture.
-- Save a run, inspect its evidence report, and resume it later.
+- Check and run small, typed gremlin programs locally, including structured control flow.
+- Search for compact programs that match a checked-in reference fixture and resume a saved run.
+- Use opt-in binary, CUDA, and narrowly scoped verification workflows when their documented prerequisites are available.
 
-The current implementation is deliberately CPU-first, deterministic, and self-contained. It does not need a network connection to run.
+The default workflow is CPU-first, deterministic, and self-contained: it does not need a network connection, GPU, solver, or external service to run.
 
 ## A useful mental model
 
