@@ -10,3 +10,8 @@ serde = { version = "=1.0.228", features = ["derive"] }
 serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
 toml = "=0.8.23"
 sha2 = "=0.10.9"
+
+# Isolation tests fingerprint worker/runtime bytes on every observation.
+# Keep integrity hashing practical in debug builds as the CLI grows.
+[profile.dev.package.sha2]
+opt-level = 3
