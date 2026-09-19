@@ -14,6 +14,8 @@ serde_json.workspace = true
 gremlin-native = { path = "../gremlin-native" }
 gremlin-cuda = { path = "../gremlin-cuda" }
 
+gremlin-verify = { path = "../gremlin-verify" }
+
 [features]
 default = []
 cuda = ["gremlin-cuda/cuda"]

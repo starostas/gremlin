@@ -1,0 +1,157 @@
+{
+  "assumptions": [
+    "fixed-width gremlin semantics",
+    "complete straight-line execution; no loop bound",
+    "explicit SysV integer ABI with valid caller return address",
+    "initializer/dependency/relocation-free ELF; immutable executable code",
+    "only documented caller-saved register instructions; flags unused, no memory or uncovered paths",
+    "lifter and solver soundness are trusted; differential checks are not a soundness proof"
+  ],
+  "binary_model": {
+    "binary_hash": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
+    "code_hash": "ff7519bccd82ae98186bdbcc06aaef128a43d039a4fad8a3dea44f35ad1097d8",
+    "entry": 4096,
+    "instructions": [
+      {
+        "dst": 4,
+        "operation": {
+          "Binary": [
+            "xor",
+            {
+              "Reg": [
+                4,
+                64
+              ]
+            },
+            {
+              "Imm": 305419896
+            }
+          ]
+        },
+        "width": 64
+      },
+      {
+        "dst": 0,
+        "operation": {
+          "Lea": [
+            null,
+            4,
+            8,
+            0
+          ]
+        },
+        "width": 64
+      },
+      {
+        "dst": 0,
+        "operation": {
+          "Binary": [
+            "sub",
+            {
+              "Reg": [
+                0,
+                64
+              ]
+            },
+            {
+              "Reg": [
+                4,
+                64
+              ]
+            }
+          ]
+        },
+        "width": 64
+      },
+      {
+        "dst": 0,
+        "operation": {
+          "Binary": [
+            "add",
+            {
+              "Reg": [
+                0,
+                64
+              ]
+            },
+            {
+              "Imm": 3
+            }
+          ]
+        },
+        "width": 64
+      }
+    ],
+    "lifter": "gremlin-x86-register-v1/iced-x86-1.21.0",
+    "signature": {
+      "arguments": [
+        "u64"
+      ],
+      "return_type": "u64"
+    },
+    "size": 23,
+    "symbol": "affine_u64"
+  },
+  "candidate_hash": "6d791d8b33054392332af58b31202fc1bad82ae5b70367a3db2f98aef504b2e8",
+  "candidate_observation": {
+    "outcome": {
+      "detail": {
+        "bits": "0x0000000000000000",
+        "ty": "u64"
+      },
+      "status": "completed"
+    },
+    "steps": 1
+  },
+  "evidence_level": null,
+  "evidence_scope": "binary",
+  "input": [
+    {
+      "bits": "0x0000000000000000",
+      "ty": "u64"
+    }
+  ],
+  "oracle_identity": {
+    "binary_sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
+    "contract": {
+      "abi": "sysv64",
+      "architecture": "x86_64",
+      "cpu_seconds": 2,
+      "environment": "empty",
+      "format": "elf",
+      "memory_mb": 256,
+      "path": "/root/gremlin/runs/formal-example/affine.so",
+      "sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
+      "symbol": "affine_u64",
+      "wall_timeout_ms": 3000
+    },
+    "kernel": "Linux 6.8.0-134-generic #134-Ubuntu SMP PREEMPT_DYNAMIC Fri Jun 26 18:43:11 UTC 2026 x86_64",
+    "runtime_files": {
+      "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+    },
+    "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
+    "sandbox_version": "bubblewrap 0.9.0",
+    "worker_sha256": "14d38421f4700b5fb9b3a46611bd93b11407aad78a029afc11b9c95db7e18b3b"
+  },
+  "query": "(set-logic QF_BV)\n(declare-fun x0 () (_ BitVec 64))\n(define-fun b0 () (_ BitVec 64) (bvxor x0 (_ bv305419896 64)))\n(define-fun b1 () (_ BitVec 64) (bvadd (bvadd (_ bv0 64) (bvmul b0 (_ bv8 64))) (_ bv0 64)))\n(define-fun b2 () (_ BitVec 64) (bvsub b1 b0))\n(define-fun b3 () (_ BitVec 64) (bvadd b2 (_ bv3 64)))\n(assert (or (not (= #b00 #b00)) (and (= #b00 #b00) true (not (= x0 b3)))))\n",
+  "query_hash": "625dd0c374f6db2599b33342d2109c02276d71f0cc68a2c39a7ce0bdb305fac8",
+  "reason": null,
+  "reference_hash": null,
+  "runtime_seconds": 0.109890638,
+  "schema_version": 1,
+  "semantics_version": "gremlin-2",
+  "solver": {
+    "path": "/usr/bin/z3",
+    "sha256": "c05be002097e2f2106efeeac03e58032e3f5cca10104f95d7a0ddc0bd3f907cb",
+    "timeout_ms": 10000,
+    "version": "Z3 version 4.8.12 - 64 bit"
+  },
+  "status": "Counterexample",
+  "target_observation": {
+    "bits": "0x000000007f6e5d4b",
+    "ty": "u64"
+  }
+}
