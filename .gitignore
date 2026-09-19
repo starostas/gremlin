@@ -2,3 +2,6 @@
 /runs/
 /token
 /token2
+node_modules/
+.astro/
+dist/
