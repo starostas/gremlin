@@ -23,7 +23,7 @@ def command(argv, log=None, allowed=(0,)):
         raise subprocess.CalledProcessError(result.returncode, argv)
 
 
-def configure(out):
+def configure(out, byte_generations=300):
     so = out / 'target.so'
     command(['cc', '-O2', '-shared', '-fPIC', '-nostdlib', '-Wl,-z,noexecstack',
              ROOT / 'examples/cksum-crc/target.c', '-o', so])
@@ -39,7 +39,7 @@ arguments = {json.dumps(args)}
 return_type = "u32"
 [search]
 population = 256
-generations = 300
+generations = {byte_generations if name == "byte" else 300}
 max_instructions = {instructions}
 max_steps = 256
 elite = 8
@@ -158,12 +158,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--gremlin', type=Path, default=ROOT / 'target/release/gremlin')
     parser.add_argument('--output', type=Path, default=ROOT / 'runs/cksum-crc-demo')
+    parser.add_argument('--byte-generations', type=int, default=300)
     args = parser.parse_args()
+    if args.byte_generations < 1:
+        parser.error("--byte-generations must be positive")
     gremlin, out = args.gremlin.resolve(), args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
-    configure(out)
+    configure(out, args.byte_generations)
     for name in ('byte', 'feedback'):
-        print(f'Searching {name} (300 generations maximum)', flush=True)
+        budget = args.byte_generations if name == 'byte' else 300
+        print(f'Searching {name} ({budget} generations maximum)', flush=True)
         # Exit 3 means the bounded search exhausted its budget, a recorded result.
         command([gremlin, 'synthesize', '--config', out / (name + '.toml')],
                 out / (name + '.log'), allowed=(0, 3))
