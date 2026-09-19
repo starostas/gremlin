@@ -16,7 +16,13 @@ cargo build --release --locked -p gremlin-cli
 python3 examples/cksum-crc/demo.py --output runs/cksum-crc-demo
 ```
 
-The output directory must be fresh. Use `--gremlin /path/to/gremlin` to select another built executable. Each search has population 256 and a 300-generation limit. The generic enumeration/mutation search receives operator and constant pools, including the CRC polynomial; it is not given the target source expression or a seeded correct candidate. The polynomial itself is not discovered.
+The output directory must be fresh. Use `--gremlin /path/to/gremlin` to select another built executable. Both searches use population 256 and default to a 300-generation limit. Increase the full byte-update budget with `--byte-generations`, for example:
+
+```sh
+python3 examples/cksum-crc/demo.py --output runs/cksum-crc-larger --byte-generations 3000
+```
+
+The feedback subproblem retains its 300-generation limit. The generic enumeration/mutation search receives operator and constant pools, including the CRC polynomial; it is not given the target source expression or a seeded correct candidate. The polynomial itself is not discovered.
 
 The script builds the isolated binary target, runs both searches, inlines the discovered feedback into an explicitly constructed eight-round byte update, proves equivalence to handwritten Gremlin references, compiles a native artifact, and runs differential checks. Logs, configurations, source, checkpoints, proof queries and native outputs remain in the output directory. `summary.json` records both successes and failures.
 
