@@ -1,0 +1,68 @@
+fn candidate(state: u32, byte: u32) -> u32 {
+    let s0: u32 = xor(state, shl(byte, 24u32));
+
+    let r0v1: u32 = 0x04c11db7u32;
+    let r0v2: u32 = ashr(s0, r0v1);
+    let r0v3: u32 = mul(r0v1, s0);
+    let r0v4: u32 = ashr(r0v2, r0v1);
+    let r0v5: u32 = and(r0v1, r0v4);
+    let r0v6: u32 = 0x04c11db7u32;
+    let s1: u32 = xor(shl(s0, 1u32), r0v5);
+
+    let r1v1: u32 = 0x04c11db7u32;
+    let r1v2: u32 = ashr(s1, r1v1);
+    let r1v3: u32 = mul(r1v1, s1);
+    let r1v4: u32 = ashr(r1v2, r1v1);
+    let r1v5: u32 = and(r1v1, r1v4);
+    let r1v6: u32 = 0x04c11db7u32;
+    let s2: u32 = xor(shl(s1, 1u32), r1v5);
+
+    let r2v1: u32 = 0x04c11db7u32;
+    let r2v2: u32 = ashr(s2, r2v1);
+    let r2v3: u32 = mul(r2v1, s2);
+    let r2v4: u32 = ashr(r2v2, r2v1);
+    let r2v5: u32 = and(r2v1, r2v4);
+    let r2v6: u32 = 0x04c11db7u32;
+    let s3: u32 = xor(shl(s2, 1u32), r2v5);
+
+    let r3v1: u32 = 0x04c11db7u32;
+    let r3v2: u32 = ashr(s3, r3v1);
+    let r3v3: u32 = mul(r3v1, s3);
+    let r3v4: u32 = ashr(r3v2, r3v1);
+    let r3v5: u32 = and(r3v1, r3v4);
+    let r3v6: u32 = 0x04c11db7u32;
+    let s4: u32 = xor(shl(s3, 1u32), r3v5);
+
+    let r4v1: u32 = 0x04c11db7u32;
+    let r4v2: u32 = ashr(s4, r4v1);
+    let r4v3: u32 = mul(r4v1, s4);
+    let r4v4: u32 = ashr(r4v2, r4v1);
+    let r4v5: u32 = and(r4v1, r4v4);
+    let r4v6: u32 = 0x04c11db7u32;
+    let s5: u32 = xor(shl(s4, 1u32), r4v5);
+
+    let r5v1: u32 = 0x04c11db7u32;
+    let r5v2: u32 = ashr(s5, r5v1);
+    let r5v3: u32 = mul(r5v1, s5);
+    let r5v4: u32 = ashr(r5v2, r5v1);
+    let r5v5: u32 = and(r5v1, r5v4);
+    let r5v6: u32 = 0x04c11db7u32;
+    let s6: u32 = xor(shl(s5, 1u32), r5v5);
+
+    let r6v1: u32 = 0x04c11db7u32;
+    let r6v2: u32 = ashr(s6, r6v1);
+    let r6v3: u32 = mul(r6v1, s6);
+    let r6v4: u32 = ashr(r6v2, r6v1);
+    let r6v5: u32 = and(r6v1, r6v4);
+    let r6v6: u32 = 0x04c11db7u32;
+    let s7: u32 = xor(shl(s6, 1u32), r6v5);
+
+    let r7v1: u32 = 0x04c11db7u32;
+    let r7v2: u32 = ashr(s7, r7v1);
+    let r7v3: u32 = mul(r7v1, s7);
+    let r7v4: u32 = ashr(r7v2, r7v1);
+    let r7v5: u32 = and(r7v1, r7v4);
+    let r7v6: u32 = 0x04c11db7u32;
+    let s8: u32 = xor(shl(s7, 1u32), r7v5);
+    return s8;
+}
