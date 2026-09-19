@@ -1,0 +1,108 @@
+{
+  "scope": "CRC byte-update bounded searches; no run found an exact solution",
+  "notes": [
+    "Same target ELF, seed, population, operator/constant pools and observed corpus cases. Comparator and generation budget differ as labeled.",
+    "Default comparator runs use the previous executable; comparator runs use the updated executable. Oracle/worker identity changes the corpus identity hash even though all case inputs and labels are identical.",
+    "Wall timings include concurrent work and are not a controlled throughput benchmark.",
+    "Scores guide ranking only; none of these runs earned correctness evidence."
+  ],
+  "runs": {
+    "correctness_first_300": {
+      "build_identity": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b",
+      "candidate_hash": "a79e45f4e3bbe60d8e6d7de1d367d6f455e2fec9c43dffa81d3926c2b6af7f9a",
+      "corpus_hash": "cd5c4e50993aa5acfff6cde6f48958ae5dce329d995dba766a3da83c6829e088",
+      "corpus_count": 448,
+      "seed": 1,
+      "generations": 300,
+      "evaluation_count": 33334784,
+      "runtime_seconds": 46.580068462999996,
+      "run_status": "budget_exhausted",
+      "evidence_level": null,
+      "fitness": {
+        "mismatching_completed_case_count": 315,
+        "summed_bit_error": 4843,
+        "noncompleted_case_count": 0,
+        "instruction_count": 2
+      },
+      "selection_cost": null
+    },
+    "correctness_first_3000": {
+      "build_identity": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b",
+      "candidate_hash": "a79e45f4e3bbe60d8e6d7de1d367d6f455e2fec9c43dffa81d3926c2b6af7f9a",
+      "corpus_hash": "cd5c4e50993aa5acfff6cde6f48958ae5dce329d995dba766a3da83c6829e088",
+      "corpus_count": 448,
+      "seed": 1,
+      "generations": 3000,
+      "evaluation_count": 333315584,
+      "runtime_seconds": 481.41002441,
+      "run_status": "budget_exhausted",
+      "evidence_level": null,
+      "fitness": {
+        "mismatching_completed_case_count": 315,
+        "summed_bit_error": 4843,
+        "noncompleted_case_count": 0,
+        "instruction_count": 2
+      },
+      "selection_cost": null
+    },
+    "bit_error_first_300": {
+      "build_identity": "27ddd7a83c8b296206085806a7f9946bcbaadde4b253d8a8d2300f2a816c468f",
+      "candidate_hash": "b8ed2b56331eb937f22fe377413af6c14a44948fa9003eb7ce48ab8183485636",
+      "corpus_hash": "df4ca0b7826aa0017d26361e88f2d26014f2621e3fbac0ce58e6e5f48680191a",
+      "corpus_count": 448,
+      "seed": 1,
+      "generations": 300,
+      "evaluation_count": 33334784,
+      "runtime_seconds": 54.747277931999996,
+      "run_status": "budget_exhausted",
+      "evidence_level": null,
+      "fitness": {
+        "mismatching_completed_case_count": 394,
+        "summed_bit_error": 4499,
+        "noncompleted_case_count": 0,
+        "instruction_count": 4
+      },
+      "selection_cost": [
+        0,
+        4499
+      ]
+    },
+    "custom_hamming_30": {
+      "build_identity": "27ddd7a83c8b296206085806a7f9946bcbaadde4b253d8a8d2300f2a816c468f",
+      "candidate_hash": "a79e45f4e3bbe60d8e6d7de1d367d6f455e2fec9c43dffa81d3926c2b6af7f9a",
+      "corpus_hash": "df4ca0b7826aa0017d26361e88f2d26014f2621e3fbac0ce58e6e5f48680191a",
+      "corpus_count": 448,
+      "seed": 1,
+      "generations": 30,
+      "evaluation_count": 3336704,
+      "runtime_seconds": 9.67933846,
+      "run_status": "budget_exhausted",
+      "evidence_level": null,
+      "fitness": {
+        "mismatching_completed_case_count": 315,
+        "summed_bit_error": 4843,
+        "noncompleted_case_count": 0,
+        "instruction_count": 2
+      },
+      "selection_cost": [
+        0,
+        4843
+      ]
+    }
+  },
+  "identical_case_inputs_and_labels": true,
+  "bit_error_first_observed_changes": [
+    {
+      "generation": 10,
+      "incomplete": 0,
+      "mismatches": 315,
+      "bit_errors": 4843
+    },
+    {
+      "generation": 190,
+      "incomplete": 0,
+      "mismatches": 394,
+      "bit_errors": 4499
+    }
+  ]
+}

@@ -15,7 +15,7 @@ cargo test --release --locked -p gremlin-cuda --features cuda
 cargo test --release --locked -p gremlin-cli --features cuda --test cuda
 ```
 
-Final local results: **55 tests passed in debug and 55 in release**, plus documentation tests. Formatting and workspace Clippy checks passed with warnings denied. The suites include import normalization and malformed ELF loader-metadata regressions. GPU parity and the CUDA synthesis/watchdog/resource tests passed on the A4000. The default build's CUDA-unavailable test is separate from the required hardware gate; it is not a substitute for GPU execution.
+Final local results: **62 tests passed in debug and 62 in release**, plus documentation tests. Formatting and workspace Clippy checks passed with warnings denied. The suites include import normalization and malformed ELF loader-metadata regressions. GPU parity and the CUDA synthesis/watchdog/resource tests passed on the A4000. The default build's CUDA-unavailable test is separate from the required hardware gate; it is not a substitute for GPU execution.
 
 ## Mandatory synthesis gate
 
@@ -71,3 +71,11 @@ See [supported features](support.md) and the D1–D6 design notes. Calls remain 
 CUDA was slower on the measured small synthesis workload: 4.263 seconds versus CPU 0.948 seconds. Setup, transfers, serialization and fresh worker/context startup are included. No general acceleration claim is made.
 
 The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test and the complete CPU workflow (commit `9620da1`). The separately contributed documentation site builds, but GitHub Pages deployment returns 404 until Pages is enabled in repository settings; this is separate from the Rust gates.
+
+## Comparator extension
+
+The complete debug and release suites pass 62 tests each after adding built-in and custom scoring. Formatting and Clippy pass with warnings denied. The added custom-comparator CPU/CUDA state-parity test passed on the RTX A4000, and CUDA-enabled workspace Clippy passed. Local regression logs are `runs/comparator-tests-debug.log` and `runs/comparator-tests-release.log`.
+
+Custom scorers preserve exact-success checks, reject traps and timeouts, accumulate costs without 64-bit overflow, and are bound to persisted configuration. Tests cover ranking changes, zero-score false positives, resume/regrading integrity, signed raw-bit handling and CLI failure reports. See [fitness comparators](comparators.md).
+
+The CRC experiment now includes a 3,000-generation default-ranking run (333,315,584 candidate/input evaluations), which remained at 315 mismatches and 4,843 bit errors. A 300-generation bit-error-first run reached 394 mismatches and 4,499 bit errors. Neither is a correct implementation. Raw summary: `docs/measurements/cksum-comparators.json`; configurations, logs and full reports: `runs/cksum-crc-budget/` and `runs/cksum-comparators/`.
