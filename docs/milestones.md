@@ -7,7 +7,7 @@ The user expanded the assignment from M0–M2 to all nine gates (M0, M1, M2, D1�
 | M0–M2 | Passed | Mandatory five fixtures on seeds 1/2/3 still pass; original CPU semantics/reproducibility tests pass |
 | D1 | Passed locally | Isolated ELF ABI, forbidden access, constructors, crashes, CPU/wall/memory limits, nondeterminism and restart tests; CEGIS persistence and affine discovery |
 | D2 | Passed locally | Structured source, recursion with depth limits, canonical CFG round trips, and branch/loop synthesis on seeds 1/2/3 |
-| D3 | In progress | External RTX A4000 runner connected; CUDA evaluator under development |
+| D3 | Passed on RTX A4000 | 10,000 programs / 4,860,000 exact CPU/GPU comparisons; synthesis state parity, watchdog and resource failures; measured CPU/CUDA timings |
 | D4 | Not started | Binary models and formal verification |
 | D5 | Not started | LLVM lowering and artifact validation |
 | D6 | Not started | External fuzzing/corpus import |

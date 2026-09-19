@@ -1,0 +1,27 @@
+name: Required CUDA gate (manual GPU runner)
+on: workflow_dispatch
+jobs:
+  parity:
+    runs-on: [self-hosted, linux, x64, gremlin-cuda]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require toolkit and device
+        run: |
+          nvidia-smi
+          "${CUDA_HOME:-/usr/local/cuda}/bin/nvcc" --version
+      - name: Lint CUDA build
+        run: cargo clippy --workspace --all-targets --features cuda -- -D warnings
+      - name: CPU/GPU semantic parity
+        env:
+          GREMLIN_CUDA_PARITY_REPORT: cuda-parity.json
+        run: cargo test --locked --release -p gremlin-cuda --features cuda
+      - name: Synthesis, watchdog and failure gates
+        env:
+          GREMLIN_CUDA_SYNTH_REPORT: cuda-synthesis.json
+        run: cargo test --locked --release -p gremlin-cli --features cuda --test cuda
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cuda-evidence
+          path: cuda-*.json

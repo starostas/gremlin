@@ -1,6 +1,6 @@
 # gremlin
 
-gremlin searches for small integer programs matching observed behavior. This repository implements the CPU baseline in milestones M0–M2 of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible evolutionary search, development fixtures, and evidence reports.
+gremlin searches for small integer programs matching observed behavior. This repository implements M0–M2 and D1–D3 of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, and optional CUDA evaluation. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
 
 ## Build and use
 
@@ -16,7 +16,7 @@ cargo run --release -p gremlin-cli -- resume runs/composed_u64/checkpoint.json
 
 The composed fixture is `x * 3 + 1` with wrapping u64 arithmetic. Five mandatory fixture configurations live in `tests/fixtures/`; each is tested with seeds 1, 2, and 3. `examples/affine.toml` is a larger, non-gating benchmark. Search sees only the signature, observations, configured operators, and configured constant hints. It does not receive oracle expressions.
 
-All configuration fields are explicit and required; unknown fields and unsupported target kinds fail. Output paths are relative to the current working directory. A run refuses to overwrite an existing directory. CLI results go to stdout as JSON, and evolution progress goes to stderr. `run` defaults to 256 steps and accepts comma-separated exact-width hexadecimal arguments. Booleans are internal; signatures accept 0–4 integer arguments.
+Normalized configuration records all defaults; unknown fields and unsupported target kinds fail. Output paths are relative to the current working directory. A run refuses to overwrite an existing directory. CLI results go to stdout as JSON, and evolution progress goes to stderr. `run` defaults to 256 steps and accepts comma-separated exact-width hexadecimal arguments. Booleans are internal; signatures accept 0–4 integer arguments.
 
 ## Run artifacts and resume
 
@@ -37,8 +37,8 @@ Exit codes: 0 successful check/execution or requested tests passed; 2 invalid in
 
 ## Evidence and limits
 
-Reports keep `run_status`, `evidence_level`, and `evidence_scope` separate. A corpus match is E1; a match also passing independently seeded holdout observations is E2. Both are `TESTED`, scoped to a checked-in Rust fixture. They are not equivalence proofs. A known holdout mismatch returns status `counterexample_found` and exit 6, even though E1 remains recorded. Setting `holdout_cases = 0` explicitly allows E1-only success.
+Reports keep `run_status`, `evidence_level`, and `evidence_scope` separate. A corpus match is E1; a match also passing independently seeded holdout observations is E2. Both are `TESTED`, scoped to the configured fixture or isolated binary. They are not equivalence proofs. A known holdout mismatch returns status `counterexample_found` and exit 6, even though E1 remains recorded. Setting `holdout_cases = 0` explicitly allows E1-only success.
 
-Source and search are straight-line. Direct IR supports validated branches and loops, but source printing only supports straight-line programs. No binary loading, CEGIS refinement, CUDA, formal verification, LLVM/native output, or external fuzzing is implemented. Search is single-threaded, bounded, and not guaranteed to find arbitrary programs or unknown constants.
+Source supports mutable locals, structured branches and loops, and module calls/recursion with explicit depth limits. Canonical CFG source round trips preserve step counts. Search can generate bounded CFGs when structural mutation is configured. Binary execution requires Linux x86-64, Bubblewrap, and working namespaces/seccomp; see [D1](docs/design/D1.md). CUDA is opt-in and requires a toolkit build and supported NVIDIA device; see [D3](docs/design/D3.md) for configuration, parity results, timing, and limitations. Formal verification, LLVM/native output, and external fuzzing are not yet implemented. Search is single-threaded, bounded, and not guaranteed to find arbitrary programs or unknown constants.
 
 See [language semantics](docs/semantics.md), [development and search design](docs/development.md), and [validation results](docs/validation.md).

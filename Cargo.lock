@@ -67,6 +67,7 @@ name = "gremlin-cli"
 version = "0.1.0"
 dependencies = [
  "gremlin-core",
+ "gremlin-cuda",
  "gremlin-native",
  "gremlin-search",
  "serde",
@@ -80,6 +81,15 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+]
+
+[[package]]
+name = "gremlin-cuda"
+version = "0.1.0"
+dependencies = [
+ "gremlin-core",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
