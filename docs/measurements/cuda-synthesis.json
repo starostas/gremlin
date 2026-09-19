@@ -1,0 +1,26 @@
+[
+  {
+    "mode": "cpu",
+    "wall_seconds": 0.948156426,
+    "candidate_hash": "f5f7f59fa98c55c658f8309268260c4f94bb111e883e3b92653580e50b072c86",
+    "corpus_hash": "0147c84f3aa3123a13171ed2cfe676df21f5cf520b8d516a461df73a711c9342",
+    "generations": 10,
+    "evaluation_count": 639416,
+    "evidence_level": "E2",
+    "backend": "cpu-reference",
+    "runtime_seconds": 0.768382001,
+    "build_identity": "397be5c5ef33d6397fb1126be6e157b545f12a64cd2fbab0bc6ff12b97c31846"
+  },
+  {
+    "mode": "cuda",
+    "wall_seconds": 4.262684358,
+    "candidate_hash": "f5f7f59fa98c55c658f8309268260c4f94bb111e883e3b92653580e50b072c86",
+    "corpus_hash": "0147c84f3aa3123a13171ed2cfe676df21f5cf520b8d516a461df73a711c9342",
+    "generations": 10,
+    "evaluation_count": 639416,
+    "evidence_level": "E2",
+    "backend": "cuda",
+    "runtime_seconds": 4.035741869,
+    "build_identity": "397be5c5ef33d6397fb1126be6e157b545f12a64cd2fbab0bc6ff12b97c31846"
+  }
+]

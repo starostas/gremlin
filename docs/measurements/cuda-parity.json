@@ -1,0 +1,2406 @@
+{
+  "batches": [
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.8543000000000003,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 200.483524,
+        "kernel_ms": 0.214494,
+        "runtime": 13000,
+        "setup_ms": 99.300436,
+        "total_ms": 195.365727,
+        "transfer_ms": 95.850456
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.854771,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.191638,
+        "kernel_ms": 0.013806,
+        "runtime": 13000,
+        "setup_ms": 0.001483,
+        "total_ms": 0.257544,
+        "transfer_ms": 0.242145
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.840144,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.837261,
+        "kernel_ms": 0.02172,
+        "runtime": 13000,
+        "setup_ms": 0.000952,
+        "total_ms": 0.250752,
+        "transfer_ms": 0.22797
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.801172,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.028472,
+        "kernel_ms": 0.020148,
+        "runtime": 13000,
+        "setup_ms": 0.001232,
+        "total_ms": 0.55814,
+        "transfer_ms": 0.5366500000000001
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.3791899999999995,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.619333,
+        "kernel_ms": 0.035737,
+        "runtime": 13000,
+        "setup_ms": 0.004779,
+        "total_ms": 0.721077,
+        "transfer_ms": 0.68042
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 14.785544,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.279704,
+        "kernel_ms": 0.257564,
+        "runtime": 13000,
+        "setup_ms": 0.003176,
+        "total_ms": 0.84009,
+        "transfer_ms": 0.57924
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.773740999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.292698000000001,
+        "kernel_ms": 0.018385,
+        "runtime": 13000,
+        "setup_ms": 0.001774,
+        "total_ms": 0.557209,
+        "transfer_ms": 0.53693
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.158995,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.036696999999999,
+        "kernel_ms": 0.024887,
+        "runtime": 13000,
+        "setup_ms": 0.001703,
+        "total_ms": 0.548472,
+        "transfer_ms": 0.521781
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 15.089126,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.095737000000001,
+        "kernel_ms": 0.256753,
+        "runtime": 13000,
+        "setup_ms": 0.001313,
+        "total_ms": 0.774417,
+        "transfer_ms": 0.516221
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.833623,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.805673,
+        "kernel_ms": 0.017934,
+        "runtime": 13000,
+        "setup_ms": 0.001212,
+        "total_ms": 0.534245,
+        "transfer_ms": 0.514979
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.26239,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.291735,
+        "kernel_ms": 0.025558,
+        "runtime": 13000,
+        "setup_ms": 0.001312,
+        "total_ms": 0.55814,
+        "transfer_ms": 0.531139
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 15.634813000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.46926,
+        "kernel_ms": 0.253677,
+        "runtime": 13000,
+        "setup_ms": 0.002104,
+        "total_ms": 0.831955,
+        "transfer_ms": 0.5760339999999999
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 6.063547,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 9.85014,
+        "kernel_ms": 0.037881,
+        "runtime": 13000,
+        "setup_ms": 0.005931,
+        "total_ms": 0.95642,
+        "transfer_ms": 0.912307
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 6.830830000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.908238,
+        "kernel_ms": 0.053701,
+        "runtime": 13000,
+        "setup_ms": 0.00494,
+        "total_ms": 0.872141,
+        "transfer_ms": 0.8133589999999999
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 27.408953,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.143209,
+        "kernel_ms": 0.857583,
+        "runtime": 13000,
+        "setup_ms": 0.003246,
+        "total_ms": 1.645445,
+        "transfer_ms": 0.7844949999999999
+      },
+      "type": "u8"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.9826230000000002,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.257300000000001,
+        "kernel_ms": 0.022312,
+        "runtime": 13000,
+        "setup_ms": 0.006412,
+        "total_ms": 0.431221,
+        "transfer_ms": 0.40236700000000003
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.8388720000000003,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.787756,
+        "kernel_ms": 0.014337,
+        "runtime": 13000,
+        "setup_ms": 0.001283,
+        "total_ms": 0.239872,
+        "transfer_ms": 0.224141
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.861043,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.777117,
+        "kernel_ms": 0.020548,
+        "runtime": 13000,
+        "setup_ms": 0.000782,
+        "total_ms": 0.23381,
+        "transfer_ms": 0.21237
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.707596,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.055513,
+        "kernel_ms": 0.01616,
+        "runtime": 13000,
+        "setup_ms": 0.000831,
+        "total_ms": 0.506102,
+        "transfer_ms": 0.489001
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.134048000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.946406,
+        "kernel_ms": 0.024516,
+        "runtime": 13000,
+        "setup_ms": 0.001282,
+        "total_ms": 0.530037,
+        "transfer_ms": 0.504118
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 14.856879,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.988735999999999,
+        "kernel_ms": 0.246333,
+        "runtime": 13000,
+        "setup_ms": 0.000872,
+        "total_ms": 0.734532,
+        "transfer_ms": 0.487207
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.701615,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.907313,
+        "kernel_ms": 0.016371,
+        "runtime": 13000,
+        "setup_ms": 0.000881,
+        "total_ms": 0.506312,
+        "transfer_ms": 0.488959
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.201835999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.888096,
+        "kernel_ms": 0.023183,
+        "runtime": 13000,
+        "setup_ms": 0.000851,
+        "total_ms": 0.512925,
+        "transfer_ms": 0.48877100000000007
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 15.229009999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.021498,
+        "kernel_ms": 0.245762,
+        "runtime": 13000,
+        "setup_ms": 0.000971,
+        "total_ms": 0.738399,
+        "transfer_ms": 0.491545
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.785762,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.153496,
+        "kernel_ms": 0.017273,
+        "runtime": 13000,
+        "setup_ms": 0.000882,
+        "total_ms": 0.514148,
+        "transfer_ms": 0.49588299999999996
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.272019,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.0726629999999995,
+        "kernel_ms": 0.027752,
+        "runtime": 13000,
+        "setup_ms": 0.001764,
+        "total_ms": 0.551889,
+        "transfer_ms": 0.5222519999999999
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 15.520047,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.180517,
+        "kernel_ms": 0.288112,
+        "runtime": 13000,
+        "setup_ms": 0.001643,
+        "total_ms": 0.800226,
+        "transfer_ms": 0.51033
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 5.946135,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.6248640000000005,
+        "kernel_ms": 0.029415,
+        "runtime": 13000,
+        "setup_ms": 0.001523,
+        "total_ms": 0.738579,
+        "transfer_ms": 0.707531
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 7.258735,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.049433,
+        "kernel_ms": 0.054172,
+        "runtime": 13000,
+        "setup_ms": 0.006091,
+        "total_ms": 0.922666,
+        "transfer_ms": 0.862282
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 27.664413,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.274105,
+        "kernel_ms": 0.876609,
+        "runtime": 13000,
+        "setup_ms": 0.005431,
+        "total_ms": 1.730085,
+        "transfer_ms": 0.847925
+      },
+      "type": "u16"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.813745,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.9102570000000005,
+        "kernel_ms": 0.015178,
+        "runtime": 13000,
+        "setup_ms": 0.002665,
+        "total_ms": 0.274376,
+        "transfer_ms": 0.256422
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.831429,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.772548,
+        "kernel_ms": 0.012934,
+        "runtime": 13000,
+        "setup_ms": 0.000922,
+        "total_ms": 0.228851,
+        "transfer_ms": 0.21487499999999998
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.860693,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.75753,
+        "kernel_ms": 0.020218,
+        "runtime": 13000,
+        "setup_ms": 0.000832,
+        "total_ms": 0.233359,
+        "transfer_ms": 0.212188
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.711553,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.006018999999999,
+        "kernel_ms": 0.016461,
+        "runtime": 13000,
+        "setup_ms": 0.000801,
+        "total_ms": 0.503367,
+        "transfer_ms": 0.48598399999999997
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.1493970000000004,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.954079999999999,
+        "kernel_ms": 0.023855,
+        "runtime": 13000,
+        "setup_ms": 0.001282,
+        "total_ms": 0.522914,
+        "transfer_ms": 0.497657
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 14.89454,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.0482890000000005,
+        "kernel_ms": 0.263817,
+        "runtime": 13000,
+        "setup_ms": 0.000902,
+        "total_ms": 0.757205,
+        "transfer_ms": 0.492356
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.75197,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.917883,
+        "kernel_ms": 0.01611,
+        "runtime": 13000,
+        "setup_ms": 0.000952,
+        "total_ms": 0.507375,
+        "transfer_ms": 0.490192
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.194412,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.931278,
+        "kernel_ms": 0.023825,
+        "runtime": 13000,
+        "setup_ms": 0.000902,
+        "total_ms": 0.522232,
+        "transfer_ms": 0.49736499999999995
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 15.268543000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.030013,
+        "kernel_ms": 0.241314,
+        "runtime": 13000,
+        "setup_ms": 0.000962,
+        "total_ms": 0.740353,
+        "transfer_ms": 0.497977
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.802334999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.194022,
+        "kernel_ms": 0.017833,
+        "runtime": 13000,
+        "setup_ms": 0.000952,
+        "total_ms": 0.521841,
+        "transfer_ms": 0.502936
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.257551,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.0711699999999995,
+        "kernel_ms": 0.027081,
+        "runtime": 13000,
+        "setup_ms": 0.001512,
+        "total_ms": 0.550405,
+        "transfer_ms": 0.521691
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 15.690117,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.430207,
+        "kernel_ms": 0.272302,
+        "runtime": 13000,
+        "setup_ms": 0.001754,
+        "total_ms": 0.842085,
+        "transfer_ms": 0.5678890000000001
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 5.947519,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.880504999999999,
+        "kernel_ms": 0.032502,
+        "runtime": 13000,
+        "setup_ms": 0.002725,
+        "total_ms": 0.799063,
+        "transfer_ms": 0.7637160000000001
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 6.803188,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.522171,
+        "kernel_ms": 0.049944,
+        "runtime": 13000,
+        "setup_ms": 0.002705,
+        "total_ms": 0.828599,
+        "transfer_ms": 0.77583
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 27.554295,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.045656,
+        "kernel_ms": 0.87165,
+        "runtime": 13000,
+        "setup_ms": 0.002535,
+        "total_ms": 1.631049,
+        "transfer_ms": 0.7567440000000001
+      },
+      "type": "u32"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.837098,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.882595,
+        "kernel_ms": 0.014768,
+        "runtime": 13000,
+        "setup_ms": 0.002635,
+        "total_ms": 0.261032,
+        "transfer_ms": 0.24350899999999998
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.842387,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.775845,
+        "kernel_ms": 0.012694,
+        "runtime": 13000,
+        "setup_ms": 0.000851,
+        "total_ms": 0.22848,
+        "transfer_ms": 0.214814
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.861855,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.75729,
+        "kernel_ms": 0.02133,
+        "runtime": 13000,
+        "setup_ms": 0.000811,
+        "total_ms": 0.233268,
+        "transfer_ms": 0.21101699999999998
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.724639,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.984558,
+        "kernel_ms": 0.016041,
+        "runtime": 13000,
+        "setup_ms": 0.000882,
+        "total_ms": 0.501504,
+        "transfer_ms": 0.484461
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.189622,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.935506,
+        "kernel_ms": 0.023194,
+        "runtime": 13000,
+        "setup_ms": 0.001122,
+        "total_ms": 0.523616,
+        "transfer_ms": 0.499168
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 14.801324,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.013573,
+        "kernel_ms": 0.251984,
+        "runtime": 13000,
+        "setup_ms": 0.000952,
+        "total_ms": 0.740864,
+        "transfer_ms": 0.487818
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.724809,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.9231229999999995,
+        "kernel_ms": 0.01631,
+        "runtime": 13000,
+        "setup_ms": 0.000861,
+        "total_ms": 0.506212,
+        "transfer_ms": 0.48891
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.190013,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.9059610000000005,
+        "kernel_ms": 0.022762,
+        "runtime": 13000,
+        "setup_ms": 0.000922,
+        "total_ms": 0.514328,
+        "transfer_ms": 0.490534
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 15.156142,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.038950000000001,
+        "kernel_ms": 0.267604,
+        "runtime": 13000,
+        "setup_ms": 0.000871,
+        "total_ms": 0.753517,
+        "transfer_ms": 0.484922
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.809137,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.155049999999999,
+        "kernel_ms": 0.017393,
+        "runtime": 13000,
+        "setup_ms": 0.000962,
+        "total_ms": 0.514147,
+        "transfer_ms": 0.49568199999999996
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.269673,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.1105350000000005,
+        "kernel_ms": 0.026019,
+        "runtime": 13000,
+        "setup_ms": 0.002255,
+        "total_ms": 0.556538,
+        "transfer_ms": 0.528154
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 15.642797,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.170849,
+        "kernel_ms": 0.270118,
+        "runtime": 13000,
+        "setup_ms": 0.001463,
+        "total_ms": 0.779767,
+        "transfer_ms": 0.508056
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 5.960062000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.815613000000001,
+        "kernel_ms": 0.028764,
+        "runtime": 13000,
+        "setup_ms": 0.001593,
+        "total_ms": 0.745793,
+        "transfer_ms": 0.7153259999999999
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 6.897005,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.515789,
+        "kernel_ms": 0.049533,
+        "runtime": 13000,
+        "setup_ms": 0.002926,
+        "total_ms": 0.827918,
+        "transfer_ms": 0.7753190000000001
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 27.69484,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.023895,
+        "kernel_ms": 0.865889,
+        "runtime": 13000,
+        "setup_ms": 0.002946,
+        "total_ms": 1.629595,
+        "transfer_ms": 0.76064
+      },
+      "type": "u64"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.793907,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.873057,
+        "kernel_ms": 0.014968,
+        "runtime": 13000,
+        "setup_ms": 0.001803,
+        "total_ms": 0.256713,
+        "transfer_ms": 0.239832
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.816649,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.7710859999999995,
+        "kernel_ms": 0.012774,
+        "runtime": 13000,
+        "setup_ms": 0.000862,
+        "total_ms": 0.226406,
+        "transfer_ms": 0.21268
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.860642,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.765445,
+        "kernel_ms": 0.020499,
+        "runtime": 13000,
+        "setup_ms": 0.000792,
+        "total_ms": 0.231556,
+        "transfer_ms": 0.210165
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.707386,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.987755,
+        "kernel_ms": 0.016421,
+        "runtime": 13000,
+        "setup_ms": 0.000832,
+        "total_ms": 0.500822,
+        "transfer_ms": 0.48345899999999997
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.22032,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.928673,
+        "kernel_ms": 0.023594,
+        "runtime": 13000,
+        "setup_ms": 0.001152,
+        "total_ms": 0.52136,
+        "transfer_ms": 0.49648400000000004
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 12.445453,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.986643,
+        "kernel_ms": 0.207611,
+        "runtime": 13000,
+        "setup_ms": 0.000842,
+        "total_ms": 0.697402,
+        "transfer_ms": 0.48882899999999996
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.737382,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.91664,
+        "kernel_ms": 0.016812,
+        "runtime": 13000,
+        "setup_ms": 0.001062,
+        "total_ms": 0.51027,
+        "transfer_ms": 0.492276
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.251869999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.918074,
+        "kernel_ms": 0.023794,
+        "runtime": 13000,
+        "setup_ms": 0.000892,
+        "total_ms": 0.518475,
+        "transfer_ms": 0.493668
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 12.740046999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.961605,
+        "kernel_ms": 0.200878,
+        "runtime": 13000,
+        "setup_ms": 0.000881,
+        "total_ms": 0.69133,
+        "transfer_ms": 0.48945099999999997
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.792084,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.1782829999999995,
+        "kernel_ms": 0.017483,
+        "runtime": 13000,
+        "setup_ms": 0.000862,
+        "total_ms": 0.517223,
+        "transfer_ms": 0.498758
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.2844809999999995,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.080588,
+        "kernel_ms": 0.02665,
+        "runtime": 13000,
+        "setup_ms": 0.001823,
+        "total_ms": 0.546307,
+        "transfer_ms": 0.517704
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 13.627405,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.083996,
+        "kernel_ms": 0.212881,
+        "runtime": 13000,
+        "setup_ms": 0.001042,
+        "total_ms": 0.721968,
+        "transfer_ms": 0.507925
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 6.568257,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.583047,
+        "kernel_ms": 0.040345,
+        "runtime": 13000,
+        "setup_ms": 0.006201,
+        "total_ms": 0.95671,
+        "transfer_ms": 0.9100509999999999
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 7.263765,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.454946,
+        "kernel_ms": 0.060203,
+        "runtime": 13000,
+        "setup_ms": 0.006322,
+        "total_ms": 1.005381,
+        "transfer_ms": 0.938636
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 23.232656000000002,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 11.416346,
+        "kernel_ms": 0.494831,
+        "runtime": 13000,
+        "setup_ms": 0.004629,
+        "total_ms": 1.331385,
+        "transfer_ms": 0.831804
+      },
+      "type": "i8"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.824675,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.216303,
+        "kernel_ms": 0.025658,
+        "runtime": 13000,
+        "setup_ms": 0.006713,
+        "total_ms": 0.444106,
+        "transfer_ms": 0.411615
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.8373679999999997,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.817513,
+        "kernel_ms": 0.013516,
+        "runtime": 13000,
+        "setup_ms": 0.001042,
+        "total_ms": 0.23392,
+        "transfer_ms": 0.21924200000000002
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.8861410000000003,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.445697,
+        "kernel_ms": 0.020478,
+        "runtime": 13000,
+        "setup_ms": 0.000872,
+        "total_ms": 2.387962,
+        "transfer_ms": 2.3665019999999997
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 5.066702,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.229629,
+        "kernel_ms": 0.019847,
+        "runtime": 13000,
+        "setup_ms": 0.001523,
+        "total_ms": 0.546238,
+        "transfer_ms": 0.524728
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.608942,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.591200000000001,
+        "kernel_ms": 0.034795,
+        "runtime": 13000,
+        "setup_ms": 0.011322,
+        "total_ms": 0.729483,
+        "transfer_ms": 0.683234
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 12.436736,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.06535,
+        "kernel_ms": 0.188194,
+        "runtime": 13000,
+        "setup_ms": 0.002976,
+        "total_ms": 0.726888,
+        "transfer_ms": 0.535608
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.785532,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.990228999999999,
+        "kernel_ms": 0.016912,
+        "runtime": 13000,
+        "setup_ms": 0.001303,
+        "total_ms": 0.518526,
+        "transfer_ms": 0.500191
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.251469,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.957878,
+        "kernel_ms": 0.023704,
+        "runtime": 13000,
+        "setup_ms": 0.001032,
+        "total_ms": 0.523524,
+        "transfer_ms": 0.498677
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 13.55563,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.992583,
+        "kernel_ms": 0.21786,
+        "runtime": 13000,
+        "setup_ms": 0.001303,
+        "total_ms": 0.709285,
+        "transfer_ms": 0.490002
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.852319,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.21393,
+        "kernel_ms": 0.017714,
+        "runtime": 13000,
+        "setup_ms": 0.000892,
+        "total_ms": 0.517193,
+        "transfer_ms": 0.49847699999999995
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.3303270000000005,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.138167,
+        "kernel_ms": 0.026881,
+        "runtime": 13000,
+        "setup_ms": 0.001292,
+        "total_ms": 0.549253,
+        "transfer_ms": 0.52094
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 13.463078,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.109202,
+        "kernel_ms": 0.227658,
+        "runtime": 13000,
+        "setup_ms": 0.001092,
+        "total_ms": 0.738579,
+        "transfer_ms": 0.509709
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 6.1371459999999995,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 8.072446000000001,
+        "kernel_ms": 0.038953,
+        "runtime": 13000,
+        "setup_ms": 0.00526,
+        "total_ms": 0.902208,
+        "transfer_ms": 0.8578749999999999
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 6.967346999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.491684,
+        "kernel_ms": 0.050766,
+        "runtime": 13000,
+        "setup_ms": 0.004278,
+        "total_ms": 0.825062,
+        "transfer_ms": 0.7698780000000001
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 22.904348000000002,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.634462,
+        "kernel_ms": 0.459845,
+        "runtime": 13000,
+        "setup_ms": 0.004087,
+        "total_ms": 1.227228,
+        "transfer_ms": 0.7631760000000001
+      },
+      "type": "i16"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.799296,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.915196,
+        "kernel_ms": 0.014948,
+        "runtime": 13000,
+        "setup_ms": 0.002104,
+        "total_ms": 0.257935,
+        "transfer_ms": 0.240782
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.835845,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.772239,
+        "kernel_ms": 0.012654,
+        "runtime": 13000,
+        "setup_ms": 0.001002,
+        "total_ms": 0.225234,
+        "transfer_ms": 0.211458
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.867425,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.766697000000001,
+        "kernel_ms": 0.020349,
+        "runtime": 13000,
+        "setup_ms": 0.000842,
+        "total_ms": 0.231135,
+        "transfer_ms": 0.209824
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.732003000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.005407,
+        "kernel_ms": 0.01617,
+        "runtime": 13000,
+        "setup_ms": 0.000822,
+        "total_ms": 0.500983,
+        "transfer_ms": 0.48387
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.192268,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.917412000000001,
+        "kernel_ms": 0.024005,
+        "runtime": 13000,
+        "setup_ms": 0.001122,
+        "total_ms": 0.519718,
+        "transfer_ms": 0.49447
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 12.631012,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.957778,
+        "kernel_ms": 0.203532,
+        "runtime": 13000,
+        "setup_ms": 0.000922,
+        "total_ms": 0.690439,
+        "transfer_ms": 0.48586399999999996
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.723125,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.909295999999999,
+        "kernel_ms": 0.01621,
+        "runtime": 13000,
+        "setup_ms": 0.000962,
+        "total_ms": 0.505702,
+        "transfer_ms": 0.48839
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.251049,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.902443,
+        "kernel_ms": 0.023364,
+        "runtime": 13000,
+        "setup_ms": 0.000891,
+        "total_ms": 0.513355,
+        "transfer_ms": 0.48897999999999997
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 13.979909000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.008052,
+        "kernel_ms": 0.21817,
+        "runtime": 13000,
+        "setup_ms": 0.000982,
+        "total_ms": 0.711078,
+        "transfer_ms": 0.491795
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.816081,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.173413,
+        "kernel_ms": 0.018605,
+        "runtime": 13000,
+        "setup_ms": 0.000911,
+        "total_ms": 0.514537,
+        "transfer_ms": 0.4949
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.352218,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.072464,
+        "kernel_ms": 0.027151,
+        "runtime": 13000,
+        "setup_ms": 0.001542,
+        "total_ms": 0.543973,
+        "transfer_ms": 0.515158
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 13.70373,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.125172,
+        "kernel_ms": 0.221657,
+        "runtime": 13000,
+        "setup_ms": 0.001463,
+        "total_ms": 0.736175,
+        "transfer_ms": 0.512925
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 6.034913,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.58009,
+        "kernel_ms": 0.029666,
+        "runtime": 13000,
+        "setup_ms": 0.001493,
+        "total_ms": 0.735574,
+        "transfer_ms": 0.704305
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 6.925619,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.722598,
+        "kernel_ms": 0.054132,
+        "runtime": 13000,
+        "setup_ms": 0.004349,
+        "total_ms": 0.899553,
+        "transfer_ms": 0.840932
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 23.189595,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.660069,
+        "kernel_ms": 0.501604,
+        "runtime": 13000,
+        "setup_ms": 0.002815,
+        "total_ms": 1.262575,
+        "transfer_ms": 0.758016
+      },
+      "type": "i32"
+    },
+    {
+      "budget": 0,
+      "cases": 1,
+      "cpu_comparison_ms": 3.823432,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.933782,
+        "kernel_ms": 0.015198,
+        "runtime": 13000,
+        "setup_ms": 0.001703,
+        "total_ms": 0.261782,
+        "transfer_ms": 0.244761
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 1,
+      "cases": 1,
+      "cpu_comparison_ms": 3.83272,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.778239,
+        "kernel_ms": 0.012564,
+        "runtime": 13000,
+        "setup_ms": 0.000882,
+        "total_ms": 0.225585,
+        "transfer_ms": 0.212039
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 64,
+      "cases": 1,
+      "cpu_comparison_ms": 3.8828650000000002,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 728904,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 4.773951,
+        "kernel_ms": 0.02109,
+        "runtime": 13000,
+        "setup_ms": 0.000832,
+        "total_ms": 0.231816,
+        "transfer_ms": 0.209774
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 0,
+      "cases": 31,
+      "cpu_comparison_ms": 4.752771999999999,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.004055,
+        "kernel_ms": 0.0157,
+        "runtime": 13000,
+        "setup_ms": 0.000891,
+        "total_ms": 0.502485,
+        "transfer_ms": 0.485774
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 1,
+      "cases": 31,
+      "cpu_comparison_ms": 5.2209520000000005,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.955674999999999,
+        "kernel_ms": 0.023093,
+        "runtime": 13000,
+        "setup_ms": 0.001493,
+        "total_ms": 0.519066,
+        "transfer_ms": 0.49437
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 64,
+      "cases": 31,
+      "cpu_comparison_ms": 12.828744,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6628824,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.965121,
+        "kernel_ms": 0.194827,
+        "runtime": 13000,
+        "setup_ms": 0.001212,
+        "total_ms": 0.685409,
+        "transfer_ms": 0.48925
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 0,
+      "cases": 32,
+      "cpu_comparison_ms": 4.737431,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.921941,
+        "kernel_ms": 0.016481,
+        "runtime": 13000,
+        "setup_ms": 0.001202,
+        "total_ms": 0.506603,
+        "transfer_ms": 0.4888
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 1,
+      "cases": 32,
+      "cpu_comparison_ms": 5.26206,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.917331,
+        "kernel_ms": 0.023263,
+        "runtime": 13000,
+        "setup_ms": 0.001112,
+        "total_ms": 0.517734,
+        "transfer_ms": 0.49324900000000005
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 64,
+      "cases": 32,
+      "cpu_comparison_ms": 12.823663000000002,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 6825488,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 5.978718,
+        "kernel_ms": 0.193183,
+        "runtime": 13000,
+        "setup_ms": 0.001273,
+        "total_ms": 0.684208,
+        "transfer_ms": 0.489622
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 0,
+      "cases": 33,
+      "cpu_comparison_ms": 4.823836,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.2003639999999995,
+        "kernel_ms": 0.017844,
+        "runtime": 13000,
+        "setup_ms": 0.001002,
+        "total_ms": 0.520048,
+        "transfer_ms": 0.501092
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 1,
+      "cases": 33,
+      "cpu_comparison_ms": 5.331007,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.066353,
+        "kernel_ms": 0.026159,
+        "runtime": 13000,
+        "setup_ms": 0.001623,
+        "total_ms": 0.542391,
+        "transfer_ms": 0.514489
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 64,
+      "cases": 33,
+      "cpu_comparison_ms": 13.244886000000001,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 7022152,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 6.077764,
+        "kernel_ms": 0.211238,
+        "runtime": 13000,
+        "setup_ms": 0.001653,
+        "total_ms": 0.721728,
+        "transfer_ms": 0.508707
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 0,
+      "cases": 65,
+      "cpu_comparison_ms": 5.951626,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.584467999999999,
+        "kernel_ms": 0.028774,
+        "runtime": 13000,
+        "setup_ms": 0.001593,
+        "total_ms": 0.733911,
+        "transfer_ms": 0.703424
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 1,
+      "cases": 65,
+      "cpu_comparison_ms": 7.007212,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.518584,
+        "kernel_ms": 0.050646,
+        "runtime": 13000,
+        "setup_ms": 0.002645,
+        "total_ms": 0.82959,
+        "transfer_ms": 0.776189
+      },
+      "type": "i64"
+    },
+    {
+      "budget": 64,
+      "cases": 65,
+      "cpu_comparison_ms": 22.804951,
+      "programs": 1250,
+      "telemetry": {
+        "allocated_bytes": 13315400,
+        "compiler": "nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2025 NVIDIA Corporation Built on Wed_Aug_20_01:58:59_PM_PDT_2025 Cuda compilation tools, release 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+        "compute_capability": "8.6",
+        "device": "NVIDIA RTX A4000",
+        "driver": 13010,
+        "host_total_ms": 7.699534,
+        "kernel_ms": 0.486084,
+        "runtime": 13000,
+        "setup_ms": 0.003446,
+        "total_ms": 1.260591,
+        "transfer_ms": 0.77095
+      },
+      "type": "i64"
+    }
+  ],
+  "comparisons": 4860000,
+  "programs": 10000
+}
