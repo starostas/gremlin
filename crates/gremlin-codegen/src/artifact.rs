@@ -25,16 +25,29 @@ pub struct Artifact {
     pub max_steps: u64,
 }
 fn command(path: &Path, args: &[String], timeout_ms: u64) -> Result<String, String> {
-    let mut child = Command::new(path)
+    let mut command = Command::new(path);
+    command
         .args(args)
         .env_clear()
         .env("PATH", "/usr/bin:/bin")
         .process_group(0)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .map_err(|e| format!("compiler unavailable: {e}"))?;
+        .stderr(Stdio::piped());
+    // A concurrent fork can briefly retain a just-written executable descriptor.
+    let launch = Instant::now();
+    let mut child = loop {
+        match command.spawn() {
+            Ok(child) => break child,
+            Err(e)
+                if e.raw_os_error() == Some(libc::ETXTBSY)
+                    && launch.elapsed() < Duration::from_millis(100) =>
+            {
+                thread::sleep(Duration::from_millis(2))
+            }
+            Err(e) => return Err(format!("compiler unavailable: {e}")),
+        }
+    };
     let out = child.stdout.take().unwrap();
     let err = child.stderr.take().unwrap();
     let read = |mut stream: Box<dyn Read + Send>| {
