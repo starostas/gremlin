@@ -1,8 +1,12 @@
+mod gpu;
 mod oracle;
 mod runs;
 use gremlin_core::*;
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.as_slice() == ["--cuda-worker"] {
+        std::process::exit(gpu::worker());
+    }
     if args.as_slice() == ["--oracle-worker"] {
         std::process::exit(gremlin_native::worker_main());
     }

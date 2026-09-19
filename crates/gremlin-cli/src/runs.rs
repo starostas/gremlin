@@ -137,7 +137,7 @@ pub fn synthesize_with_candidate(c: Config, candidate: Option<Function>) -> Resu
         let started = Instant::now();
         let corpus = oracle.corpus(&c).map_err(infra)?;
         write_json(&dir, "config.json", &c)?;
-        let engine = Engine::new(c.search.clone(), &corpus).map_err(input)?;
+        let engine = crate::gpu::engine(&c, &corpus).map_err(input)?;
         let mut state = engine.initialize(c.seed).map_err(infra)?;
         let initial_candidate_hash = if let Some(f) = candidate {
             let f = f.normalized().map_err(input)?;
@@ -294,7 +294,7 @@ pub fn resume(path: &Path) -> Result<i32, Error> {
         return Err(input("checkpoint output directory mismatch"));
     }
     cp.corpus.provenance = provenance;
-    let engine = Engine::new(config.search.clone(), &cp.corpus).map_err(input)?;
+    let engine = crate::gpu::engine(&config, &cp.corpus).map_err(input)?;
     engine.validate_state(&cp.state).map_err(input)?;
     let _lock = RunLock::acquire(dir)?;
     persist(dir, &mut cp)?;
@@ -424,7 +424,7 @@ fn evolve(
             cp.counterexamples.push(json!({"candidate_hash":rejected_hash,"round":cp.refinement_rounds+1,"case":case,"replayed":true}));
         }
         cp.refinement_rounds += 1;
-        engine = Engine::new(cp.config.search.clone(), &cp.corpus).map_err(infra)?;
+        engine = crate::gpu::engine(&cp.config, &cp.corpus).map_err(infra)?;
         engine.regrade(&mut cp.state).map_err(infra)?;
         cp.runtime_seconds = prior + start.elapsed().as_secs_f64();
         persist(dir, &mut cp)?;
@@ -489,12 +489,12 @@ fn finish(
     };
     let mut evidence = vec![];
     if matched {
-        evidence.push(json!({"level":"E1","scope":scope,"candidate_hash":candidate_hash,"corpus_hash":cp.corpus_hash,"case_count":cp.corpus.cases.len(),"max_steps":cp.config.search.max_steps,"assumptions":["configured deterministic pure target contract","bounded CPU interpreter"]}));
+        evidence.push(json!({"level":"E1","scope":scope,"candidate_hash":candidate_hash,"corpus_hash":cp.corpus_hash,"case_count":cp.corpus.cases.len(),"max_steps":cp.config.search.max_steps,"assumptions":["configured deterministic pure target contract","bounded gremlin interpreter"]}));
     }
     if level == Some("E2") {
         evidence.push(json!({"level":"E2","scope":scope,"candidate_hash":candidate_hash,"holdout":holdout,"assumptions":["sampled differential evidence, not proof"]}));
     }
-    let report = json!({"schema_version":2,"semantics_version":SEMANTICS_VERSION,"run_identity":object_hash(&(cp.config_hash.clone(),cp.corpus_hash.clone(),cp.build_identity.clone())),"build_identity":cp.build_identity,"target":cp.corpus.target,"target_hash":cp.target_hash,"oracle":oracle.details(),"seed":cp.config.seed,"configuration":cp.config,"candidate_hash":candidate_hash,"initial_candidate_hash":cp.initial_candidate_hash,"corpus_hash":cp.corpus_hash,"corpus_count":cp.corpus.cases.len(),"backend":"cpu-reference","evaluation_count":cp.state.evaluation_count,"evaluation_count_unit":"candidate-case search executions including corpus regrading","generations":cp.state.generation,"runtime_seconds":cp.runtime_seconds,"execution_failure_counts":cp.state.failures,"best_fitness":cp.state.best.fitness,"holdout":holdout,"refinement_rounds":cp.refinement_rounds,"counterexamples":cp.counterexamples,"stop_reason":reason,"run_status":status,"evidence_level":level,"evidence_scope":scope,"label":level.map(|_|"TESTED"),"successful_replacement":code==0,"evidence":evidence,"unsupported_unattempted_stages":["CUDA","formal verification","LLVM/native compilation","external fuzzing"]});
+    let report = json!({"schema_version":2,"semantics_version":SEMANTICS_VERSION,"run_identity":object_hash(&(cp.config_hash.clone(),cp.corpus_hash.clone(),cp.build_identity.clone())),"build_identity":cp.build_identity,"target":cp.corpus.target,"target_hash":cp.target_hash,"oracle":oracle.details(),"seed":cp.config.seed,"configuration":cp.config,"candidate_hash":candidate_hash,"initial_candidate_hash":cp.initial_candidate_hash,"corpus_hash":cp.corpus_hash,"corpus_count":cp.corpus.cases.len(),"backend":if cp.config.search.cuda.is_some(){"cuda"}else{"cpu-reference"},"evaluation_count":cp.state.evaluation_count,"evaluation_count_unit":"candidate-case search executions including corpus regrading","generations":cp.state.generation,"runtime_seconds":cp.runtime_seconds,"execution_failure_counts":cp.state.failures,"best_fitness":cp.state.best.fitness,"holdout":holdout,"refinement_rounds":cp.refinement_rounds,"counterexamples":cp.counterexamples,"stop_reason":reason,"run_status":status,"evidence_level":level,"evidence_scope":scope,"label":level.map(|_|"TESTED"),"successful_replacement":code==0,"evidence":evidence,"cuda_telemetry_file":cp.config.search.cuda.as_ref().map(|_|"cuda-batches.jsonl"),"unsupported_unattempted_stages":["formal verification","LLVM/native compilation","external fuzzing"]});
     write_json(dir, "report.json", &report)?;
     let mut hashes = cp.file_hashes.clone();
     for name in [
@@ -507,6 +507,11 @@ fn finish(
         "report.json",
     ] {
         hashes.insert(name.into(), file_hash(&dir.join(name))?);
+    }
+    for name in ["cuda-batches.jsonl", "initial.gremlin"] {
+        if dir.join(name).exists() {
+            hashes.insert(name.into(), file_hash(&dir.join(name))?);
+        }
     }
     write_json(dir, "integrity.json", &hashes)?;
     println!(

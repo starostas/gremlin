@@ -33,6 +33,8 @@ pub struct RefinementConfig {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SearchConfig {
+    #[serde(default)]
+    pub cuda: Option<CudaConfig>,
     pub population: usize,
     pub generations: usize,
     pub max_instructions: usize,
@@ -51,6 +53,12 @@ pub struct SearchConfig {
     pub structural_mutation_percent: usize,
     #[serde(default)]
     pub loop_bound: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CudaConfig {
+    pub memory_budget_mb: u64,
+    pub wall_timeout_ms: u64,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -83,6 +91,17 @@ impl Config {
             return Err("unsupported configuration schema_version".into());
         }
         self.signature().validate()?;
+        if let Some(cuda) = &self.search.cuda {
+            if cuda.memory_budget_mb == 0
+                || cuda.memory_budget_mb > 65536
+                || cuda.wall_timeout_ms == 0
+                || cuda.wall_timeout_ms > 600000
+            {
+                return Err(
+                    "CUDA memory budget must be 1..65536 MiB and wall timeout 1..600000 ms".into(),
+                );
+            }
+        }
         match self.target.kind.as_str() {
             "fixture" => {
                 if self.target.binary.is_some() {
