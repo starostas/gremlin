@@ -52,3 +52,11 @@ The eight-round structure and initial byte mixing are provided by the harness. F
 For the nine bytes `123456789`, the assembled implementation produces `930766865`, matching `printf 123456789 | cksum`. The raw one-byte update alone is not a complete POSIX checksum: length folding and complement matter.
 
 See [measured summary](../../docs/measurements/cksum-crc.json). Runtime varies by machine; these are bounded-search results, not a claim that arbitrary CRC implementations can currently be synthesized end to end.
+
+## Larger budget and comparator experiment
+
+Increasing the original full-byte search to **3,000 generations** evaluated 333,315,584 candidate/input pairs in about eight minutes. Its best result was still `state << 8`: 315 mismatches and 4,843 wrong bits across 448 corpus cases, unchanged from the 300-generation run. It matches 133 boundary cases where the byte and high state byte cancel, which gives the default ranking a locally attractive but incomplete program.
+
+With the new `[search.comparator] kind = "bit_error_first"` setting, the same 300-generation budget reached 4,499 wrong bits, although complete-output mismatches increased to 394. This is an intentional consequence of prioritizing bit distance. It is progress on that metric, not a correct CRC implementation. A custom Hamming scorer also ran successfully for 30 generations; automated tests verify its ordering against the built-in implementation.
+
+See [comparator configuration](../../docs/comparators.md) and [measured comparison](../../docs/measurements/cksum-comparators.json). More budget alone did not improve this seed under the original ranking; that does not prove that a larger budget or another seed could never succeed.
