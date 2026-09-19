@@ -1,14 +1,14 @@
 {
   "pipeline": "CUDA-enabled executable running CPU search and isolated binary/native validation locally; GPU parity tested separately on A4000",
   "search": {
-    "build_identity": "d432b34809c4c1a13eb568508621ab553f6231d49f187a8dfa9852e59ba4d946",
+    "build_identity": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b",
     "candidate_hash": "f85dd8b7d0184feb35d6d65dcd7c622a5daa0d496e2f101568e7666fa85b4a64",
-    "corpus_hash": "1b51c932759bf11a4af553e5a8a56a5e44cf766ae5d5d986026cb54250ce0bd7",
+    "corpus_hash": "43cfb62b58dc2ab8ebfd25e9b17d64615d69bf21dd434f0d412b3476c2b7bfaf",
     "corpus_count": 257,
     "generations": 79,
     "evaluation_count": 5037456,
     "refinement_rounds": 1,
-    "runtime_seconds": 9.34711394,
+    "runtime_seconds": 8.580554636,
     "evidence_level": "E2",
     "evidence_scope": "binary"
   },
@@ -20,6 +20,7 @@
       "complete straight-line execution; no loop bound",
       "explicit SysV integer ABI with valid caller return address",
       "initializer/dependency/relocation-free ELF; immutable executable code",
+      "loader metadata, GNU/SysV hash lookup and modeled symbol are bound to the same mapped bytes; readable 4 KiB-aligned file-backed load segments without BSS",
       "only documented caller-saved register instructions; flags unused, no memory or uncovered paths",
       "lifter and solver soundness are trusted; differential checks are not a soundness proof"
     ],
@@ -98,7 +99,7 @@
           "width": 64
         }
       ],
-      "lifter": "gremlin-x86-register-v1/iced-x86-1.21.0",
+      "lifter": "gremlin-x86-register-v2/iced-x86-1.21.0",
       "signature": {
         "arguments": [
           "u64"
@@ -113,6 +114,23 @@
     "evidence_level": "E4",
     "evidence_scope": "binary",
     "input": null,
+    "model_probe": {
+      "input": [
+        {
+          "bits": "0x0000000000000000",
+          "ty": "u64"
+        }
+      ],
+      "model": {
+        "bits": "0x000000007f6e5d4b",
+        "ty": "u64"
+      },
+      "oracle": {
+        "bits": "0x000000007f6e5d4b",
+        "ty": "u64"
+      },
+      "purpose": "loader and entry smoke check; not a soundness proof"
+    },
     "oracle_identity": {
       "binary_sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
       "contract": {
@@ -137,13 +155,13 @@
       },
       "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
       "sandbox_version": "bubblewrap 0.9.0",
-      "worker_sha256": "d432b34809c4c1a13eb568508621ab553f6231d49f187a8dfa9852e59ba4d946"
+      "worker_sha256": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b"
     },
     "query": "(set-logic QF_BV)\n(declare-fun x0 () (_ BitVec 64))\n(define-fun c1 () (_ BitVec 64) (_ bv305419896 64))\n(define-fun c2 () (_ BitVec 64) (bvxor x0 c1))\n(define-fun c3 () (_ BitVec 64) (_ bv7 64))\n(define-fun c4 () (_ BitVec 64) (bvmul c2 c3))\n(define-fun c5 () (_ BitVec 64) (_ bv3 64))\n(define-fun c6 () (_ BitVec 64) (bvadd c4 c5))\n(define-fun b0 () (_ BitVec 64) (bvxor x0 (_ bv305419896 64)))\n(define-fun b1 () (_ BitVec 64) (bvadd (bvadd (_ bv0 64) (bvmul b0 (_ bv8 64))) (_ bv0 64)))\n(define-fun b2 () (_ BitVec 64) (bvsub b1 b0))\n(define-fun b3 () (_ BitVec 64) (bvadd b2 (_ bv3 64)))\n(assert (or (not (= #b00 #b00)) (and (= #b00 #b00) true (not (= c6 b3)))))\n",
     "query_hash": "90f989d117ab09b247509abedc573ef00f86b11c342e106f671bbcf9b6c76e72",
     "reason": null,
     "reference_hash": null,
-    "runtime_seconds": 0.066699889,
+    "runtime_seconds": 0.098522079,
     "schema_version": 1,
     "semantics_version": "gremlin-2",
     "solver": {
@@ -160,7 +178,7 @@
       "artifact_bytes": 13288,
       "artifact_hash": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
       "candidate_hash": "f85dd8b7d0184feb35d6d65dcd7c622a5daa0d496e2f101568e7666fa85b4a64",
-      "compile_seconds": 0.101299036,
+      "compile_seconds": 0.09107932,
       "compiler_hash": "8ef402d453d1ba4902e4ee0f0f847f6cfa01400c95aa43c24e97818b9c0e3f45",
       "compiler_path": "/usr/bin/clang-18",
       "compiler_version": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
@@ -175,12 +193,12 @@
         "-target",
         "x86_64-unknown-linux-gnu",
         "-o",
-        "runs/final-pipeline/native/candidate.so",
-        "runs/final-pipeline/native/candidate.ll"
+        "runs/final-v1/native/candidate.so",
+        "runs/final-v1/native/candidate.ll"
       ],
       "llvm_hash": "a8407c24bf41aa497dcdfbef1e624b02f79548949ba7a51ab7963a91717c0008",
       "max_steps": 256,
-      "path": "runs/final-pipeline/native/candidate.so"
+      "path": "runs/final-v1/native/candidate.so"
     },
     "artifact_evidence_level": "E2",
     "artifact_evidence_scope": "native_artifact_differential",
@@ -190,7 +208,7 @@
     "corpus_count": 257,
     "holdout_count": 256,
     "holdout_domain_exhausted": false,
-    "imported_corpus_hash": "91e1976c07a9f2b07001c9b78a5642a1c0feec5b7d36e368f48895399db6f6e5",
+    "imported_corpus_hash": "c81124984c440989a7c87d70a143d333b895a5920fcd99892713d11cdbe4bdeb",
     "label": "TESTED",
     "native_status_identity": {
       "binary_sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
@@ -201,7 +219,7 @@
         "environment": "empty",
         "format": "elf",
         "memory_mb": 256,
-        "path": "runs/final-pipeline/native/candidate.so",
+        "path": "runs/final-v1/native/candidate.so",
         "sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
         "symbol": "gremlin_status",
         "wall_timeout_ms": 5000
@@ -216,9 +234,9 @@
       },
       "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
       "sandbox_version": "bubblewrap 0.9.0",
-      "worker_sha256": "d432b34809c4c1a13eb568508621ab553f6231d49f187a8dfa9852e59ba4d946"
+      "worker_sha256": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b"
     },
-    "native_validation_seconds": 0.11868886,
+    "native_validation_seconds": 0.112048416,
     "native_validation_timing_scope": "isolated batch validation including startup and repeated observations; not intrinsic function latency",
     "native_value_identity": {
       "binary_sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
@@ -229,7 +247,7 @@
         "environment": "empty",
         "format": "elf",
         "memory_mb": 256,
-        "path": "runs/final-pipeline/native/candidate.so",
+        "path": "runs/final-v1/native/candidate.so",
         "sha256": "d211e3424a1850ee6390cc2243bf052004ff0aef4d2f244d005c832d4b233cda",
         "symbol": "gremlin_target",
         "wall_timeout_ms": 5000
@@ -244,7 +262,7 @@
       },
       "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
       "sandbox_version": "bubblewrap 0.9.0",
-      "worker_sha256": "d432b34809c4c1a13eb568508621ab553f6231d49f187a8dfa9852e59ba4d946"
+      "worker_sha256": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b"
     },
     "oracle": {
       "binary_sha256": "9eb28553826ef1827f8c81827f1b6d322f46d154601f4fe72d806e42b2e5e929",
@@ -270,10 +288,10 @@
       },
       "sandbox_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71",
       "sandbox_version": "bubblewrap 0.9.0",
-      "worker_sha256": "d432b34809c4c1a13eb568508621ab553f6231d49f187a8dfa9852e59ba4d946"
+      "worker_sha256": "3ba37e532420d955f891bac64e0b80e12d230e13aeb5929c52927650e106523b"
     },
     "requested_minimum_candidate_evidence": "E4",
-    "runtime_seconds": 0.517266989,
+    "runtime_seconds": 0.493740805,
     "schema_version": 1,
     "semantics_version": "gremlin-2",
     "source_hash": "4a89b9a04c5eb0391bcc1a1b470051aa7db2bc33bbd66b183bc551cf1539383e",

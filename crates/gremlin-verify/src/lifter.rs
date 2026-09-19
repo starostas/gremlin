@@ -4,7 +4,7 @@ use iced_x86::{Decoder, DecoderOptions, Instruction, Mnemonic, OpKind, Register}
 use object::{Object, ObjectSection, ObjectSymbol};
 use serde::Serialize;
 use std::collections::BTreeMap;
-pub const LIFTER_VERSION: &str = "gremlin-x86-register-v1/iced-x86-1.21.0";
+pub const LIFTER_VERSION: &str = "gremlin-x86-register-v2/iced-x86-1.21.0";
 #[derive(Clone, Debug, Serialize)]
 enum Operand {
     Reg(u8, u32),
@@ -142,6 +142,7 @@ pub fn lift(contract: &BinaryContract, signature: &Signature) -> Result<BinaryMo
     if symbol.size() == 0 || symbol.size() > 4096 || symbol.kind() != object::SymbolKind::Text {
         return Err("formal symbol must be a nonempty function of at most 4096 bytes".into());
     }
+    crate::elf_binding::validate(&data, &contract.symbol, symbol.address(), symbol.size())?;
     let section = file
         .section_by_index(symbol.section_index().ok_or("symbol has no section")?)
         .map_err(|e| e.to_string())?;

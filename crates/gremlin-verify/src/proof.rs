@@ -33,6 +33,7 @@ pub struct ProofReport {
     pub target_observation: Option<Value>,
     pub assumptions: Vec<String>,
     pub runtime_seconds: f64,
+    pub model_probe: Option<serde_json::Value>,
 }
 fn report(f: &Function, scope: &str) -> Result<ProofReport, String> {
     Ok(ProofReport {
@@ -56,6 +57,7 @@ fn report(f: &Function, scope: &str) -> Result<ProofReport, String> {
             "complete straight-line execution; no loop bound".into(),
         ],
         runtime_seconds: 0.,
+        model_probe: None,
     })
 }
 fn query(f: &Function, a: &Symbolic, b: &Symbolic) -> String {
@@ -141,8 +143,23 @@ pub fn verify_binary(
             return Ok(r);
         }
     };
-    r.assumptions.extend(["explicit SysV integer ABI with valid caller return address".into(),"initializer/dependency/relocation-free ELF; immutable executable code".into(),"only documented caller-saved register instructions; flags unused, no memory or uncovered paths".into(),"lifter and solver soundness are trusted; differential checks are not a soundness proof".into()]);
+    r.assumptions.extend(["explicit SysV integer ABI with valid caller return address".into(),"initializer/dependency/relocation-free ELF; immutable executable code".into(),
+        "loader metadata, GNU/SysV hash lookup and modeled symbol are bound to the same mapped bytes; readable 4 KiB-aligned file-backed load segments without BSS".into(),"only documented caller-saved register instructions; flags unused, no memory or uncovered paths".into(),"lifter and solver soundness are trusted; differential checks are not a soundness proof".into()]);
     let target = model.symbolic()?;
+    let probe_input = f
+        .signature()
+        .arguments
+        .iter()
+        .map(|ty| Value::new(*ty, 0))
+        .collect::<Vec<_>>();
+    let probe_model = model.execute(&probe_input)?;
+    let probe_oracle = oracle(&probe_input)?;
+    if probe_model != probe_oracle {
+        return Err("modeling error: loader/model probe disagrees with isolated oracle".into());
+    }
+    r.model_probe = Some(
+        serde_json::json!({"input":probe_input,"model":probe_model,"oracle":probe_oracle,"purpose":"loader and entry smoke check; not a soundness proof"}),
+    );
     if let Some(input) = solve(f, &candidate, &target, solver, timeout_ms, &mut r)? {
         let model_value = model.execute(&input)?;
         let observed = oracle(&input)?;
