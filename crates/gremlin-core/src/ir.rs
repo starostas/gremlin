@@ -11,6 +11,7 @@ pub struct Param {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Expr {
+    Call { function: String, args: Vec<Id> },
     Const { value: Value },
     Apply { op: Op, args: Vec<Id> },
 }
@@ -64,6 +65,8 @@ pub struct Block {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Function {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub callees: BTreeMap<String, Signature>,
     pub schema_version: u32,
     pub parameters: Vec<Param>,
     pub return_type: Type,
@@ -177,6 +180,21 @@ impl Function {
         for b in &self.blocks {
             for (i, x) in b.instructions.iter().enumerate() {
                 let actual = match &x.expr {
+                    Expr::Call { function, args } => {
+                        let signature = self
+                            .callees
+                            .get(function)
+                            .ok_or_else(|| format!("undeclared callee {function}"))?;
+                        signature.validate()?;
+                        let types = args
+                            .iter()
+                            .map(|id| use_value(*id, b.id, i as isize))
+                            .collect::<Result<Vec<_>, _>>()?;
+                        if types != signature.arguments {
+                            return Err(format!("call signature mismatch for {function}"));
+                        }
+                        signature.return_type
+                    }
                     Expr::Const { value } => {
                         if value.bits > value.ty.mask() {
                             return Err("constant bit pattern exceeds width".into());
@@ -263,6 +281,7 @@ impl Function {
             args: e.args.iter().map(|v| vm[v]).collect(),
         };
         Ok(Self {
+            callees: self.callees.clone(),
             schema_version: SCHEMA_VERSION,
             parameters: self.parameters.iter().map(param).collect(),
             return_type: self.return_type,
@@ -279,6 +298,10 @@ impl Function {
                             id: vm[&x.id],
                             ty: x.ty,
                             expr: match &x.expr {
+                                Expr::Call { function, args } => Expr::Call {
+                                    function: function.clone(),
+                                    args: args.iter().map(|v| vm[v]).collect(),
+                                },
                                 Expr::Const { value } => Expr::Const { value: *value },
                                 Expr::Apply { op, args } => Expr::Apply {
                                     op: *op,
@@ -329,6 +352,13 @@ pub struct Evaluator {
 }
 impl Evaluator {
     pub fn new(f: &Function) -> Result<Self, String> {
+        if f.blocks
+            .iter()
+            .flat_map(|b| &b.instructions)
+            .any(|i| matches!(i.expr, Expr::Call { .. }))
+        {
+            return Err("internal calls require a validated module evaluator".into());
+        }
         let function = f.normalized()?;
         let count = function.parameters.len()
             + function
@@ -374,6 +404,9 @@ impl Evaluator {
                 }
                 steps += 1;
                 let result = match &x.expr {
+                    Expr::Call { .. } => {
+                        unreachable!("calls rejected during evaluator preparation")
+                    }
                     Expr::Const { value } => Ok(*value),
                     Expr::Apply { op, args } => {
                         let mut v = [Value::new(Type::Bool, 0); 3];

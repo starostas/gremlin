@@ -10,12 +10,18 @@ pub struct Gene {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Genome {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cfg: Option<Function>,
     pub genes: Vec<Gene>,
     pub output: Id,
 }
 impl Genome {
     pub fn lower(&self, s: &Signature) -> Function {
+        if let Some(f) = &self.cfg {
+            return f.clone();
+        }
         Function {
+            callees: std::collections::BTreeMap::new(),
             schema_version: SCHEMA_VERSION,
             parameters: s
                 .arguments
@@ -52,8 +58,18 @@ impl Genome {
             .chain(self.genes.iter().map(|g| g.ty))
             .collect()
     }
-    fn valid(&self, s: &Signature, c: &SearchConfig) -> bool {
-        self.genes.len() <= c.max_instructions && self.lower(s).validate().is_ok()
+    pub fn instruction_count(&self) -> usize {
+        self.cfg.as_ref().map_or(self.genes.len(), |f| {
+            f.blocks.iter().map(|b| b.instructions.len()).sum()
+        })
+    }
+    pub fn valid(&self, s: &Signature, c: &SearchConfig) -> bool {
+        let f = self.lower(s);
+        self.instruction_count() <= c.max_instructions
+            && f.blocks.len() <= c.max_blocks
+            && f.signature() == *s
+            && f.validate().is_ok()
+            && (self.cfg.is_none() || (self.genes.is_empty() && self.output == 0))
     }
 }
 fn matching(types: &[Type], t: Type) -> Vec<Id> {
@@ -112,6 +128,7 @@ pub fn seeds(s: &Signature, c: &SearchConfig) -> Vec<Genome> {
     for (i, t) in s.arguments.iter().enumerate() {
         if *t == s.return_type {
             out.push(Genome {
+                cfg: None,
                 genes: vec![],
                 output: i as Id,
             });
@@ -120,6 +137,7 @@ pub fn seeds(s: &Signature, c: &SearchConfig) -> Vec<Genome> {
     for v in &constants {
         if v.ty == s.return_type {
             out.push(Genome {
+                cfg: None,
                 genes: vec![Gene {
                     ty: v.ty,
                     expr: Expr::Const { value: *v },
@@ -145,6 +163,7 @@ pub fn seeds(s: &Signature, c: &SearchConfig) -> Vec<Genome> {
                         continue;
                     }
                     let mut g = Genome {
+                        cfg: None,
                         genes: vec![],
                         output: 0,
                     };
@@ -189,6 +208,7 @@ pub fn random_genome(s: &Signature, c: &SearchConfig, rng: &mut Rng, fallback: &
         .map(|v| Value::parse(v).unwrap())
         .collect();
     let mut g = Genome {
+        cfg: None,
         genes: vec![],
         output: 0,
     };
@@ -250,6 +270,11 @@ pub fn delete(g: &Genome, s: &Signature, index: usize) -> Option<Genome> {
     Some(n)
 }
 pub fn mutate(parent: &Genome, s: &Signature, c: &SearchConfig, rng: &mut Rng) -> Genome {
+    if parent.cfg.is_some()
+        || (c.structural_mutation_percent > 0 && rng.index(100) < c.structural_mutation_percent)
+    {
+        return crate::structural::mutate_cfg(parent, s, c, rng);
+    }
     let constants: Vec<_> = c
         .constants
         .iter()
@@ -354,4 +379,110 @@ pub fn mutate(parent: &Genome, s: &Signature, c: &SearchConfig, rng: &mut Rng) -
         }
     }
     parent.clone()
+}
+
+/// Enumerate short accumulator chains over the configured pool, independently of any oracle.
+/// Roots are return-typed parameters (constants only when none exist); each step is unary,
+/// or binary with a configured constant/parameter in either position. No target-specific seeds.
+pub fn chain_proposal(
+    signature: &Signature,
+    config: &SearchConfig,
+    mut cursor: u64,
+) -> Option<Genome> {
+    #[derive(Clone)]
+    enum Leaf {
+        Parameter(Id),
+        Constant(Value),
+    }
+    let ty = signature.return_type;
+    let parameters: Vec<_> = signature
+        .arguments
+        .iter()
+        .enumerate()
+        .filter(|(_, t)| **t == ty)
+        .map(|(i, _)| Leaf::Parameter(i as Id))
+        .collect();
+    let constants: Vec<_> = config
+        .constants
+        .iter()
+        .filter_map(|s| Value::parse(s).ok())
+        .filter(|v| v.ty == ty)
+        .map(Leaf::Constant)
+        .collect();
+    let roots = if parameters.is_empty() {
+        constants.clone()
+    } else {
+        parameters.clone()
+    };
+    let leaves: Vec<_> = parameters.into_iter().chain(constants).collect();
+    let mut actions = vec![];
+    for op in &config.operators {
+        if op.arity() == 1 && op.result(&[ty]) == Ok(ty) {
+            actions.push((*op, None, false));
+        } else if op.arity() == 2 && op.result(&[ty, ty]) == Ok(ty) {
+            for leaf in &leaves {
+                actions.push((*op, Some(leaf.clone()), false));
+                actions.push((*op, Some(leaf.clone()), true));
+            }
+        }
+    }
+    if roots.is_empty() || actions.is_empty() {
+        return None;
+    }
+    let mut selected = None;
+    for depth in 1..=config.enumeration_depth {
+        let count = (actions.len() as u64)
+            .checked_pow(depth)?
+            .checked_mul(roots.len() as u64)?;
+        if cursor < count {
+            selected = Some(depth);
+            break;
+        }
+        cursor -= count;
+    }
+    let depth = selected?;
+    let root = roots[(cursor % roots.len() as u64) as usize].clone();
+    cursor /= roots.len() as u64;
+    let mut genome = Genome {
+        cfg: None,
+        genes: vec![],
+        output: 0,
+    };
+    let materialize = |leaf: Leaf, g: &mut Genome| -> Id {
+        match leaf {
+            Leaf::Parameter(id) => id,
+            Leaf::Constant(value) => {
+                let index = g
+                    .genes
+                    .iter()
+                    .position(|x| x.expr == Expr::Const { value })
+                    .unwrap_or_else(|| {
+                        g.genes.push(Gene {
+                            ty,
+                            expr: Expr::Const { value },
+                        });
+                        g.genes.len() - 1
+                    });
+                (signature.arguments.len() + index) as Id
+            }
+        }
+    };
+    genome.output = materialize(root, &mut genome);
+    for _ in 0..depth {
+        let (op, leaf, reverse) = actions[(cursor % actions.len() as u64) as usize].clone();
+        cursor /= actions.len() as u64;
+        let mut args = vec![genome.output];
+        if let Some(leaf) = leaf {
+            args.push(materialize(leaf, &mut genome));
+            if reverse {
+                args.reverse();
+            }
+        }
+        genome.output = (signature.arguments.len() + genome.genes.len()) as Id;
+        genome.genes.push(Gene {
+            ty,
+            expr: Expr::Apply { op, args },
+        });
+    }
+    genome.valid(signature, config).then_some(genome)
 }

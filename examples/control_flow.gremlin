@@ -1,0 +1,9 @@
+fn main(x: u8) -> u8 {
+    let mut n: u8 = x;
+    let mut sum: u8 = 0u8;
+    while ne(n, 0u8) {
+        sum = add(sum, n);
+        n = sub(n, 1u8);
+    }
+    return sum;
+}
