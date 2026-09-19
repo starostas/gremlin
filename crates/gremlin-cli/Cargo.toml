@@ -16,6 +16,8 @@ gremlin-cuda = { path = "../gremlin-cuda" }
 
 gremlin-verify = { path = "../gremlin-verify" }
 
+gremlin-codegen = { path = "../gremlin-codegen" }
+
 [features]
 default = []
 cuda = ["gremlin-cuda/cuda"]

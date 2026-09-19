@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/gremlin-core", "crates/gremlin-search", "crates/gremlin-cli", "crates/gremlin-native", "crates/gremlin-cuda", "crates/gremlin-verify"]
+members = ["crates/gremlin-core", "crates/gremlin-search", "crates/gremlin-cli", "crates/gremlin-native", "crates/gremlin-cuda", "crates/gremlin-verify", "crates/gremlin-codegen"]
 resolver = "2"
 [workspace.package]
 version = "0.1.0"

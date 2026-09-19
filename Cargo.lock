@@ -66,11 +66,23 @@ dependencies = [
 name = "gremlin-cli"
 version = "0.1.0"
 dependencies = [
+ "gremlin-codegen",
  "gremlin-core",
  "gremlin-cuda",
  "gremlin-native",
  "gremlin-search",
  "gremlin-verify",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "gremlin-codegen"
+version = "0.1.0"
+dependencies = [
+ "gremlin-core",
+ "gremlin-native",
+ "libc",
  "serde",
  "serde_json",
 ]
