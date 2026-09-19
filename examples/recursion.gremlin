@@ -1,0 +1,10 @@
+fn main(x: u8) -> u8 {
+    return factorial(x);
+}
+fn factorial(n: u8) -> u8 {
+    if eq(n, 0u8) {
+        return 1u8;
+    } else {
+        return mul(n, factorial(sub(n, 1u8)));
+    }
+}

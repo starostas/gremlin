@@ -5,3 +5,4 @@ pub mod engine;
 pub mod genome;
 pub use engine::*;
 pub use genome::*;
+pub mod structural;

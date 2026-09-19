@@ -109,9 +109,13 @@ fn artifacts_resume_and_integrity() {
     assert_eq!(report["holdout"]["actual_count"], 16);
     let checkpoint = dir.join("checkpoint.json");
     let before: Value = serde_json::from_slice(&fs::read(&checkpoint).unwrap()).unwrap();
+    let resumed = run(&["resume", checkpoint.to_str().unwrap()]);
     assert_eq!(
-        run(&["resume", checkpoint.to_str().unwrap()]).status.code(),
-        Some(0)
+        resumed.status.code(),
+        Some(0),
+        "stdout={} stderr={}",
+        String::from_utf8_lossy(&resumed.stdout),
+        String::from_utf8_lossy(&resumed.stderr)
     );
     let after: Value = serde_json::from_slice(&fs::read(&checkpoint).unwrap()).unwrap();
     assert_eq!(before["checkpoint"]["state"], after["checkpoint"]["state"]);

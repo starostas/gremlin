@@ -77,6 +77,7 @@ fn genome(source: &str) -> Genome {
         unreachable!()
     };
     Genome {
+        cfg: None,
         genes: f.blocks[0]
             .instructions
             .iter()
@@ -165,6 +166,7 @@ fn mixed_type_mutations_remain_valid() {
         return_type: Type::I8,
     };
     let mut g = Genome {
+        cfg: None,
         genes: vec![],
         output: 0,
     };
@@ -173,4 +175,27 @@ fn mixed_type_mutations_remain_valid() {
         g = mutate(&g, &signature, &config, &mut rng);
         g.lower(&signature).validate().unwrap();
     }
+}
+
+#[test]
+fn enumeration_discovers_chains_and_resumes() {
+    let mut c = config("composed_u64");
+    c.search.enumeration_depth = 2;
+    c.search.enumeration_proposals = 128;
+    let corpus = fixture_corpus("composed_u64", 1, 8).unwrap();
+    let engine = Engine::new(c.search.clone(), &corpus).unwrap();
+    let mut state = engine.initialize(3).unwrap();
+    engine.advance(&mut state).unwrap();
+    let mut resumed: SearchState =
+        serde_json::from_slice(&serde_json::to_vec(&state).unwrap()).unwrap();
+    for _ in 0..20 {
+        if state.best.fitness.matches() {
+            break;
+        }
+        engine.advance(&mut state).unwrap();
+        engine.advance(&mut resumed).unwrap();
+        assert_eq!(state, resumed);
+    }
+    assert!(state.best.fitness.matches());
+    assert!(state.enumeration_cursor > 0);
 }

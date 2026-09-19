@@ -1,6 +1,6 @@
 use crate::*;
 use std::collections::BTreeMap;
-fn lex(source: &str) -> Result<Vec<String>, String> {
+pub(crate) fn lex(source: &str) -> Result<Vec<String>, String> {
     let bytes = source.as_bytes();
     let mut i = 0;
     let mut out = Vec::new();
@@ -40,6 +40,7 @@ fn lex(source: &str) -> Result<Vec<String>, String> {
     Ok(out)
 }
 struct Parser {
+    callees: BTreeMap<String, Signature>,
     tokens: Vec<String>,
     pos: usize,
     names: BTreeMap<String, (Id, Type)>,
@@ -92,7 +93,7 @@ impl Parser {
         }
         let token = self.take()?;
         if self.peek() == "(" {
-            let op: Op = token.parse()?;
+            let op: Option<Op> = token.parse().ok();
             self.expect("(")?;
             let mut args = Vec::new();
             let mut types = Vec::new();
@@ -108,8 +109,26 @@ impl Parser {
                 }
             }
             self.expect(")")?;
-            let ty = op.result(&types)?;
-            Ok(self.emit(ty, Expr::Apply { op, args }))
+            if let Some(op) = op {
+                let ty = op.result(&types)?;
+                Ok(self.emit(ty, Expr::Apply { op, args }))
+            } else {
+                let signature = self
+                    .callees
+                    .get(&token)
+                    .ok_or_else(|| format!("unknown operator or function {token}"))?;
+                if types != signature.arguments {
+                    return Err(format!("call signature mismatch for {token}"));
+                }
+                let ty = signature.return_type;
+                Ok(self.emit(
+                    ty,
+                    Expr::Call {
+                        function: token,
+                        args,
+                    },
+                ))
+            }
         } else if let Some(v) = self.names.get(&token) {
             Ok(*v)
         } else if token == "true"
@@ -124,11 +143,25 @@ impl Parser {
     }
 }
 pub fn parse(source: &str) -> Result<Function, String> {
+    parse_with_signatures(source, &BTreeMap::new())
+}
+pub(crate) fn parse_with_signatures(
+    source: &str,
+    callees: &BTreeMap<String, Signature>,
+) -> Result<Function, String> {
     if source.len() > 1_000_000 {
         return Err("source exceeds 1 MB limit".into());
     }
+    let tokens = lex(source)?;
+    if tokens
+        .iter()
+        .any(|t| ["mut", "if", "else", "while", "loop", "break", "continue"].contains(&t.as_str()))
+    {
+        return crate::structured::parse_structured(tokens, callees);
+    }
     let mut p = Parser {
-        tokens: lex(source)?,
+        callees: callees.clone(),
+        tokens,
         pos: 0,
         names: BTreeMap::new(),
         instructions: Vec::new(),
@@ -159,6 +192,9 @@ pub fn parse(source: &str) -> Result<Function, String> {
     p.expect("->")?;
     let return_type = p.take()?.parse()?;
     p.expect("{")?;
+    if p.peek() == "block" {
+        return parse_cfg(p, parameters, return_type);
+    }
     while p.peek() == "let" {
         p.expect("let")?;
         let name = p.ident()?;
@@ -185,6 +221,7 @@ pub fn parse(source: &str) -> Result<Function, String> {
         return Err("expected exactly one function".into());
     }
     let f = Function {
+        callees: used_callees(&p.instructions, callees),
         schema_version: SCHEMA_VERSION,
         parameters,
         return_type,
@@ -200,8 +237,8 @@ pub fn parse(source: &str) -> Result<Function, String> {
 }
 pub fn print_source(f: &Function) -> Result<String, String> {
     let f = f.normalized()?;
-    if f.blocks.len() != 1 || !f.blocks[0].parameters.is_empty() {
-        return Err("source printer supports straight-line functions only".into());
+    if f.blocks.len() != 1 || !matches!(f.blocks[0].terminator, Terminator::Return { .. }) {
+        return print_cfg(&f);
     }
     let mut s = format!(
         "fn candidate({}) -> {} {{\n",
@@ -214,6 +251,13 @@ pub fn print_source(f: &Function) -> Result<String, String> {
     );
     for x in &f.blocks[0].instructions {
         let rhs = match &x.expr {
+            Expr::Call { function, args } => format!(
+                "{function}({})",
+                args.iter()
+                    .map(|v| format!("v{v}"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
             Expr::Const { value } => value.literal(),
             Expr::Apply { op, args } => format!(
                 "{op}({})",
@@ -231,4 +275,210 @@ pub fn print_source(f: &Function) -> Result<String, String> {
         return Err("source printer requires return terminator".into());
     }
     Ok(s)
+}
+
+fn block_id(name: &str) -> Result<Id, String> {
+    name.strip_prefix('b')
+        .ok_or("block IDs must be b followed by an integer")?
+        .parse()
+        .map_err(|_| "invalid block ID".into())
+}
+fn cfg_edge(p: &mut Parser) -> Result<Edge, String> {
+    let block = block_id(&p.take()?)?;
+    p.expect("(")?;
+    let mut args = vec![];
+    if p.peek() != ")" {
+        loop {
+            args.push(p.expr(0)?.0);
+            if p.peek() != "," {
+                break;
+            }
+            p.take()?;
+        }
+    }
+    p.expect(")")?;
+    Ok(Edge { block, args })
+}
+fn parse_cfg(mut p: Parser, parameters: Vec<Param>, return_type: Type) -> Result<Function, String> {
+    let mut blocks = vec![];
+    while p.peek() == "block" {
+        p.take()?;
+        let id = block_id(&p.take()?)?;
+        p.expect("(")?;
+        let mut block_parameters = vec![];
+        if p.peek() != ")" {
+            loop {
+                let name = p.ident()?;
+                p.expect(":")?;
+                let ty = p.take()?.parse()?;
+                let id = p.next;
+                p.next += 1;
+                if p.names.insert(name.clone(), (id, ty)).is_some() {
+                    return Err(format!("duplicate value {name}"));
+                }
+                block_parameters.push(Param { id, ty });
+                if p.peek() != "," {
+                    break;
+                }
+                p.take()?;
+            }
+        }
+        p.expect(")")?;
+        p.expect("{")?;
+        while p.peek() == "let" {
+            p.take()?;
+            let name = p.ident()?;
+            p.expect(":")?;
+            let ty: Type = p.take()?.parse()?;
+            p.expect("=")?;
+            let (id, actual) = p.expr(0)?;
+            if ty != actual {
+                return Err("CFG binding type mismatch".into());
+            }
+            p.expect(";")?;
+            if p.names.insert(name.clone(), (id, ty)).is_some() {
+                return Err(format!("duplicate value {name}"));
+            }
+        }
+        let terminator = match p.take()?.as_str() {
+            "return" => {
+                let (value, ty) = p.expr(0)?;
+                if ty != return_type {
+                    return Err("return type mismatch".into());
+                }
+                Terminator::Return { value }
+            }
+            "jump" => Terminator::Jump {
+                edge: cfg_edge(&mut p)?,
+            },
+            "branch" => {
+                let (condition, ty) = p.expr(0)?;
+                if ty != Type::Bool {
+                    return Err("branch condition must be bool".into());
+                }
+                p.expect(",")?;
+                let if_true = cfg_edge(&mut p)?;
+                p.expect(",")?;
+                let if_false = cfg_edge(&mut p)?;
+                Terminator::Branch {
+                    condition,
+                    if_true,
+                    if_false,
+                }
+            }
+            other => return Err(format!("expected CFG terminator, got {other}")),
+        };
+        p.expect(";")?;
+        p.expect("}")?;
+        blocks.push(Block {
+            id,
+            parameters: block_parameters,
+            instructions: std::mem::take(&mut p.instructions),
+            terminator,
+        });
+    }
+    p.expect("}")?;
+    if p.pos != p.tokens.len() {
+        return Err("expected exactly one function".into());
+    }
+    let entry = blocks.first().ok_or("CFG requires a block")?.id;
+    Function {
+        callees: used_callees(
+            &blocks
+                .iter()
+                .flat_map(|b| b.instructions.iter().cloned())
+                .collect::<Vec<_>>(),
+            &p.callees,
+        ),
+        schema_version: SCHEMA_VERSION,
+        parameters,
+        return_type,
+        entry,
+        blocks,
+    }
+    .normalized()
+}
+fn print_cfg(f: &Function) -> Result<String, String> {
+    let params = |ps: &[Param]| {
+        ps.iter()
+            .map(|p| format!("v{}: {}", p.id, p.ty))
+            .collect::<Vec<_>>()
+            .join(", ")
+    };
+    let edge = |e: &Edge| {
+        format!(
+            "b{}({})",
+            e.block,
+            e.args
+                .iter()
+                .map(|v| format!("v{v}"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
+    };
+    let mut source = format!(
+        "fn candidate({}) -> {} {{\n",
+        params(&f.parameters),
+        f.return_type
+    );
+    for block in &f.blocks {
+        source.push_str(&format!(
+            "    block b{}({}) {{\n",
+            block.id,
+            params(&block.parameters)
+        ));
+        for i in &block.instructions {
+            let expression = match &i.expr {
+                Expr::Call { function, args } => format!(
+                    "{function}({})",
+                    args.iter()
+                        .map(|v| format!("v{v}"))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+                Expr::Const { value } => value.literal(),
+                Expr::Apply { op, args } => format!(
+                    "{op}({})",
+                    args.iter()
+                        .map(|v| format!("v{v}"))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            };
+            source.push_str(&format!(
+                "        let v{}: {} = {};\n",
+                i.id, i.ty, expression
+            ));
+        }
+        let terminator = match &block.terminator {
+            Terminator::Return { value } => format!("return v{value}"),
+            Terminator::Jump { edge: e } => format!("jump {}", edge(e)),
+            Terminator::Branch {
+                condition,
+                if_true,
+                if_false,
+            } => format!("branch v{condition}, {}, {}", edge(if_true), edge(if_false)),
+        };
+        source.push_str(&format!("        {terminator};\n    }}\n"));
+    }
+    source.push_str("}\n");
+    Ok(source)
+}
+
+pub(crate) fn used_callees(
+    instructions: &[Instruction],
+    signatures: &BTreeMap<String, Signature>,
+) -> BTreeMap<String, Signature> {
+    instructions
+        .iter()
+        .filter_map(|i| {
+            if let Expr::Call { function, .. } = &i.expr {
+                signatures
+                    .get(function)
+                    .map(|s| (function.clone(), s.clone()))
+            } else {
+                None
+            }
+        })
+        .collect()
 }

@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/gremlin-core", "crates/gremlin-search", "crates/gremlin-cli"]
+members = ["crates/gremlin-core", "crates/gremlin-search", "crates/gremlin-cli", "crates/gremlin-native"]
 resolver = "2"
 [workspace.package]
 version = "0.1.0"
@@ -7,6 +7,6 @@ edition = "2021"
 license = "Apache-2.0"
 [workspace.dependencies]
 serde = { version = "=1.0.228", features = ["derive"] }
-serde_json = "=1.0.145"
+serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
 toml = "=0.8.23"
 sha2 = "=0.10.9"
