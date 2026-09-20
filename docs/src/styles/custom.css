@@ -449,6 +449,24 @@
 }
 
 /*
+ * Starlight lays the header out from the content column, and computes that
+ * column by subtracting the table of contents. The experiment pages switch the
+ * table of contents off, so Starlight zeroes its width and half the freed space
+ * lands in the first header column, carrying the search box about 174px to the
+ * right as you navigate onto one.
+ *
+ * Keep the header geometry fixed site-wide by giving these pages the same
+ * reservation a page with a table of contents makes. Nothing is rendered in
+ * that space; it only keeps the header from moving. (--__toc-width and
+ * --__toc-pad are Starlight internals, so this is worth re-checking on a major
+ * upgrade.)
+ */
+:root:not([data-has-toc]) .header {
+  --__toc-width: var(--sl-sidebar-width);
+  --__toc-pad: var(--sl-nav-pad-x);
+}
+
+/*
  * Widen the column rather than the island inside it. Starlight centres this
  * container, so capping it keeps the whole block centred in the pane; capping
  * the island instead left it anchored to the left gutter with the reclaimed
