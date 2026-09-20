@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm run check && mkdir -p public",
+  "outputDirectory": "public",
+  "functions": {
+    "api/internal/queue/dispatch.ts": {
+      "experimentalTriggers": [
+        {
+          "type": "queue/v2beta",
+          "topic": "gremlin-gpu-jobs"
+        }
+      ],
+      "maxDuration": 30
+    }
+  }
+}

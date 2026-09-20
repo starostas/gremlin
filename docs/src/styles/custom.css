@@ -67,3 +67,217 @@
 [data-has-hero] .sl-markdown-content > .sl-heading-wrapper:has(> #demos) ~ * {
   display: none;
 }
+
+/* The experiment islands deliberately use the same quiet surfaces and controls as the docs. */
+.experiment-island {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--sl-color-black) 92%, var(--sl-color-gray-6));
+  margin-block: 2rem;
+  padding: 1rem;
+}
+
+.experiment-toolbar,
+.experiment-fields,
+.experiment-actions,
+.experiment-robot-controls,
+.experiment-range {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.experiment-toolbar {
+  justify-content: space-between;
+}
+
+.experiment-human-check {
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+.experiment-fields label,
+.experiment-range {
+  color: var(--sl-color-gray-2);
+  flex-direction: column;
+  font-size: var(--sl-text-xs);
+  gap: 0.35rem;
+}
+
+.experiment-island input,
+.experiment-island select,
+.experiment-button {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  background: var(--sl-color-black);
+  color: var(--sl-color-gray-1);
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+}
+
+.experiment-island input {
+  min-width: 7rem;
+}
+
+.experiment-island select {
+  cursor: pointer;
+}
+
+.experiment-button {
+  cursor: pointer;
+}
+
+.experiment-button:hover:not(:disabled) {
+  border-color: var(--sl-color-gray-2);
+  color: var(--sl-color-white);
+}
+
+.experiment-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.experiment-button-primary {
+  background: var(--sl-color-white);
+  color: var(--sl-color-black);
+}
+
+.experiment-status {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-sm);
+  margin-block: 1rem;
+}
+
+.experiment-status-error {
+  color: var(--sl-color-gray-2);
+}
+
+.experiment-canvas-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.experiment-canvas-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.experiment-island figure {
+  margin: 0;
+}
+
+.experiment-island canvas {
+  border: 1px solid var(--sl-color-gray-5);
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.experiment-island figcaption {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+  margin-top: 0.45rem;
+}
+
+.experiment-metrics {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  margin-top: 0.75rem;
+}
+
+.experiment-metric {
+  border-top: 1px solid var(--sl-color-gray-5);
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.65rem;
+}
+
+.experiment-metric span {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+}
+
+.experiment-metric strong {
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-base);
+  font-weight: 500;
+}
+
+.experiment-code {
+  font-size: var(--sl-text-xs);
+  margin-block: 1rem 0;
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.experiment-chart,
+.experiment-details {
+  margin-top: 1rem;
+}
+
+.experiment-details {
+  border-top: 1px solid var(--sl-color-gray-5);
+  color: var(--sl-color-gray-2);
+  font-size: var(--sl-text-sm);
+  padding-top: 0.75rem;
+}
+
+.experiment-details summary {
+  color: var(--sl-color-gray-1);
+  cursor: pointer;
+}
+
+.experiment-details pre {
+  font-size: var(--sl-text-xs);
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.experiment-robot-layout {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 28rem) minmax(10rem, 1fr);
+}
+
+.experiment-robot-canvas {
+  cursor: crosshair;
+}
+
+.experiment-robot-controls {
+  align-items: center;
+}
+
+.experiment-robot-controls span {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-sm);
+}
+
+.experiment-range {
+  align-items: center;
+  flex-direction: row;
+  margin-top: 0.5rem;
+}
+
+.experiment-range input {
+  min-width: 0;
+  padding: 0;
+}
+
+.experiment-crc-canvas {
+  margin-top: 1rem;
+}
+
+@media (max-width: 42rem) {
+  .experiment-canvas-grid,
+  .experiment-canvas-grid-three,
+  .experiment-metrics,
+  .experiment-robot-layout {
+    grid-template-columns: 1fr;
+  }
+}

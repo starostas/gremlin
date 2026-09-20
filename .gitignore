@@ -5,3 +5,6 @@
 node_modules/
 .astro/
 dist/
+.env
+.env.*
+!.env.example

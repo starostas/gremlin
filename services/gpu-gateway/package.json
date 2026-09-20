@@ -1,0 +1,25 @@
+{
+  "name": "gremlin-gpu-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm run check",
+    "check": "tsc --noEmit",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.0",
+    "@vercel/oidc": "^3.8.8",
+    "@vercel/queue": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2",
+    "vercel": "^59.23.2"
+  }
+}

@@ -1,0 +1,22 @@
+# Named Cloudflare Tunnel for the GPU worker.
+#
+# The tunnel dials out, so the GPU host needs no inbound port and its address is
+# never published. Cloudflare terminates TLS at the hostname below, which is the
+# value the gateway uses for GPU_WORKER_URL.
+#
+# Install this at /etc/cloudflared/config.yml and place the tunnel's credentials
+# file beside it. Create both with:
+#
+#   cloudflared tunnel login
+#   cloudflared tunnel create gremlin-gpu
+#   cloudflared tunnel route dns gremlin-gpu gpu-worker.example.com
+#
+tunnel: gremlin-gpu
+credentials-file: /etc/cloudflared/gremlin-gpu.json
+
+ingress:
+  - hostname: gpu-worker.example.com
+    service: http://127.0.0.1:8080
+  # Anything that does not match the hostname above is refused rather than
+  # forwarded, so the tunnel exposes exactly one origin.
+  - service: http_status:404

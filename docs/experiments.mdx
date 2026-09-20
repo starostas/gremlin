@@ -1,38 +1,12 @@
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-These browser experiments pair Gremlin’s synthesis engine with small, visual tasks. Each project includes its own setup notes and recorded-playback details.
+These are small, bounded searches with recorded runs you can replay in the page. When the GPU gateway is configured, each page also exposes a bounded live run. The original standalone demos remain in `apps/` while the islands are verified.
 
 <CardGrid>
-  <LinkCard
-    title="Shader Detective"
-    href="https://github.com/starostas/gremlin/blob/main/apps/shader-detective/README.md"
-    description="Recover a hidden color transform."
-  />
-  <LinkCard
-    title="Shader Sculptor"
-    href="https://github.com/starostas/gremlin/blob/main/apps/shader-sculptor/README.md"
-    description="Reconstruct an image as a drawing program."
-  />
-  <LinkCard
-    title="Tiny Robot"
-    href="https://github.com/starostas/gremlin/blob/main/apps/tiny-robot/README.md"
-    description="Evolve a controller, then test it in a maze you draw."
-  />
-  <LinkCard
-    title="Landing Lab"
-    href="https://github.com/starostas/gremlin/blob/main/apps/landing-lab/README.md"
-    description="Search for a spacecraft landing controller."
-  />
-  <LinkCard
-    title="Orbit Forge"
-    href="https://github.com/starostas/gremlin/blob/main/apps/orbit-forge/README.md"
-    description="Evolve a numerical solver and visualize its orbits."
-  />
-  <LinkCard
-    title="CRC experiment"
-    href="https://github.com/starostas/gremlin/blob/main/examples/cksum-crc/README.md"
-    description="Try synthesizing part of cksum with a working component and recorded failures."
-  />
+  <LinkCard title="Shader Detective" href="/experiments/shader-detective/" description="Recover a hidden packed-color transform." />
+  <LinkCard title="Landing Lab" href="/experiments/landing-lab/" description="Search a controller for a bounded landing simulation." />
+  <LinkCard title="Tiny Robot" href="/experiments/tiny-robot/" description="Evolve a two-state maze controller, then edit its room." />
+  <LinkCard title="Shader Sculptor" href="/experiments/shader-sculptor/" description="Turn an image into a layered drawing program." />
+  <LinkCard title="Orbit Forge" href="/experiments/orbit-forge/" description="Search a numerical solver for Kepler’s equation." />
+  <LinkCard title="CRC feedback" href="/experiments/cksum-crc/" description="Inspect the small subproblem that made a CRC experiment tractable." />
 </CardGrid>
-
-The source repositories are the canonical place for each experiment’s environment, inputs, and playback instructions.

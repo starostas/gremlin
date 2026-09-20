@@ -1,0 +1,241 @@
+.tiny-robot-parity {
+  margin-top: 1rem;
+}
+
+.tiny-robot-panel,
+.tiny-robot-gallery-section {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.tiny-robot-panel-heading {
+  align-items: center;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.75rem;
+}
+
+.tiny-robot-panel-heading h3 {
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-base);
+  font-weight: 500;
+  margin: 0;
+}
+
+.tiny-robot-panel-heading p {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+  margin: 0.15rem 0 0;
+}
+
+.tiny-robot-canvas {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.tiny-robot-tools,
+.tiny-robot-playback {
+  border-top: 1px solid var(--sl-color-gray-5);
+  padding: 0.75rem;
+}
+
+.tiny-robot-tools {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tiny-robot-tools > span,
+.tiny-robot-playback label,
+.tiny-robot-sensors span,
+.tiny-robot-decision > span,
+.tiny-robot-metrics span {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+}
+
+.tiny-robot-tool-active {
+  border-color: var(--sl-color-gray-2);
+  color: var(--sl-color-white);
+}
+
+.tiny-robot-playback {
+  align-items: end;
+}
+
+.tiny-robot-playback label {
+  display: grid;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.tiny-robot-outcome {
+  align-items: baseline;
+  border-top: 1px solid var(--sl-color-gray-5);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.75rem;
+}
+
+.tiny-robot-outcome strong {
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-sm);
+  font-weight: 500;
+}
+
+.tiny-robot-outcome-invalid strong {
+  color: var(--sl-color-gray-2);
+}
+
+.tiny-robot-outcome span,
+.tiny-robot-help,
+.tiny-robot-decision small {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+}
+
+.tiny-robot-help {
+  margin: 0;
+  padding: 0 0.75rem 0.75rem;
+}
+
+.tiny-robot-sensors {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0.75rem;
+}
+
+.tiny-robot-sensors > div {
+  border-left: 1px solid var(--sl-color-gray-5);
+  min-width: 0;
+  padding-left: 0.5rem;
+}
+
+.tiny-robot-sensors strong {
+  color: var(--sl-color-white);
+  display: block;
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-text-xs);
+  font-weight: 500;
+  margin-top: 0.3rem;
+}
+
+.tiny-robot-decision {
+  background: color-mix(in srgb, var(--sl-color-gray-6) 70%, var(--sl-color-black));
+  border-block: 1px solid var(--sl-color-gray-5);
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.75rem;
+}
+
+.tiny-robot-decision strong {
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-lg);
+  font-weight: 500;
+}
+
+.tiny-robot-rules-wrap {
+  overflow-x: auto;
+  padding: 0.75rem;
+}
+
+.tiny-robot-rules {
+  border-collapse: collapse;
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-text-xs);
+  min-width: 31rem;
+  width: 100%;
+}
+
+.tiny-robot-rules th {
+  color: var(--sl-color-gray-3);
+  font-weight: 400;
+  padding: 0.35rem;
+  text-align: left;
+}
+
+.tiny-robot-rules td {
+  border-top: 1px solid var(--sl-color-gray-5);
+  color: var(--sl-color-gray-2);
+  padding: 0.35rem;
+  white-space: nowrap;
+}
+
+.tiny-robot-rules .tiny-robot-rule-active td {
+  background: var(--sl-color-gray-5);
+  color: var(--sl-color-white);
+}
+
+.tiny-robot-source {
+  border-top: 1px solid var(--sl-color-gray-5);
+  padding: 0.75rem;
+}
+
+.tiny-robot-source summary {
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  font-size: var(--sl-text-sm);
+}
+
+.tiny-robot-gallery-section {
+  margin-top: 1rem;
+}
+
+.tiny-robot-gallery {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 0.75rem;
+}
+
+.tiny-robot-gallery-item {
+  background: var(--sl-color-black);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.25rem;
+  color: var(--sl-color-gray-3);
+  cursor: pointer;
+  font: inherit;
+  min-width: 0;
+  padding: 0.3rem;
+}
+
+.tiny-robot-gallery-item:hover,
+.tiny-robot-gallery-selected {
+  border-color: var(--sl-color-gray-2);
+}
+
+.tiny-robot-gallery-item canvas {
+  border: 0;
+  width: 100%;
+}
+
+.tiny-robot-gallery-item span {
+  display: block;
+  font-size: var(--sl-text-xs);
+  margin-top: 0.3rem;
+}
+
+.tiny-robot-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 42rem) {
+  .tiny-robot-sensors,
+  .tiny-robot-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tiny-robot-gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tiny-robot-playback label {
+    margin-left: 0;
+  }
+}
