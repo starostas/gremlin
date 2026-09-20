@@ -81,7 +81,7 @@ async function writeSlots(slots: PendingSlots, etag?: string) {
     addRandomSuffix: false,
     ...(etag ? { allowOverwrite: true, ifMatch: etag } : { ifNoneMatch: '*' }),
     contentType,
-    cacheControlMaxAge: 60
+    cacheControlMaxAge: 0
   });
 }
 
@@ -148,7 +148,7 @@ export async function createJob(state: JobState) {
     access: 'private',
     addRandomSuffix: false,
     contentType,
-    cacheControlMaxAge: 60
+    cacheControlMaxAge: 0
   });
 }
 
@@ -169,11 +169,13 @@ export async function updateJob(
         allowOverwrite: true,
         ifMatch: stored.etag,
         contentType,
-        cacheControlMaxAge: 60
+        cacheControlMaxAge: 0
       });
       return next;
     } catch (error) {
       if (!(error instanceof BlobPreconditionFailedError) || attempt === retryLimit - 1) throw error;
+      // Back off before re-reading so a racing write has time to settle.
+      await new Promise((settle) => setTimeout(settle, 50 * (attempt + 1)));
     }
   }
   throw new Error('Unable to update the job after concurrent changes.');
