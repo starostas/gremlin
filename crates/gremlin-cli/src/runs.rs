@@ -176,7 +176,8 @@ pub fn synthesize_with_candidate(c: Config, candidate: Option<Function>) -> Resu
                 &dir.join("initial.gremlin"),
                 print_source(&f).map_err(input)?.as_bytes(),
             )?;
-            let fitness = engine.evaluate(&genome).map_err(input)?;
+            let mut fitness = engine.evaluate(&genome).map_err(input)?;
+            fitness.cases.clear();
             state.population[0] = Individual { genome, fitness };
             state.population.sort_by(|a, b| a.fitness.cmp(&b.fitness));
             state.best = state.population[0].clone();
@@ -494,7 +495,19 @@ fn finish(
     if level == Some("E2") {
         evidence.push(json!({"level":"E2","scope":scope,"candidate_hash":candidate_hash,"holdout":holdout,"assumptions":["sampled differential evidence, not proof"]}));
     }
-    let report = json!({"schema_version":2,"semantics_version":SEMANTICS_VERSION,"run_identity":object_hash(&(cp.config_hash.clone(),cp.corpus_hash.clone(),cp.build_identity.clone())),"build_identity":cp.build_identity,"target":cp.corpus.target,"target_hash":cp.target_hash,"oracle":oracle.details(),"seed":cp.config.seed,"configuration":cp.config,"candidate_hash":candidate_hash,"initial_candidate_hash":cp.initial_candidate_hash,"corpus_hash":cp.corpus_hash,"corpus_count":cp.corpus.cases.len(),"backend":if cp.config.search.cuda.is_some(){"cuda"}else{"cpu-reference"},"evaluation_count":cp.state.evaluation_count,"evaluation_count_unit":"candidate-case search executions including corpus regrading","generations":cp.state.generation,"runtime_seconds":cp.runtime_seconds,"execution_failure_counts":cp.state.failures,"best_fitness":cp.state.best.fitness,"holdout":holdout,"refinement_rounds":cp.refinement_rounds,"counterexamples":cp.counterexamples,"stop_reason":reason,"run_status":status,"evidence_level":level,"evidence_scope":scope,"label":level.map(|_|"TESTED"),"successful_replacement":code==0,"evidence":evidence,"cuda_telemetry_file":cp.config.search.cuda.as_ref().map(|_|"cuda-batches.jsonl"),"unattempted_stages":["formal verification","LLVM/native compilation","external fuzzing"]});
+    // Detailed diagnostics are materialized once, not stored for every population member.
+    let best_fitness = Engine::new(cp.config.search.clone(), &cp.corpus)
+        .map_err(infra)?
+        .evaluate(&cp.state.best.genome)
+        .map_err(infra)?;
+    let mut compact = best_fitness.clone();
+    compact.cases.clear();
+    let mut stored = cp.state.best.fitness.clone();
+    stored.cases.clear();
+    if compact != stored {
+        return Err(infra("best fitness differs from CPU replay"));
+    }
+    let report = json!({"schema_version":2,"semantics_version":SEMANTICS_VERSION,"run_identity":object_hash(&(cp.config_hash.clone(),cp.corpus_hash.clone(),cp.build_identity.clone())),"build_identity":cp.build_identity,"target":cp.corpus.target,"target_hash":cp.target_hash,"oracle":oracle.details(),"seed":cp.config.seed,"configuration":cp.config,"candidate_hash":candidate_hash,"initial_candidate_hash":cp.initial_candidate_hash,"corpus_hash":cp.corpus_hash,"corpus_count":cp.corpus.cases.len(),"backend":if cp.config.search.cuda.is_some(){"cuda"}else{"cpu-reference"},"evaluation_count":cp.state.evaluation_count,"evaluation_count_unit":"candidate-case search executions including corpus regrading","generations":cp.state.generation,"runtime_seconds":cp.runtime_seconds,"execution_failure_counts":cp.state.failures,"best_fitness":best_fitness,"holdout":holdout,"refinement_rounds":cp.refinement_rounds,"counterexamples":cp.counterexamples,"stop_reason":reason,"run_status":status,"evidence_level":level,"evidence_scope":scope,"label":level.map(|_|"TESTED"),"successful_replacement":code==0,"evidence":evidence,"cuda_telemetry_file":cp.config.search.cuda.as_ref().map(|_|"cuda-batches.jsonl"),"unattempted_stages":["formal verification","LLVM/native compilation","external fuzzing"]});
     write_json(dir, "report.json", &report)?;
     let mut hashes = cp.file_hashes.clone();
     for name in [

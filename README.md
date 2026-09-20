@@ -2,6 +2,8 @@
 
 gremlin searches for small integer programs matching observed behavior. This repository implements all nine milestones (M0–M2 and D1–D6) of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, optional CUDA evaluation, and narrow binary-scoped formal verification. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
 
+Try [Shader Detective](apps/shader-detective/README.md), a browser demo that recovers a hidden color transform and compares the same search on CPU and GPU. A labeled recorded demo is included.
+
 ## Build and use
 
 Rust 1.90.0 and a system linker are required. Full integration tests additionally require Bubblewrap, Z3, Clang 18 and compiler-rt/libFuzzer; optional workflows check their prerequisites explicitly. Dependencies are pinned in `Cargo.toml` and `Cargo.lock`; execution needs no network, CUDA, LLVM, solver, or external service.
@@ -29,13 +31,13 @@ Each run writes:
 - `config.json`: normalized, fully explicit configuration.
 - `corpus.json` and `provenance.json`: canonical observations and separate provenance.
 - `best.gremlin` and `best.ir.json`: candidate source and normalized IR.
-- `checkpoint.json`: a generation-boundary population, per-case fitness, complete RNG state, best candidate, identities, and checksums.
+- `checkpoint.json`: a generation-boundary population, compact fitness totals, complete RNG state, best candidate, identities, and checksums.
 - `report.json`: stop reason, status, evidence scope, corpus and holdout results, execution counts, configuration, and runtime.
 - `integrity.json`: SHA-256 of every completed artifact above.
 
 Checkpoints are atomically replaced after each completed generation. Resume verifies the checkpoint payload checksum, static input file hashes, executable identity, semantics/PRNG versions, configuration, fixture fingerprint, corpus identity, population validity, and recalculated fitness. It continues from the last completed generation. Use the same executable build and working directory as the original run. A final checkpoint can also be resumed to reproduce its validation report. Timing telemetry may differ; population, RNG, candidate sequence, and fitness remain deterministic.
 
-A `.running` file prevents concurrent writers. After an externally killed process, confirm it has stopped and remove that stale file before resuming. Temporary files can remain after a crash; the checkpoint itself is replaced by atomic rename. Checkpoint serialization retains every case outcome and therefore grows with population × corpus size.
+A `.running` file prevents concurrent writers. After an externally killed process, confirm it has stopped and remove that stale file before resuming. Temporary files can remain after a crash; the checkpoint itself is replaced by atomic rename. Population fitness stores aggregate totals, with empty `cases` arrays. Resume recomputes those totals on CPU. The final report materializes detailed per-case results for the best candidate; checkpoints do not retain the full population × corpus outcome matrix.
 
 Exit codes: 0 successful check/execution or requested tests passed; 2 invalid input/configuration; 3 exhausted search without a corpus match; 4 infrastructure failure; 5 execution trap/timeout; 6 holdout counterexample.
 

@@ -8,3 +8,6 @@ pub mod genome;
 pub use engine::*;
 pub use genome::*;
 pub mod structural;
+
+pub mod scoring;
+pub use scoring::*;
