@@ -449,21 +449,19 @@
 }
 
 /*
- * Starlight lays the header out from the content column, and computes that
- * column by subtracting the table of contents. The experiment pages switch the
- * table of contents off, so Starlight zeroes its width and half the freed space
- * lands in the first header column, carrying the search box about 174px to the
- * right as you navigate onto one.
+ * Starlight lays the header out from the content column and computes that
+ * column by subtracting the table of contents, so a page that switches the
+ * table of contents off moves the search box: half the freed width lands in the
+ * first header column.
  *
- * Keep the header geometry fixed site-wide by giving these pages the same
- * reservation a page with a table of contents makes. Nothing is rendered in
- * that space; it only keeps the header from moving. (--__toc-width and
- * --__toc-pad are Starlight internals, so this is worth re-checking on a major
- * upgrade.)
+ * The experiment pages therefore keep their table of contents in the document,
+ * which leaves Starlight's own header maths identical everywhere, and hide the
+ * panel here instead. An outline of one or two entries was not worth the column
+ * on these pages, but it was never worth a header that jumps either.
  */
-:root:not([data-has-toc]) .header {
-  --__toc-width: var(--sl-sidebar-width);
-  --__toc-pad: var(--sl-nav-pad-x);
+.main-frame:has(.experiment-island) .right-sidebar-container,
+.main-frame:has(.experiment-island) mobile-starlight-toc {
+  display: none;
 }
 
 /*
