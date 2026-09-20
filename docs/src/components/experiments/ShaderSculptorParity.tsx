@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { CodeBlock, Metric, Outcome, Section } from './IslandChrome';
+import { CodeBlock, Metric, Outcome, Section, canvasPalette } from './IslandChrome';
 
 /**
  * The portable event shape emitted by Shader Sculptor. The GPU gateway keeps
@@ -328,7 +328,7 @@ function rasterizeImage(loaded: LoadedImage, size: number): Target {
   canvas.height = size;
   const context = canvas.getContext('2d');
   if (!context) throw new Error('The browser could not create an image canvas.');
-  context.fillStyle = '#101820';
+  context.fillStyle = canvasPalette(canvas).ground;
   context.fillRect(0, 0, size, size);
 
   const image = loaded.source as { width: number; height: number } & CanvasImageSource;

@@ -1,4 +1,5 @@
 import type { ComponentChildren } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 /**
  * Chrome shared by every island so the experiments read the same way: one
@@ -111,4 +112,53 @@ export function Outcome({
       {note && <p class="experiment-note">{note}</p>}
     </Section>
   );
+}
+
+/**
+ * Canvas colours taken from the site's own palette rather than written into the
+ * drawing code, so a chart is not a black rectangle on a white page. Starlight
+ * inverts these tokens between themes: `--sl-color-black` is the page ground
+ * and `--sl-color-white` the ink, whichever theme is active.
+ */
+export type CanvasPalette = {
+  ground: string;
+  grid: string;
+  ink: string;
+  strong: string;
+  muted: string;
+  faint: string;
+  invert: string;
+};
+
+export function canvasPalette(element?: Element | null): CanvasPalette {
+  const style = getComputedStyle(element ?? document.documentElement);
+  const token = (name: string, fallback: string) => style.getPropertyValue(name).trim() || fallback;
+  return {
+    ground: token('--sl-color-gray-6', '#141518'),
+    grid: token('--sl-color-gray-5', '#242529'),
+    ink: token('--sl-color-white', '#f5f5f6'),
+    strong: token('--sl-color-gray-1', '#dedee0'),
+    muted: token('--sl-color-gray-2', '#b3b4b8'),
+    faint: token('--sl-color-gray-3', '#7b7d83'),
+    invert: token('--sl-color-black', '#08090b')
+  };
+}
+
+/**
+ * Canvases are painted imperatively, so switching theme would otherwise leave
+ * the previous palette on screen until something else forced a redraw. This
+ * changes on every theme switch and belongs in a drawing effect's dependencies.
+ */
+export function useTheme() {
+  const [theme, setTheme] = useState(() =>
+    typeof document === 'undefined' ? 'dark' : document.documentElement.dataset.theme ?? 'dark'
+  );
+  useEffect(() => {
+    const observer = new MutationObserver(() =>
+      setTheme(document.documentElement.dataset.theme ?? 'dark')
+    );
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, []);
+  return theme;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { Metric } from './IslandChrome';
+import { Metric, canvasPalette, useTheme, type CanvasPalette } from './IslandChrome';
 import type { JSX } from 'preact';
 import './TinyRobotParity.css';
 
@@ -203,6 +203,7 @@ function sourceForDisplay(source: unknown) {
 
 function drawIcon(
   context: CanvasRenderingContext2D,
+  palette: CanvasPalette,
   kind: 'key' | 'door' | 'exit' | 'robot',
   x: number,
   y: number,
@@ -216,7 +217,7 @@ function drawIcon(
   context.lineJoin = 'round';
 
   if (kind === 'key') {
-    context.strokeStyle = '#f5f5f6';
+    context.strokeStyle = palette.ink;
     context.beginPath();
     context.arc(-size * 0.15, 0, size * 0.16, 0, Math.PI * 2);
     context.moveTo(size * 0.01, 0);
@@ -228,16 +229,16 @@ function drawIcon(
   }
 
   if (kind === 'door') {
-    context.fillStyle = '#7b7d83';
+    context.fillStyle = palette.faint;
     context.fillRect(-size * 0.25, -size * 0.33, size * 0.5, size * 0.66);
-    context.strokeStyle = '#dedee0';
+    context.strokeStyle = palette.strong;
     context.strokeRect(-size * 0.25, -size * 0.33, size * 0.5, size * 0.66);
-    context.fillStyle = '#08090b';
+    context.fillStyle = palette.invert;
     context.fillRect(size * 0.07, -size * 0.02, size * 0.07, size * 0.07);
   }
 
   if (kind === 'exit') {
-    context.strokeStyle = '#f5f5f6';
+    context.strokeStyle = palette.ink;
     context.beginPath();
     context.arc(0, 0, size * 0.28, 0, Math.PI * 2);
     context.moveTo(-size * 0.14, 0);
@@ -251,14 +252,14 @@ function drawIcon(
 
   if (kind === 'robot') {
     context.rotate((heading * Math.PI) / 2);
-    context.fillStyle = '#aeb0b5';
+    context.fillStyle = palette.muted;
     context.beginPath();
     context.moveTo(0, -size * 0.29);
     context.lineTo(size * 0.24, size * 0.22);
     context.lineTo(-size * 0.24, size * 0.22);
     context.closePath();
     context.fill();
-    context.fillStyle = '#08090b';
+    context.fillStyle = palette.invert;
     context.fillRect(-size * 0.08, -size * 0.05, size * 0.16, size * 0.13);
   }
   context.restore();
@@ -277,20 +278,21 @@ function drawBoard(
   canvas.height = size;
   const context = canvas.getContext('2d');
   if (!context) return;
+  const palette = canvasPalette(canvas);
 
   const cellSize = size / 8;
   const state = frames?.[Math.min(frame, Math.max(0, frames.length - 1))] ?? [room.start, room.heading, 0, false];
   const visited = new Set((frames ?? []).slice(0, frame + 1).map(([cell]) => cell));
-  context.fillStyle = '#08090b';
+  context.fillStyle = palette.invert;
   context.fillRect(0, 0, size, size);
 
   for (let cell = 0; cell < 64; cell += 1) {
     const x = (cell % 8) * cellSize;
     const y = Math.floor(cell / 8) * cellSize;
-    context.fillStyle = wall(room, cell) ? '#27292e' : visited.has(cell) ? '#b3b4b8' : '#dedee0';
+    context.fillStyle = wall(room, cell) ? palette.grid : visited.has(cell) ? palette.muted : palette.strong;
     context.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
     if (!mini && wall(room, cell)) {
-      context.fillStyle = '#34363b';
+      context.fillStyle = palette.grid;
       context.fillRect(x + cellSize * 0.14, y + cellSize * 0.14, cellSize * 0.72, 2);
     }
   }
@@ -309,14 +311,14 @@ function drawBoard(
   }
 
   const item = (kind: 'key' | 'door' | 'exit' | 'robot', cell: number, direction?: number) =>
-    drawIcon(context, kind, (cell % 8 + 0.5) * cellSize, (Math.floor(cell / 8) + 0.5) * cellSize, cellSize * 0.78, direction);
+    drawIcon(context, palette, kind, (cell % 8 + 0.5) * cellSize, (Math.floor(cell / 8) + 0.5) * cellSize, cellSize * 0.78, direction);
 
   item('exit', room.exit);
   if (!state[3]) {
     item('key', room.key);
     item('door', room.door);
   } else {
-    context.strokeStyle = '#7b7d83';
+    context.strokeStyle = palette.faint;
     context.lineWidth = 2;
     context.strokeRect(
       (room.door % 8) * cellSize + cellSize * 0.22,
@@ -330,7 +332,7 @@ function drawBoard(
     const observed = sensors(room, state[0], state[1], state[3]);
     [state[1], (state[1] + 3) & 3, (state[1] + 1) & 3].forEach((direction, index) => {
       const cell = neighbor(state[0], direction);
-      context.strokeStyle = observed[index] ? '#5e6066' : '#7b7d83';
+      context.strokeStyle = observed[index] ? palette.faint : palette.faint;
       context.lineWidth = 3;
       context.strokeRect(
         (cell % 8) * cellSize + 5,
@@ -345,9 +347,10 @@ function drawBoard(
 
 function PreviewCanvas({ preview }: { preview: Preview }) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const theme = useTheme();
   useEffect(() => {
     drawBoard(canvas.current, preview.room, preview.frames, Math.max(0, preview.frames.length - 1), true);
-  }, [preview]);
+  }, [preview, theme]);
   return <canvas ref={canvas} aria-hidden="true" />;
 }
 
@@ -410,6 +413,7 @@ function reading(value: boolean | undefined) {
  * here to show the same brain in the editor.
  */
 export default function TinyRobotParity({ recording, events, current }: TinyRobotParityProps) {
+  const theme = useTheme();
   const recordingEvents = Array.isArray(recording)
     ? recording
     : Array.isArray(recording?.events)
@@ -452,7 +456,7 @@ export default function TinyRobotParity({ recording, events, current }: TinyRobo
 
   useEffect(() => {
     drawBoard(canvas.current, room, trace?.frames, visibleFrame);
-  }, [room, trace?.frames, visibleFrame]);
+  }, [room, trace?.frames, visibleFrame, theme]);
 
   useEffect(() => {
     setPlaying(false);

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import ShaderSculptorParity, { type ShaderSculptorRunInput } from './ShaderSculptorParity';
 import TinyRobotParity from './TinyRobotParity';
-import { CodeBlock, Metric, Outcome, Section } from './IslandChrome';
+import { CodeBlock, Metric, Outcome, Section, canvasPalette, useTheme } from './IslandChrome';
 
 export type DemoId =
   | 'shader-detective'
@@ -415,9 +415,10 @@ function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number,
   canvas.height = height;
   const context = canvas.getContext('2d');
   if (!context) return;
-  context.fillStyle = '#101114';
+  const palette = canvasPalette(canvas);
+  context.fillStyle = palette.ground;
   context.fillRect(0, 0, width, height);
-  context.strokeStyle = '#303237';
+  context.strokeStyle = palette.grid;
   context.lineWidth = 1;
   for (let y = 20; y < height; y += 24) {
     context.beginPath();
@@ -433,7 +434,7 @@ function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number,
   const highest = Math.max(...scaled.map(([, value]) => value));
   const lowest = logarithmic ? Math.min(...scaled.map(([, value]) => value)) : 0;
   const span = Math.max(highest - lowest, logarithmic ? 1 : 0.001);
-  context.strokeStyle = '#d5d6d9';
+  context.strokeStyle = palette.ink;
   context.lineWidth = 1.5;
   context.beginPath();
   scaled.forEach(([generation, value], index) => {
@@ -447,6 +448,7 @@ function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number,
 
 function ShaderDetective() {
   const demo = useDemoRun('shader-detective');
+  const theme = useTheme();
   const inputCanvas = useRef<HTMLCanvasElement>(null);
   const targetCanvas = useRef<HTMLCanvasElement>(null);
   const previewCanvas = useRef<HTMLCanvasElement>(null);
@@ -493,7 +495,7 @@ function ShaderDetective() {
     drawPixels(targetCanvas.current, demo.data, start?.target, width, height);
     drawPixels(previewCanvas.current, demo.data, preview, width, height);
   }, [demo.data, height, preview, start, width]);
-  useEffect(() => drawErrorChart(chartCanvas.current, curve), [curve]);
+  useEffect(() => drawErrorChart(chartCanvas.current, curve), [curve, theme]);
 
   const mismatches = current?.mismatches;
   const accuracy =
@@ -602,15 +604,16 @@ function drawLanding(canvas: HTMLCanvasElement | null, traces: Json[], phase: nu
   canvas.height = height;
   const context = canvas.getContext('2d');
   if (!context) return;
-  context.fillStyle = '#101114';
+  const palette = canvasPalette(canvas);
+  context.fillStyle = palette.ground;
   context.fillRect(0, 0, width, height);
-  context.strokeStyle = '#303237';
+  context.strokeStyle = palette.grid;
   context.lineWidth = 1;
   context.beginPath();
   context.moveTo(0, height - 34);
   context.lineTo(width, height - 34);
   context.stroke();
-  context.fillStyle = '#b8bbc1';
+  context.fillStyle = palette.muted;
   context.fillRect(width / 2 - 22, height - 37, 44, 3);
   const x = (value: number) => width / 2 + (value * width) / 1900;
   const y = (value: number) => height - 36 - (Math.max(0, value) * (height - 64)) / 7000;
@@ -623,16 +626,19 @@ function drawLanding(canvas: HTMLCanvasElement | null, traces: Json[], phase: nu
       if (index === 0) context.moveTo(x(point[0]), y(point[1]));
       else context.lineTo(x(point[0]), y(point[1]));
     });
-    context.strokeStyle = trace.safe ? 'rgb(184 187 193 / 45%)' : 'rgb(126 129 135 / 28%)';
+    context.globalAlpha = trace.safe ? 0.45 : 0.28;
+    context.strokeStyle = trace.safe ? palette.muted : palette.faint;
     context.stroke();
+    context.globalAlpha = 1;
     const point = frames[Math.min(frame, frames.length - 1)];
-    context.fillStyle = trace.safe ? '#f5f5f6' : '#92959b';
+    context.fillStyle = trace.safe ? palette.ink : palette.faint;
     context.fillRect(x(point[0]) - 2, y(point[1]) - 2, 4, 4);
   }
 }
 
 function LandingLab() {
   const demo = useDemoRun('landing-lab');
+  const theme = useTheme();
   const baselineCanvas = useRef<HTMLCanvasElement>(null);
   const bestCanvas = useRef<HTMLCanvasElement>(null);
   const [mode, setMode] = useState<'cpu' | 'gpu' | 'both'>('both');
@@ -660,7 +666,7 @@ function LandingLab() {
     };
     animate();
     return () => cancelAnimationFrame(frame);
-  }, [baseline, best]);
+  }, [baseline, best, theme]);
 
   return (
     <section class="experiment-island" aria-label="Landing Lab interactive demo">
@@ -943,7 +949,8 @@ function drawOrbit(canvas: HTMLCanvasElement | null, genome: Json | undefined, e
   canvas.height = height;
   const context = canvas.getContext('2d');
   if (!context) return;
-  context.fillStyle = '#101114';
+  const palette = canvasPalette(canvas);
+  context.fillStyle = palette.ground;
   context.fillRect(0, 0, width, height);
   const scale = 108;
   const centerX = width / 2 + eccentricity * scale * 0.45;
@@ -952,7 +959,7 @@ function drawOrbit(canvas: HTMLCanvasElement | null, genome: Json | undefined, e
     centerX + scale * (Math.cos(angle) - eccentricity),
     centerY + scale * Math.sqrt(1 - eccentricity * eccentricity) * Math.sin(angle)
   ];
-  context.strokeStyle = '#676a70';
+  context.strokeStyle = palette.faint;
   context.beginPath();
   for (let degree = 0; degree <= 360; degree += 1) {
     const [x, y] = point((degree * Math.PI) / 180);
@@ -960,7 +967,7 @@ function drawOrbit(canvas: HTMLCanvasElement | null, genome: Json | undefined, e
     else context.lineTo(x, y);
   }
   context.stroke();
-  context.fillStyle = '#f5f5f6';
+  context.fillStyle = palette.ink;
   context.beginPath();
   context.arc(centerX, centerY, 5, 0, Math.PI * 2);
   context.fill();
@@ -976,17 +983,19 @@ function drawOrbit(canvas: HTMLCanvasElement | null, genome: Json | undefined, e
       ? solveOrbit(genome, Math.round(trailMean * Number(Q)), eccentricityFixed) / Number(Q)
       : orbitalTruth(trailMean, eccentricity);
     const [trailX, trailY] = point(trailSign * trail);
-    context.fillStyle = `rgb(174 176 181 / ${((25 - index) / 25) * 0.28})`;
+    context.globalAlpha = ((25 - index) / 25) * 0.28;
+    context.fillStyle = palette.muted;
     context.fillRect(trailX - 1, trailY - 1, 2, 2);
   }
+  context.globalAlpha = 1;
   const [referenceX, referenceY] = point(sign * reference);
-  context.strokeStyle = '#f5f5f6';
+  context.strokeStyle = palette.ink;
   context.lineWidth = 1.5;
   context.beginPath();
   context.arc(referenceX, referenceY, 9, 0, Math.PI * 2);
   context.stroke();
   const [x, y] = point(sign * actual);
-  context.fillStyle = '#aeb0b5';
+  context.fillStyle = palette.muted;
   context.beginPath();
   context.arc(x, y, 6, 0, Math.PI * 2);
   context.fill();
@@ -1000,14 +1009,24 @@ function drawHeatmap(canvas: HTMLCanvasElement | null, grid: number[] | undefine
   const context = canvas.getContext('2d');
   if (!context) return;
   const image = context.createImageData(256, 256);
+  // Ramp between the theme's own ground and ink rather than a fixed pair of
+  // greys, so the map stays legible in either theme.
+  const palette = canvasPalette(canvas);
+  const channels = (colour: string) => {
+    context.fillStyle = colour;
+    const parsed = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(context.fillStyle);
+    return parsed ? [1, 2, 3].map((i) => Number.parseInt(parsed[i], 16)) : [0, 0, 0];
+  };
+  const low = channels(palette.grid);
+  const high = channels(palette.strong);
   for (let y = 0; y < 256; y += 1) {
     for (let x = 0; x < 256; x += 1) {
       const value = grid[y * 256 + x];
       const ratio = Math.min(1, Math.max(0, Math.log10(Math.max(value, 1e-12) / (tolerance ?? 0.0001)) / 5 + 1));
       const index = ((255 - y) * 256 + x) * 4;
-      image.data[index] = Math.round(54 + ratio * 140);
-      image.data[index + 1] = Math.round(57 + ratio * 140);
-      image.data[index + 2] = Math.round(63 + ratio * 140);
+      for (let channel = 0; channel < 3; channel += 1) {
+        image.data[index + channel] = Math.round(low[channel] + ratio * (high[channel] - low[channel]));
+      }
       image.data[index + 3] = 255;
     }
   }
@@ -1016,6 +1035,7 @@ function drawHeatmap(canvas: HTMLCanvasElement | null, grid: number[] | undefine
 
 function OrbitForge() {
   const demo = useDemoRun('orbit-forge');
+  const theme = useTheme();
   const orbitCanvas = useRef<HTMLCanvasElement>(null);
   const heatCanvas = useRef<HTMLCanvasElement>(null);
   const errorCanvas = useRef<HTMLCanvasElement>(null);
@@ -1058,9 +1078,9 @@ function OrbitForge() {
       : undefined;
   const totalGenerations = last(demo.events, (event) => typeof event.generations === 'number')?.generations;
 
-  useEffect(() => drawOrbit(orbitCanvas.current, genome, eccentricity, phase), [genome, eccentricity, phase]);
-  useEffect(() => drawHeatmap(heatCanvas.current, done?.grid, done?.tolerance), [done]);
-  useEffect(() => drawErrorChart(errorCanvas.current, curve), [curve]);
+  useEffect(() => drawOrbit(orbitCanvas.current, genome, eccentricity, phase), [genome, eccentricity, phase, theme]);
+  useEffect(() => drawHeatmap(heatCanvas.current, done?.grid, done?.tolerance), [done, theme]);
+  useEffect(() => drawErrorChart(errorCanvas.current, curve), [curve, theme]);
   useEffect(() => {
     if (!animating) return;
     let frame = 0;
