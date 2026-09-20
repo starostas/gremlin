@@ -407,7 +407,10 @@
 }
 
 main:has(.experiment-island) .sl-container {
-  max-width: 56rem;
+  /* Let the experiment use the whole pane. Starlight's content panel keeps its
+     own gutter and the island adds its padding inside that, so the canvases
+     still stand off the edge. */
+  max-width: none;
 }
 
 main:has(.experiment-island) .sl-markdown-content > :not(astro-island) {
