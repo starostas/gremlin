@@ -329,6 +329,9 @@
  * the left edge lines up with the headings above it.
  */
 .experiment-details {
+  /* Starlight accents a details block with a left border; the band is ruled
+     across the top only, like every section above it. */
+  border: 0;
   border-top: 1px solid var(--sl-color-gray-6);
   color: var(--sl-color-gray-2);
   font-size: var(--sl-text-sm);
