@@ -23,6 +23,12 @@ export const pages = {
       ]
     }
   },
+  'docs/introduction.md': {
+    id: 'introduction',
+    route: '/introduction/',
+    title: 'What Gremlin is',
+    description: 'What Gremlin searches for, what it accepts, and what its results claim.'
+  },
   'docs/experiments.mdx': {
     id: 'experiments',
     route: '/experiments/',

@@ -37,6 +37,7 @@ export default defineConfig({
       },
       sidebar: [
         { label: 'Overview', slug: 'index' },
+        { label: 'What Gremlin is', slug: 'introduction' },
         {
           label: 'Experiments',
           items: [
