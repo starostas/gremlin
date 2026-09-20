@@ -407,10 +407,18 @@
 }
 
 main:has(.experiment-island) .sl-container {
-  /* Let the experiment use the whole pane. Starlight's content panel keeps its
-     own gutter and the island adds its padding inside that, so the canvases
-     still stand off the edge. */
+  /* The container stays uncapped so the prose keeps the left edge and gutter it
+     has on every other page; the island alone is given the extra width. */
   max-width: none;
+}
+
+/*
+ * The experiment reaches past the text column without running to the edge of
+ * the pane, so it reads as a figure the prose is wrapped around rather than a
+ * full-bleed band.
+ */
+main:has(.experiment-island) .experiment-island {
+  max-width: 68rem;
 }
 
 main:has(.experiment-island) .sl-markdown-content > :not(astro-island) {

@@ -16,6 +16,18 @@ type AssetClaims = {
   exp: number;
 };
 
+/**
+ * A problem with the supplied upload rather than with the GPU worker. It will
+ * never succeed on retry, so the dispatcher fails the job instead of returning
+ * it to the queue.
+ */
+export class SculptorAssetError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SculptorAssetError';
+  }
+}
+
 const isResolution = (value: unknown): value is SculptorResolution =>
   typeof value === 'number' && resolutions.includes(value as SculptorResolution);
 
@@ -99,15 +111,19 @@ export function parseSculptorAsset(reference: SculptorAssetReference) {
 /** Reads only an asset that was authorized for this exact job request. */
 export async function readSculptorAsset(reference: SculptorAssetReference) {
   const claims = parseSculptorAsset(reference);
-  if (!claims) throw new Error('The image upload has expired or is invalid.');
+  if (!claims) throw new SculptorAssetError('The image upload has expired or is invalid.');
   const result = await get(sculptorAssetPath(claims.id), { access: 'private', useCache: false });
-  if (!result || result.statusCode !== 200 || result.blob.size !== claims.byteLength) {
-    throw new Error('The uploaded image is unavailable.');
+  // The metadata this returns for a private blob reports a size of zero even on
+  // a 200 with a full body, so it cannot be used to screen the upload. The
+  // authoritative check is below, against the bytes actually read: both the
+  // length and the digest must match what was signed at authorization.
+  if (!result || result.statusCode !== 200) {
+    throw new SculptorAssetError('The uploaded image is unavailable.');
   }
   const bytes = Buffer.from(await new Response(result.stream).arrayBuffer());
   const actual = createHash('sha256').update(bytes).digest('hex');
   if (bytes.byteLength !== claims.byteLength || actual !== claims.sha256) {
-    throw new Error('The uploaded image did not pass verification.');
+    throw new SculptorAssetError('The uploaded image did not pass verification.');
   }
   return { ...claims, bytes };
 }
