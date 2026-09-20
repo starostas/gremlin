@@ -163,6 +163,17 @@
   color: var(--sl-color-black);
 }
 
+/*
+ * The shared hover rule turns the label white, which is more specific than the
+ * primary variant and so applied to it too: white text on a white button. The
+ * primary button dims its ground on hover instead and keeps its dark label.
+ */
+.experiment-button-primary:hover:not(:disabled) {
+  background: var(--sl-color-gray-2);
+  border-color: var(--sl-color-white);
+  color: var(--sl-color-black);
+}
+
 .experiment-status {
   color: var(--sl-color-gray-3);
   font-size: var(--sl-text-sm);
