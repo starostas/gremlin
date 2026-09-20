@@ -1,0 +1,25 @@
+[Unit]
+Description=Gremlin GPU job worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gremlin-gpu
+Group=gremlin-gpu
+WorkingDirectory=/opt/gremlin/services/gpu-gateway/worker
+EnvironmentFile=/etc/gremlin-gpu-worker.env
+ExecStart=/usr/bin/env pnpm start
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/gremlin-gpu-worker
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+TasksMax=128
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

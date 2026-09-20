@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import preact from '@astrojs/preact';
 import repositoryContent from './src/remark-repository-content.mjs';
 
 const site =
@@ -13,6 +14,7 @@ export default defineConfig({
     remarkPlugins: [[repositoryContent, { base: '' }]]
   },
   integrations: [
+    preact(),
     starlight({
       title: 'Gremlin',
       description:
@@ -25,7 +27,18 @@ export default defineConfig({
       },
       sidebar: [
         { label: 'Overview', slug: 'index' },
-        { label: 'Experiments', slug: 'experiments' },
+        {
+          label: 'Experiments',
+          items: [
+            { label: 'Overview', slug: 'experiments' },
+            { label: 'Shader Detective', slug: 'experiments/shader-detective' },
+            { label: 'Landing Lab', slug: 'experiments/landing-lab' },
+            { label: 'Tiny Robot', slug: 'experiments/tiny-robot' },
+            { label: 'Shader Sculptor', slug: 'experiments/shader-sculptor' },
+            { label: 'Orbit Forge', slug: 'experiments/orbit-forge' },
+            { label: 'CRC feedback', slug: 'experiments/cksum-crc' }
+          ]
+        },
         {
           label: 'Get started',
           items: [

@@ -29,6 +29,42 @@ export const pages = {
     title: 'Experiments',
     description: 'Browser experiments and synthesis case studies built with Gremlin.'
   },
+  'docs/experiments/shader-detective.mdx': {
+    id: 'experiments/shader-detective',
+    route: '/experiments/shader-detective/',
+    title: 'Shader Detective',
+    description: 'Recover a hidden packed-color transform from observed input and output colors.'
+  },
+  'docs/experiments/landing-lab.mdx': {
+    id: 'experiments/landing-lab',
+    route: '/experiments/landing-lab/',
+    title: 'Landing Lab',
+    description: 'Search a bounded controller for a toy spacecraft landing simulation.'
+  },
+  'docs/experiments/tiny-robot.mdx': {
+    id: 'experiments/tiny-robot',
+    route: '/experiments/tiny-robot/',
+    title: 'Tiny Robot',
+    description: 'Evolve a small stateful controller and test it in editable maze rooms.'
+  },
+  'docs/experiments/shader-sculptor.mdx': {
+    id: 'experiments/shader-sculptor',
+    route: '/experiments/shader-sculptor/',
+    title: 'Shader Sculptor',
+    description: 'Approximate an image with a layered, executable drawing program.'
+  },
+  'docs/experiments/orbit-forge.mdx': {
+    id: 'experiments/orbit-forge',
+    route: '/experiments/orbit-forge/',
+    title: 'Orbit Forge',
+    description: 'Search numerical solver strategies for Kepler’s equation.'
+  },
+  'docs/experiments/cksum-crc.mdx': {
+    id: 'experiments/cksum-crc',
+    route: '/experiments/cksum-crc/',
+    title: 'CRC feedback',
+    description: 'Explore the discovered feedback term from the cksum CRC experiment.'
+  },
   'docs/usage.md': {
     id: 'usage',
     route: '/usage/',
