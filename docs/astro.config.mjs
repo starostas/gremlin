@@ -24,6 +24,9 @@ export default defineConfig({
         'Documentation for Gremlin, a deterministic search system for small integer programs.',
       customCss: ['./src/styles/custom.css'],
       favicon: '/favicon.ico',
+      social: [
+        { icon: 'github', label: 'Source on GitHub', href: 'https://github.com/starostas/gremlin' }
+      ],
       // The .ico carries the legacy sizes; these cover the cases that ignore it:
       // retina tabs, iOS home screens, and Android install prompts.
       head: [

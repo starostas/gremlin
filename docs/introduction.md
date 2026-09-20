@@ -30,4 +30,6 @@ Where a binary is the source of truth rather than a table of examples, Gremlin c
 
 ## Where to go next
 
+The source is on [GitHub](https://github.com/starostas/gremlin), including the engines behind each experiment and the measured runs they replay.
+
 The [experiments](/experiments/) are the fastest way to see what this looks like in practice — each one runs a bounded search and shows you the program it found beside the thing it was matching. [Getting started](/usage/) builds the CLI and runs a first search locally. The [language reference](/semantics/) defines the semantics that the interpreter, the GPU evaluator, the solver encoding and the native backend all have to agree on, and [supported features](/support/) is the precise statement of what is and is not in the contract.

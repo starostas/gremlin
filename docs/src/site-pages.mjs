@@ -19,6 +19,12 @@ export const pages = {
           text: 'Read the docs',
           link: '/introduction/',
           variant: 'minimal'
+        },
+        {
+          text: 'Source on GitHub',
+          link: 'https://github.com/starostas/gremlin',
+          variant: 'minimal',
+          icon: 'external'
         }
       ]
     }
