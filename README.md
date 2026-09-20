@@ -2,6 +2,8 @@
 
 gremlin searches for small integer programs matching observed behavior. This repository implements all nine milestones (M0–M2 and D1–D6) of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, optional CUDA evaluation, and narrow binary-scoped formal verification. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
 
+Try [Landing Lab](apps/landing-lab/README.md), a browser demo that searches spacecraft controllers across thousands of simulated flights. Its measured GPU search is 71.7× faster than the single-thread Gremlin CPU interpreter. A labeled recording is included.
+
 Try [Shader Detective](apps/shader-detective/README.md), a browser demo that recovers a hidden color transform and compares the same search on CPU and GPU. A labeled recorded demo is included.
 
 ## Build and use

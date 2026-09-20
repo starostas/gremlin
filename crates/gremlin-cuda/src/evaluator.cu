@@ -9,16 +9,22 @@ struct Block {uint32_t start,len,params_offset,params_len,term,a,yes,no;};
 struct Edge {uint32_t target,args_offset,len;};
 struct Program {uint64_t registers_offset;uint32_t registers,scratch,entry,argument_count;};
 struct Result {uint64_t bits,steps;uint32_t status,reason;};
+// Adjacent lanes evaluate adjacent cases of the same program. Store each
+// register across cases contiguously so their loads and stores coalesce.
+struct RegisterFile {
+ uint64_t *base; uint32_t cases;
+ __device__ uint64_t &operator[](uint32_t index) const { return base[uint64_t(index)*cases]; }
+};
 struct Metrics {double setup_ms,transfer_ms,kernel_ms,total_ms;int driver,runtime,major,minor;char device[256];};
 __device__ uint64_t mask(uint32_t width){return UINT64_MAX>>(64-width);}
 __device__ uint64_t negate(uint64_t a,uint64_t m){return (~a+1)&m;}
 __global__ void evaluate(const Program *programs,const Block *blocks,const Instruction *instructions,const Edge *edges,const uint32_t *indices,const uint64_t *inputs,uint64_t *storage,Result *results,uint32_t cases,uint64_t budget){
- uint32_t program_index=blockIdx.x;uint32_t test=blockIdx.y*32+threadIdx.x;if(test>=cases)return;Program p=programs[program_index];uint64_t *values=storage+p.registers_offset+uint64_t(test)*(p.registers+p.scratch);uint64_t *scratch=values+p.registers;Result result{0,0,0,0};Result *output=results+uint64_t(program_index)*cases+test;
+ uint32_t program_index=blockIdx.x;uint32_t test=blockIdx.y*blockDim.x+threadIdx.x;if(test>=cases)return;Program p=programs[program_index];RegisterFile values{storage+p.registers_offset+test,cases};RegisterFile scratch{storage+p.registers_offset+uint64_t(p.registers)*cases+test,cases};Result result{0,0,0,0};Result *output=results+uint64_t(program_index)*cases+test;
  for(uint32_t i=0;i<p.argument_count;++i)values[i]=inputs[uint64_t(test)*p.argument_count+i];uint32_t block_id=p.entry;
- for(;;){Block block=blocks[block_id];for(uint32_t pc=0;pc<block.len;++pc){if(result.steps==budget){result.status=1;*output=result;return;}++result.steps;Instruction i=instructions[block.start+pc];if(i.op==0){values[i.dst]=i.literal;continue;}uint64_t a=values[i.a],b=values[i.b],c=values[i.c],m=mask(i.width),sign=uint64_t(1)<<(i.width-1),r=0;uint32_t k=b%i.width;bool sa=(a&sign)!=0,sb=(b&sign)!=0;
+ for(;;){Block block=blocks[block_id];for(uint32_t pc=0;pc<block.len;++pc){if(result.steps==budget){result.status=1;*output=result;return;}++result.steps;Instruction i=instructions[block.start+pc];if(i.op==0){values[i.dst]=i.literal;continue;}uint64_t a=values[i.a],b=values[i.b],c=values[i.c],m=mask(i.width),sign=uint64_t(1)<<(i.width-1),r=0;uint32_t k=b&(i.width-1);bool sa=(a&sign)!=0,sb=(b&sign)!=0;
  switch(i.op){
  case 1:r=a+b;break;case 2:r=a-b;break;case 3:r=a*b;break;
- case 4:case 5:case 6:case 7:{if(b==0){result.status=2;result.reason=1;*output=result;return;}if((i.op==5||i.op==7)&&a==sign&&b==m){result.status=2;result.reason=2;*output=result;return;}if(i.op==4)r=a/b;else if(i.op==6)r=a%b;else{uint64_t x=sa?negate(a,m):a,y=sb?negate(b,m):b;if(i.op==5){r=x/y;if(sa!=sb)r=negate(r,m);}else{r=x%y;if(sa)r=negate(r,m);}}break;}
+ case 4:case 5:case 6:case 7:{if(b==0){result.status=2;result.reason=1;*output=result;return;}if((i.op==5||i.op==7)&&a==sign&&b==m){result.status=2;result.reason=2;*output=result;return;}if(i.op==4)r=i.width<=32?uint32_t(a)/uint32_t(b):a/b;else if(i.op==6)r=i.width<=32?uint32_t(a)%uint32_t(b):a%b;else{uint64_t x=sa?negate(a,m):a,y=sb?negate(b,m):b;if(i.op==5){r=i.width<=32?uint32_t(x)/uint32_t(y):x/y;if(sa!=sb)r=negate(r,m);}else{r=i.width<=32?uint32_t(x)%uint32_t(y):x%y;if(sa)r=negate(r,m);}}break;}
  case 8:r=a&b;break;case 9:r=a|b;break;case 10:r=a^b;break;case 11:r=~a;break;
  case 12:r=a<<k;break;case 13:r=a>>k;break;case 14:r=(a>>k)|(sa?(m^(m>>k)):0);break;case 15:r=k==0?a:((a<<k)|(a>>(i.width-k)));break;case 16:r=k==0?a:((a>>k)|(a<<(i.width-k)));break;
  case 17:r=a==b;break;case 18:r=a!=b;break;case 19:r=a<b;break;case 20:r=a<=b;break;case 21:r=a>b;break;case 22:r=a>=b;break;
@@ -37,6 +43,6 @@ extern "C" int gremlin_cuda_evaluate(const Program *programs,size_t program_coun
  auto copy=[&](const void *source,size_t size,void **target)->cudaError_t{if(size==0){*target=nullptr;return cudaSuccess;}cudaError_t result=cudaMalloc(target,size);if(result!=cudaSuccess)return result;allocations.pointers.push_back(*target);if(source)return cudaMemcpy(*target,source,size,cudaMemcpyHostToDevice);return cudaSuccess;};
  Program *dp;Block *db;Instruction *di;Edge *de;uint32_t *dx;uint64_t *da,*dr;Result *dresults;metrics->setup_ms=milliseconds(start);auto transfer_start=Clock::now();
  CHECK(copy(programs,program_count*sizeof(Program),(void**)&dp));CHECK(copy(blocks,block_count*sizeof(Block),(void**)&db));CHECK(copy(instructions,instruction_count*sizeof(Instruction),(void**)&di));CHECK(copy(edges,edge_count*sizeof(Edge),(void**)&de));CHECK(copy(indices,index_count*sizeof(uint32_t),(void**)&dx));CHECK(copy(inputs,input_count*sizeof(uint64_t),(void**)&da));CHECK(copy(nullptr,register_count*sizeof(uint64_t),(void**)&dr));CHECK(copy(nullptr,program_count*cases*sizeof(Result),(void**)&dresults));metrics->transfer_ms=milliseconds(transfer_start);
- auto kernel_start=Clock::now();evaluate<<<dim3(program_count,(cases+31)/32),32>>>(dp,db,di,de,dx,da,dr,dresults,cases,budget);CHECK(cudaGetLastError());CHECK(cudaDeviceSynchronize());metrics->kernel_ms=milliseconds(kernel_start);auto back=Clock::now();CHECK(cudaMemcpy(results,dresults,program_count*cases*sizeof(Result),cudaMemcpyDeviceToHost));metrics->transfer_ms+=milliseconds(back);metrics->total_ms=milliseconds(start);return 0;
+ auto kernel_start=Clock::now();evaluate<<<dim3(program_count,(cases+127)/128),128>>>(dp,db,di,de,dx,da,dr,dresults,cases,budget);CHECK(cudaGetLastError());CHECK(cudaDeviceSynchronize());metrics->kernel_ms=milliseconds(kernel_start);auto back=Clock::now();CHECK(cudaMemcpy(results,dresults,program_count*cases*sizeof(Result),cudaMemcpyDeviceToHost));metrics->transfer_ms+=milliseconds(back);metrics->total_ms=milliseconds(start);return 0;
  #undef CHECK
 }
