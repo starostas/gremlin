@@ -1,4 +1,6 @@
-use crate::{genome::*, SearchConfig};
+use crate::{
+    genome::*, score_executions, summarize_batch, ComparatorConfig, EvaluationSummary, SearchConfig,
+};
 use gremlin_core::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -82,6 +84,21 @@ pub trait Backend {
         inputs: &[Vec<Value>],
         max_steps: u64,
     ) -> Result<Vec<Vec<Execution>>, String>;
+    fn summarize(
+        &self,
+        functions: &[Function],
+        inputs: &[Vec<Value>],
+        expected: &[Value],
+        max_steps: u64,
+        comparator: &ComparatorConfig,
+    ) -> Result<Vec<EvaluationSummary>, String> {
+        summarize_batch(
+            self.evaluate(functions, inputs, max_steps)?,
+            expected,
+            max_steps,
+            comparator,
+        )
+    }
 }
 pub struct CpuBackend;
 impl Backend for CpuBackend {
@@ -109,12 +126,11 @@ pub struct Engine {
     config: SearchConfig,
     corpus_hash: String,
     cases: Vec<(Vec<Value>, Value)>,
-    comparator: Option<Function>,
 }
 impl Engine {
     pub fn new(config: SearchConfig, corpus: &Corpus) -> Result<Self, String> {
         corpus.validate()?;
-        let comparator = config.comparator.program()?;
+        config.comparator.program()?;
         let signature = corpus.target.signature.clone();
         let cases = corpus
             .cases
@@ -132,7 +148,6 @@ impl Engine {
             config,
             corpus_hash: corpus.content_hash()?,
             cases,
-            comparator,
         })
     }
     pub fn with_backend(mut self, backend: Box<dyn Backend>) -> Self {
@@ -159,82 +174,30 @@ impl Engine {
         bytes: Vec<u8>,
         executions: Vec<Execution>,
     ) -> Result<Fitness, String> {
-        if executions.len() != self.cases.len() {
-            return Err("backend returned wrong case count".into());
-        }
-        let mut fitness = Fitness {
-            selection_cost: None,
-            corpus_hash: self.corpus_hash.clone(),
-            noncompleted_case_count: 0,
-            mismatching_completed_case_count: 0,
-            summed_bit_error: 0,
-            instruction_count: g.instruction_count(),
-            total_executed_steps: 0,
-            canonical_program_bytes: bytes,
-            cases: Vec::with_capacity(self.cases.len()),
-        };
-        let mut scorer = self.comparator.as_ref().map(Evaluator::new).transpose()?;
-        let mut custom_sum = 0u128;
-        for ((_, expected), e) in self.cases.iter().zip(executions) {
-            if e.steps > self.config.max_steps {
-                return Err("backend exceeded step budget".into());
-            }
-            if let Outcome::Completed(v) = &e.outcome {
-                if v.ty != self.signature.return_type || v.bits & !v.ty.mask() != 0 {
-                    return Err("backend returned wrong type or bit pattern".into());
-                }
-            }
-            fitness.total_executed_steps += e.steps;
-            let custom_cost = match (&mut scorer, &e.outcome, &self.config.comparator) {
-                (
-                    Some(scorer),
-                    Outcome::Completed(actual),
-                    crate::ComparatorConfig::Gremlin { max_steps, .. },
-                ) => {
-                    // Preserve the target's raw two's-complement bit patterns,
-                    // zero-extended to u64; no host signed arithmetic or floats.
-                    let result = scorer.execute(
-                        &[
-                            Value::new(Type::U64, actual.bits),
-                            Value::new(Type::U64, expected.bits),
-                        ],
-                        *max_steps,
-                    );
-                    match result.outcome {
-                        Outcome::Completed(cost) => {
-                            custom_sum = custom_sum
-                                .checked_add(u128::from(cost.bits))
-                                .ok_or("comparator cost sum overflow")?;
-                            Some(cost.bits)
-                        }
-                        outcome => return Err(format!("comparator execution failed: {outcome:?}")),
-                    }
-                }
-                _ => None,
-            };
-            let bit_error = if let Outcome::Completed(v) = &e.outcome {
-                let error = ((v.bits ^ expected.bits) & expected.ty.mask()).count_ones();
-                fitness.mismatching_completed_case_count += u64::from(error != 0);
-                fitness.summed_bit_error += u64::from(error);
-                Some(error)
-            } else {
-                fitness.noncompleted_case_count += 1;
-                None
-            };
-            fitness.cases.push(CaseResult {
-                execution: e,
-                bit_error,
-                custom_cost,
-            });
-        }
-        fitness.selection_cost = match self.config.comparator {
-            crate::ComparatorConfig::CorrectnessFirst { .. } => None,
-            crate::ComparatorConfig::BitErrorFirst { .. } => Some([0, fitness.summed_bit_error]),
-            crate::ComparatorConfig::Gremlin { .. } => {
-                Some([(custom_sum >> 64) as u64, custom_sum as u64])
-            }
-        };
+        let expected = self.cases.iter().map(|(_, v)| *v).collect::<Vec<_>>();
+        let (summary, cases) = score_executions(
+            executions,
+            &expected,
+            self.config.max_steps,
+            &self.config.comparator,
+            true,
+        )?;
+        let mut fitness = self.fitness(g, bytes, summary);
+        fitness.cases = cases;
         Ok(fitness)
+    }
+    fn fitness(&self, g: &Genome, bytes: Vec<u8>, summary: EvaluationSummary) -> Fitness {
+        Fitness {
+            selection_cost: summary.selection_cost,
+            corpus_hash: self.corpus_hash.clone(),
+            noncompleted_case_count: summary.noncompleted,
+            mismatching_completed_case_count: summary.mismatches,
+            summed_bit_error: summary.bit_error,
+            instruction_count: g.instruction_count(),
+            total_executed_steps: summary.steps,
+            canonical_program_bytes: bytes,
+            cases: Vec::new(),
+        }
     }
     fn individuals(
         &self,
@@ -259,24 +222,30 @@ impl Engine {
             .iter()
             .map(|(input, _)| input.clone())
             .collect::<Vec<_>>();
-        let results = self
-            .backend
-            .evaluate(&functions, &inputs, self.config.max_steps)?;
+        let expected = self.cases.iter().map(|(_, v)| *v).collect::<Vec<_>>();
+        let results = self.backend.summarize(
+            &functions,
+            &inputs,
+            &expected,
+            self.config.max_steps,
+            &self.config.comparator,
+        )?;
         if results.len() != genomes.len() {
             return Err("backend returned wrong program count".into());
         }
         let mut individuals = Vec::with_capacity(genomes.len());
-        for ((g, f), executions) in genomes.into_iter().zip(functions).zip(results) {
-            let fitness = self.grade(&g, f.canonical_bytes()?, executions)?;
+        for ((g, f), summary) in genomes.into_iter().zip(functions).zip(results) {
+            summary.validate(
+                self.cases.len(),
+                self.signature.return_type,
+                self.config.max_steps,
+                &self.config.comparator,
+            )?;
             *count += self.cases.len() as u64;
-            for c in &fitness.cases {
-                match c.execution.outcome {
-                    Outcome::Trap(_) => failures.trap += 1,
-                    Outcome::Timeout(_) => failures.timeout += 1,
-                    Outcome::Invalid(_) => failures.invalid += 1,
-                    _ => {}
-                }
-            }
+            failures.trap += summary.failures.trap;
+            failures.timeout += summary.failures.timeout;
+            failures.invalid += summary.failures.invalid;
+            let fitness = self.fitness(&g, f.canonical_bytes()?, summary);
             individuals.push(Individual { genome: g, fitness });
         }
         Ok(individuals)
@@ -364,9 +333,11 @@ impl Engine {
             return Err("checkpoint generation or population mismatch".into());
         }
         for i in &state.population {
-            if !i.genome.valid(&self.signature, &self.config)
-                || self.evaluate(&i.genome)? != i.fitness
-            {
+            let mut recomputed = self.evaluate(&i.genome)?;
+            if i.fitness.cases.is_empty() {
+                recomputed.cases.clear();
+            }
+            if !i.genome.valid(&self.signature, &self.config) || recomputed != i.fitness {
                 return Err("checkpoint fitness or genome mismatch".into());
             }
         }

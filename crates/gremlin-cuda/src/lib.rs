@@ -37,3 +37,5 @@ pub fn evaluate(_: &Request) -> Result<Evaluation, String> {
 pub use backend::evaluate;
 #[cfg(feature = "cuda")]
 mod backend;
+
+pub mod protocol;
