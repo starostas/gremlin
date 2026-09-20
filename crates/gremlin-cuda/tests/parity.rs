@@ -97,3 +97,43 @@ fn ten_thousand_program_cpu_gpu_parity() {
     }
     println!("CUDA parity passed: {program_count} seeded programs, {comparisons} outcome/step comparisons");
 }
+
+#[cfg(feature = "cuda")]
+#[test]
+fn coalesced_registers_preserve_loop_edges_and_partial_blocks() {
+    use gremlin_core::{parse, Evaluator, Type, Value};
+    use gremlin_cuda::{evaluate, Request};
+    let functions = vec![
+        parse("fn f(x:u32,y:u32)->u32 { let mut a:u32=x; let mut b:u32=y; let mut n:u32=0u32; while ult(n,17u32) { let old:u32=a; a=b; b=add(old,b); n=add(n,1u32); } return xor(a,b); }").unwrap(),
+        parse("fn f(x:u32,y:u32)->u32 { return udiv(rotl(x,y),y); }").unwrap(),
+    ];
+    for cases in [127, 128, 129, 255, 257] {
+        let inputs: Vec<_> = (0..cases)
+            .map(|n| {
+                vec![
+                    Value::new(Type::U32, n as u64 * 1234567),
+                    Value::new(Type::U32, n as u64 % 67),
+                ]
+            })
+            .collect();
+        for max_steps in [0, 1, 64, 1024] {
+            let result = evaluate(&Request {
+                functions: functions.clone(),
+                inputs: inputs.clone(),
+                max_steps,
+                memory_budget: 1 << 28,
+            })
+            .unwrap();
+            for (f, row) in functions.iter().zip(result.executions) {
+                let mut cpu = Evaluator::new(f).unwrap();
+                for (input, gpu) in inputs.iter().zip(row) {
+                    assert_eq!(
+                        cpu.execute(input, max_steps),
+                        gpu,
+                        "cases={cases} budget={max_steps}"
+                    );
+                }
+            }
+        }
+    }
+}
