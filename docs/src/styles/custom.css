@@ -406,18 +406,15 @@
   }
 }
 
-main:has(.experiment-island) .sl-container {
-  /* The container stays uncapped so the prose keeps the left edge and gutter it
-     has on every other page; the island alone is given the extra width. */
-  max-width: none;
-}
-
 /*
- * The experiment reaches past the text column without running to the edge of
- * the pane, so it reads as a figure the prose is wrapped around rather than a
- * full-bleed band.
+ * Widen the column rather than the island inside it. Starlight centres this
+ * container, so capping it keeps the whole block centred in the pane; capping
+ * the island instead left it anchored to the left gutter with the reclaimed
+ * width all piled up on one side. The island fills the column and the prose
+ * keeps its own measure within it, so the experiment still reaches past the
+ * text.
  */
-main:has(.experiment-island) .experiment-island {
+main:has(.experiment-island) .sl-container {
   max-width: 68rem;
 }
 
