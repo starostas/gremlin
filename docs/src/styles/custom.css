@@ -321,20 +321,30 @@
 }
 
 .experiment-chart,
+/*
+ * The evidence disclosure closes the island, so it is ruled off exactly like a
+ * section band: same gap above, same rule, same colour. Starlight indents a
+ * details body to clear the disclosure marker, which pushed this one right of
+ * every other band, so the marker is brought inside the content box instead and
+ * the left edge lines up with the headings above it.
+ */
 .experiment-details {
-  margin-top: 1rem;
-}
-
-.experiment-details {
-  border-top: 1px solid var(--sl-color-gray-5);
+  border-top: 1px solid var(--sl-color-gray-6);
   color: var(--sl-color-gray-2);
   font-size: var(--sl-text-sm);
-  padding-top: 0.75rem;
+  margin-top: 1.25rem;
+  padding-inline: 0;
+  padding-top: 1rem;
 }
 
 .experiment-details summary {
   color: var(--sl-color-gray-1);
   cursor: pointer;
+  list-style-position: inside;
+}
+
+.experiment-details > :not(summary) {
+  margin-top: 0.75rem;
 }
 
 .experiment-details pre {

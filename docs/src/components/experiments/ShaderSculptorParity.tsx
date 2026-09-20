@@ -723,7 +723,7 @@ export default function ShaderSculptorParity({
         </div>
       </Section>
 
-      <details>
+      <details class="experiment-details">
         <summary>Evidence</summary>
         <p>{resultSize} × {resultSize} pixels. {seconds !== undefined ? `${seconds.toFixed(2)} s search` : 'No completed search yet'}{asNumber(finished?.total_seconds) !== undefined ? ` / ${asNumber(finished?.total_seconds)?.toFixed(2)} s through source validation.` : '.'}</p>
         {asNumber(finished?.kernel_ms) !== undefined && <p>GPU scoring kernels: {asNumber(finished?.kernel_ms)?.toFixed(0)} ms. Working buffers: {asNumber(finished?.device_bytes) !== undefined ? `${(asNumber(finished?.device_bytes)! / 1024).toFixed(0)} KiB` : 'not reported'}.</p>}
