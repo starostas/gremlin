@@ -4,8 +4,16 @@ import { isJobId, isTerminal, type JsonObject } from '../../_lib/contracts.js';
 import { expireStaleActiveJob, readJob, updateJob } from '../../_lib/job-store.js';
 import { requestWorkerCancellation } from '../../_lib/worker.js';
 
+/**
+ * This runtime hands the handler a path-only `request.url`, so it is resolved
+ * against a placeholder base before reading the path or query.
+ */
+function requestUrl(request: Request) {
+  return new URL(request.url, 'http://request.invalid');
+}
+
 function idFromRequest(request: Request) {
-  const id = new URL(request.url).pathname.split('/').at(-1) ?? '';
+  const id = requestUrl(request).pathname.split('/').at(-1) ?? '';
   return decodeURIComponent(id);
 }
 
@@ -15,7 +23,7 @@ function idFromRequest(request: Request) {
  * tracks how many events it already holds asks only for what is new.
  */
 function eventsAfter(request: Request, events: JsonObject[]) {
-  const raw = new URL(request.url).searchParams.get('after');
+  const raw = requestUrl(request).searchParams.get('after');
   if (raw === null) return { events, nextCursor: events.length };
   const after = Number(raw);
   if (!Number.isInteger(after) || after < 0 || after > events.length) {

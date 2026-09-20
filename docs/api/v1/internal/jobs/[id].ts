@@ -5,8 +5,16 @@ import { readJson } from '../../../_lib/request.js';
 
 const callbackStatuses = new Set<JobStatus>(['running', 'succeeded', 'failed', 'cancelled']);
 
+/**
+ * This runtime hands the handler a path-only `request.url`, so it is resolved
+ * against a placeholder base before reading the path or query.
+ */
+function requestUrl(request: Request) {
+  return new URL(request.url, 'http://request.invalid');
+}
+
 function idFromRequest(request: Request) {
-  const id = new URL(request.url).pathname.split('/').at(-1) ?? '';
+  const id = requestUrl(request).pathname.split('/').at(-1) ?? '';
   return decodeURIComponent(id);
 }
 
