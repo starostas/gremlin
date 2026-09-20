@@ -149,8 +149,8 @@ pub(crate) fn parse_with_signatures(
     source: &str,
     callees: &BTreeMap<String, Signature>,
 ) -> Result<Function, String> {
-    if source.len() > 1_000_000 {
-        return Err("source exceeds 1 MB limit".into());
+    if source.len() > 8_000_000 {
+        return Err("source exceeds 8 MB limit".into());
     }
     let tokens = lex(source)?;
     if tokens
