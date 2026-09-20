@@ -3,9 +3,12 @@ import starlight from '@astrojs/starlight';
 import preact from '@astrojs/preact';
 import repositoryContent from './src/remark-repository-content.mjs';
 
-const site =
-  process.env.SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+// VERCEL_URL is the per-deployment host, so using it made every deploy rewrite
+// the canonical links and the sitemap to a throwaway URL.
+// VERCEL_PROJECT_PRODUCTION_URL is the project's stable production domain and
+// survives both a redeploy and a domain rename.
+const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const site = process.env.SITE_URL ?? (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000');
 
 export default defineConfig({
   site,
