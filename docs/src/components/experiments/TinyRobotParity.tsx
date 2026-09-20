@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { Metric } from './IslandChrome';
 import type { JSX } from 'preact';
 import './TinyRobotParity.css';
 
@@ -722,22 +723,18 @@ export default function TinyRobotParity({ recording, events, current }: TinyRobo
       )}
 
       <div class="experiment-metrics tiny-robot-metrics">
-        <div class="experiment-metric">
-          <span>training rooms</span>
-          <strong>{typeof brain?.solved === 'number' ? `${brain.solved} / ${brain.cases}` : '—'}</strong>
-        </div>
-        <div class="experiment-metric">
-          <span>unseen rooms</span>
-          <strong>{typeof brain?.holdout_solved === 'number' ? `${brain.holdout_solved} / ${brain.holdout_cases}` : '—'}</strong>
-        </div>
-        <div class="experiment-metric">
-          <span>generation</span>
-          <strong>{brain?.generation ?? '—'}</strong>
-        </div>
-        <div class="experiment-metric">
-          <span>simulated episodes</span>
-          <strong>{formatNumber(brain?.evaluations)}</strong>
-        </div>
+        <Metric
+          better="higher"
+          label="training rooms"
+          value={typeof brain?.solved === 'number' ? `${brain.solved} / ${brain.cases}` : undefined}
+        />
+        <Metric
+          better="higher"
+          label="unseen rooms"
+          value={typeof brain?.holdout_solved === 'number' ? `${brain.holdout_solved} / ${brain.holdout_cases}` : undefined}
+        />
+        <Metric label="generation" value={brain?.generation} />
+        <Metric label="simulated episodes" value={formatNumber(brain?.evaluations)} />
       </div>
     </div>
   );

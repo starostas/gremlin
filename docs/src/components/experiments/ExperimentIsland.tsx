@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import ShaderSculptorParity, { type ShaderSculptorRunInput } from './ShaderSculptorParity';
 import TinyRobotParity from './TinyRobotParity';
-import { CodeBlock, Outcome, Section } from './IslandChrome';
+import { CodeBlock, Metric, Outcome, Section } from './IslandChrome';
 
 export type DemoId =
   | 'shader-detective'
@@ -407,15 +407,6 @@ function IslandStatus({ error, job, current }: { error?: string; job?: { id: str
   return message ? <p class={`experiment-status${error ? ' experiment-status-error' : ''}`} aria-live="polite">{message}</p> : null;
 }
 
-function Metric({ label, value }: { label: string; value: string | number | undefined }) {
-  return (
-    <div class="experiment-metric">
-      <span>{label}</span>
-      <strong>{value ?? '—'}</strong>
-    </div>
-  );
-}
-
 function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number, number]>, logarithmic = false) {
   if (!canvas) return;
   const width = 420;
@@ -562,9 +553,9 @@ function ShaderDetective() {
         </div>
         <div class="experiment-metrics">
           <Metric label="generation" value={current?.generation} />
-          <Metric label="match" value={accuracy} />
+          <Metric label="match" value={accuracy} better="higher" />
           <Metric label="evaluations" value={formatNumber(current?.evaluations)} />
-          <Metric label="time" value={typeof result?.search_seconds === 'number' ? `${result.search_seconds.toFixed(2)}s` : typeof current?.elapsed_seconds === 'number' ? `${current.elapsed_seconds.toFixed(2)}s` : undefined} />
+          <Metric better="lower" label="time" value={typeof result?.search_seconds === 'number' ? `${result.search_seconds.toFixed(2)}s` : typeof current?.elapsed_seconds === 'number' ? `${current.elapsed_seconds.toFixed(2)}s` : undefined} />
         </div>
         <figure class="experiment-chart"><canvas ref={chartCanvas} aria-label="Bit error rate by generation" /><figcaption>Bit error rate</figcaption></figure>
       </Section>
@@ -713,9 +704,9 @@ function LandingLab() {
       </div>
       <div class="experiment-metrics">
         <Metric label="tested" value={typeof current?.tested === 'number' ? `${current.tested} / 128` : result?.programs ? `${result.programs} / 128` : undefined} />
-        <Metric label="safe flights" value={typeof current?.safe === 'number' ? `${formatNumber(current.safe)} / ${formatNumber(current.cases)}` : undefined} />
-        <Metric label="search" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
-        <Metric label="speedup" value={typeof comparison?.speedup === 'number' ? `${comparison.speedup.toFixed(1)}×` : undefined} />
+        <Metric better="higher" label="safe flights" value={typeof current?.safe === 'number' ? `${formatNumber(current.safe)} / ${formatNumber(current.cases)}` : undefined} />
+        <Metric better="lower" label="search" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
+        <Metric better="higher" label="speedup" value={typeof comparison?.speedup === 'number' ? `${comparison.speedup.toFixed(1)}×` : undefined} />
       </div>
       </Section>
       <Outcome
@@ -1041,13 +1032,17 @@ function OrbitForge() {
   // While a run is live the curve comes from the progress events; once it has
   // finished, the terminal event carries the whole history, so a replayed run
   // shows the same shape.
+  // Plot the quantity the search minimises. It is not the error: a solver only
+  // has to stay inside the tolerance budget, and once it does, accuracy beyond
+  // that is spent on speed. Charting error therefore showed a rise at the
+  // moment the search first traded surplus accuracy for a shorter solve.
   const progressCurve = demo.events
-    .filter((event) => event.kind === 'progress' && typeof event.max_error === 'number')
-    .map((event) => [event.generation as number, event.max_error as number] as [number, number]);
+    .filter((event) => event.kind === 'progress' && typeof event.mean_steps === 'number')
+    .map((event) => [event.generation as number, event.mean_steps as number] as [number, number]);
   const historyCurve = Array.isArray(done?.history)
     ? done.history
-        .filter((entry: Json) => typeof entry?.max_error === 'number')
-        .map((entry: Json) => [entry.generation as number, entry.max_error as number] as [number, number])
+        .filter((entry: Json) => typeof entry?.mean_steps === 'number')
+        .map((entry: Json) => [entry.generation as number, entry.mean_steps as number] as [number, number])
     : [];
   const curve = progressCurve.length >= historyCurve.length ? progressCurve : historyCurve;
   const benchmark = done?.benchmark;
@@ -1065,7 +1060,7 @@ function OrbitForge() {
 
   useEffect(() => drawOrbit(orbitCanvas.current, genome, eccentricity, phase), [genome, eccentricity, phase]);
   useEffect(() => drawHeatmap(heatCanvas.current, done?.grid, done?.tolerance), [done]);
-  useEffect(() => drawErrorChart(errorCanvas.current, curve, true), [curve]);
+  useEffect(() => drawErrorChart(errorCanvas.current, curve), [curve]);
   useEffect(() => {
     if (!animating) return;
     let frame = 0;
@@ -1147,13 +1142,23 @@ function OrbitForge() {
             ? (totalGenerations ? `${current.generation} / ${totalGenerations}` : current.generation)
             : done?.checked !== undefined ? `${formatNumber(done.checked)} checked` : undefined}
         />
-        <Metric label="max error" value={typeof current?.max_error === 'number' ? `${current.max_error.toExponential(2)} rad` : undefined} />
-        <Metric label="native speedup" value={speedup} />
-        <Metric label="time" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
+        <Metric
+          label="max error"
+          value={typeof current?.max_error === 'number'
+            ? `${current.max_error.toExponential(2)} rad${done?.tolerance ? ` / ${Number(done.tolerance).toExponential(0)}` : ''}`
+            : undefined}
+        />
+        <Metric
+          better="lower"
+          label="iterations"
+          value={typeof current?.mean_steps === 'number' ? current.mean_steps.toFixed(1) : undefined}
+        />
+        <Metric better="higher" label="native speedup" value={speedup} />
+        <Metric better="lower" label="time" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
       </div>
       <figure class="experiment-chart">
-        <canvas ref={errorCanvas} aria-label="Worst solver error by generation" />
-        <figcaption>Worst error by generation · log scale{done?.tolerance ? ` · target ${Number(done.tolerance).toExponential(0)} rad` : ''}</figcaption>
+        <canvas ref={errorCanvas} aria-label="Average solver iterations by generation" />
+        <figcaption>Average iterations per solve, by generation · lower is better</figcaption>
       </figure>
       </Section>
       <Outcome

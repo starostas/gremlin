@@ -21,6 +21,35 @@ export function Section({ title, children }: { title: string; children: Componen
 const defaultMaxLines = 100;
 
 /**
+ * A metric with the direction that counts as progress, so a falling line is not
+ * read as a failing one. `better` is left unset for counters like a generation
+ * number or an evaluation total, where neither direction is an improvement.
+ */
+export function Metric({
+  label,
+  value,
+  better
+}: {
+  label: string;
+  value: string | number | undefined;
+  better?: 'higher' | 'lower';
+}) {
+  return (
+    <div class="experiment-metric">
+      <span>
+        {label}
+        {better && (
+          <abbr class="experiment-metric-goal" title={`${better} is better`}>
+            {better === 'higher' ? '↑' : '↓'}
+          </abbr>
+        )}
+      </span>
+      <strong>{value ?? '—'}</strong>
+    </div>
+  );
+}
+
+/**
  * Discovered programs vary from a single very long line to several thousand
  * short ones, so both extremes are handled here rather than at each call site:
  * long lines wrap instead of scrolling off, and a long program is cut to a

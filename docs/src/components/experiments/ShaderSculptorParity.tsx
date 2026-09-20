@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { CodeBlock, Outcome, Section } from './IslandChrome';
+import { CodeBlock, Metric, Outcome, Section } from './IslandChrome';
 
 /**
  * The portable event shape emitted by Shader Sculptor. The GPU gateway keeps
@@ -696,10 +696,10 @@ export default function ShaderSculptorParity({
         </div>
 
         <div class="experiment-metrics">
-          <div class="experiment-metric"><span>layers</span><strong>{formatNumber(layers)}</strong></div>
-          <div class="experiment-metric"><span>candidate-pixel tests</span><strong>{pixelEvaluations ? `${(pixelEvaluations / 1_000_000_000).toFixed(2)} billion` : '—'}</strong></div>
-          <div class="experiment-metric"><span>search wall time</span><strong>{seconds !== undefined ? `${seconds.toFixed(2)}s` : '—'}</strong></div>
-          <div class="experiment-metric"><span>color error reduction</span><strong>{quality ?? '—'}</strong></div>
+          <Metric label="layers" value={formatNumber(layers)} />
+          <Metric label="candidate-pixel tests" value={pixelEvaluations ? `${(pixelEvaluations / 1_000_000_000).toFixed(2)} billion` : undefined} />
+          <Metric better="lower" label="search wall time" value={seconds !== undefined ? `${seconds.toFixed(2)}s` : undefined} />
+          <Metric better="higher" label="color error reduction" value={quality} />
         </div>
       </Section>
 

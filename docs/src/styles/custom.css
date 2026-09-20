@@ -215,6 +215,14 @@
   padding-top: 0.65rem;
 }
 
+.experiment-metric-goal {
+  border: 0;
+  cursor: help;
+  margin-left: 0.3rem;
+  opacity: 0.75;
+  text-decoration: none;
+}
+
 .experiment-metric span {
   color: var(--sl-color-gray-3);
   font-size: var(--sl-text-xs);
