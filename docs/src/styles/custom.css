@@ -385,6 +385,17 @@
   grid-template-columns: minmax(0, 28rem) minmax(10rem, 1fr);
 }
 
+/*
+ * The room canvas claims a fixed share, so on a middling screen the panel
+ * beside it is left too narrow for its six-column rule table and the table
+ * scrolls. Stack them until there is room for both.
+ */
+@media (max-width: 78rem) {
+  .experiment-robot-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .experiment-robot-canvas {
   cursor: crosshair;
 }
