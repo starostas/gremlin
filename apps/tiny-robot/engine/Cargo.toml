@@ -1,0 +1,13 @@
+[package]
+name = "tiny-robot"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+[workspace]
+[features]
+default = []
+cuda = ["gremlin-cuda/cuda"]
+[dependencies]
+gremlin-core = { path = "../../../crates/gremlin-core" }
+gremlin-cuda = { path = "../../../crates/gremlin-cuda" }
+serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }

@@ -60,8 +60,8 @@ impl Module {
     }
 }
 pub fn parse_module(source: &str) -> Result<Module, String> {
-    if source.len() > 1_000_000 {
-        return Err("source exceeds 1 MB limit".into());
+    if source.len() > 8_000_000 {
+        return Err("source exceeds 8 MB limit".into());
     }
     let tokens = crate::syntax::lex(source)?;
     let mut pos = 0;

@@ -1,0 +1,12 @@
+[package]
+name = "shader-sculptor"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+[workspace]
+[features]
+default = []
+cuda = []
+[dependencies]
+gremlin-core = { path = "../../../crates/gremlin-core" }
+serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
