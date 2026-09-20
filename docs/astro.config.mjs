@@ -20,6 +20,16 @@ export default defineConfig({
       description:
         'Documentation for Gremlin, a deterministic search system for small integer programs.',
       customCss: ['./src/styles/custom.css'],
+      favicon: '/favicon.ico',
+      // The .ico carries the legacy sizes; these cover the cases that ignore it:
+      // retina tabs, iOS home screens, and Android install prompts.
+      head: [
+        { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' } },
+        { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' } },
+        { tag: 'link', attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' } },
+        { tag: 'link', attrs: { rel: 'manifest', href: '/site.webmanifest' } },
+        { tag: 'meta', attrs: { name: 'theme-color', content: '#222222' } }
+      ],
       markdown: {
         // Content is intentionally loaded from the repository README and /docs rather than
         // Starlight's default src/content/docs directory.
