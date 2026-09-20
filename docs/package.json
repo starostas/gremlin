@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "check": "tsc --noEmit -p tsconfig.api.json"
+    "check": "tsc --noEmit -p tsconfig.api.json",
+    "dev": "astro dev",
+    "prebuild": "rm -rf node_modules/.astro .astro",
+    "preview": "astro preview"
   },
   "packageManager": "pnpm@10.15.0",
   "devDependencies": {

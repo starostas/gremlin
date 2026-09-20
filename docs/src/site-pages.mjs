@@ -17,7 +17,7 @@ export const pages = {
         },
         {
           text: 'Read the docs',
-          link: '/usage/',
+          link: '/introduction/',
           variant: 'minimal'
         }
       ]
