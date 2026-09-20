@@ -465,6 +465,15 @@
 }
 
 /*
+ * The main pane is given an explicit width that allows for the panel, so
+ * hiding the panel alone would leave its column empty rather than handing the
+ * width to the experiment.
+ */
+.main-frame:has(.experiment-island) .main-pane {
+  width: 100%;
+}
+
+/*
  * Widen the column rather than the island inside it. Starlight centres this
  * container, so capping it keeps the whole block centred in the pane; capping
  * the island instead left it anchored to the left gutter with the reclaimed
