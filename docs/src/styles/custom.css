@@ -483,6 +483,12 @@
  */
 main:has(.experiment-island) .sl-container {
   max-width: 68rem;
+  /*
+   * Starlight leaves the start margin automatic so the column sits against the
+   * outline panel. With that panel hidden the automatic margin takes all the
+   * slack and pushes the column to the right edge, so centre it explicitly.
+   */
+  margin-inline: auto;
 }
 
 main:has(.experiment-island) .sl-markdown-content > :not(astro-island) {
