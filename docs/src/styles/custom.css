@@ -119,6 +119,7 @@
 .experiment-fields label,
 .experiment-range {
   color: var(--sl-color-gray-2);
+  display: flex;
   flex-direction: column;
   font-size: var(--sl-text-xs);
   gap: 0.35rem;
@@ -315,10 +316,6 @@
   padding: 0;
 }
 
-.experiment-crc-canvas {
-  margin-top: 1rem;
-}
-
 @media (max-width: 42rem) {
   .experiment-canvas-grid,
   .experiment-canvas-grid-three,
@@ -326,4 +323,12 @@
   .experiment-robot-layout {
     grid-template-columns: 1fr;
   }
+}
+
+main:has(.experiment-island) .sl-container {
+  max-width: 56rem;
+}
+
+main:has(.experiment-island) .sl-markdown-content > :not(astro-island) {
+  max-width: 45rem;
 }

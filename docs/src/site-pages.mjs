@@ -59,12 +59,6 @@ export const pages = {
     title: 'Orbit Forge',
     description: 'Search numerical solver strategies for Kepler’s equation.'
   },
-  'docs/experiments/cksum-crc.mdx': {
-    id: 'experiments/cksum-crc',
-    route: '/experiments/cksum-crc/',
-    title: 'CRC feedback',
-    description: 'Explore the discovered feedback term from the cksum CRC experiment.'
-  },
   'docs/usage.md': {
     id: 'usage',
     route: '/usage/',

@@ -35,8 +35,7 @@ export default defineConfig({
             { label: 'Landing Lab', slug: 'experiments/landing-lab' },
             { label: 'Tiny Robot', slug: 'experiments/tiny-robot' },
             { label: 'Shader Sculptor', slug: 'experiments/shader-sculptor' },
-            { label: 'Orbit Forge', slug: 'experiments/orbit-forge' },
-            { label: 'CRC feedback', slug: 'experiments/cksum-crc' }
+            { label: 'Orbit Forge', slug: 'experiments/orbit-forge' }
           ]
         },
         {

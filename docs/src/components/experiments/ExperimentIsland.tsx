@@ -7,8 +7,7 @@ export type DemoId =
   | 'landing-lab'
   | 'tiny-robot'
   | 'shader-sculptor'
-  | 'orbit-forge'
-  | 'cksum-crc';
+  | 'orbit-forge';
 
 type Json = Record<string, any>;
 
@@ -91,8 +90,7 @@ function useHumanCheck() {
   return { container, requestToken };
 }
 
-const samplePath = (demo: DemoId) =>
-  `/experiments-data/${demo}/${demo === 'cksum-crc' ? 'measurement.json' : 'sample.json'}`;
+const samplePath = (demo: DemoId) => `/experiments-data/${demo}/sample.json`;
 
 const formatNumber = (value: number | undefined) =>
   typeof value === 'number' ? new Intl.NumberFormat('en-US').format(value) : '—';
@@ -167,7 +165,7 @@ function drawPixels(canvas: HTMLCanvasElement | null, data: Json | undefined, va
   else drawRgb(canvas, data, value, width, height);
 }
 
-function useDemoRun(demo: Exclude<DemoId, 'cksum-crc'>) {
+function useDemoRun(demo: DemoId) {
   const [data, setData] = useState<Json>();
   const [events, setEvents] = useState<Json[]>([]);
   const [cursor, setCursor] = useState(-1);
@@ -1108,76 +1106,10 @@ function OrbitForge() {
   );
 }
 
-function crcStep(state: number, byte: number) {
-  let next = (state ^ ((byte & 255) << 24)) >>> 0;
-  for (let index = 0; index < 8; index += 1) {
-    next = next & 0x80000000 ? ((next << 1) ^ 0x04c11db7) >>> 0 : (next << 1) >>> 0;
-  }
-  return next >>> 0;
-}
-
-function CksumCrc() {
-  const [state, setState] = useState(0xffffffff);
-  const [byte, setByte] = useState(0x31);
-  const [measurement, setMeasurement] = useState<Json>();
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const next = crcStep(state, byte);
-
-  useEffect(() => {
-    fetch(samplePath('cksum-crc')).then((response) => response.json()).then(setMeasurement).catch(() => undefined);
-  }, []);
-
-  useEffect(() => {
-    const element = canvas.current;
-    if (!element) return;
-    element.width = 640;
-    element.height = 96;
-    const context = element.getContext('2d');
-    if (!context) return;
-    context.fillStyle = '#101114';
-    context.fillRect(0, 0, element.width, element.height);
-    for (let index = 0; index < 32; index += 1) {
-      const bit = (next >>> (31 - index)) & 1;
-      context.fillStyle = bit ? '#e5e5e6' : '#34363b';
-      context.fillRect(10 + index * 19, bit ? 20 : 58, 12, bit ? 52 : 14);
-    }
-  }, [next]);
-
-  return (
-    <section class="experiment-island" aria-label="CRC byte transition interactive demo">
-      <div class="experiment-toolbar">
-        <div class="experiment-fields">
-          <label>
-            State
-            <input value={state.toString(16).padStart(8, '0')} inputMode="text" onInput={(event) => {
-              const value = Number.parseInt((event.currentTarget as HTMLInputElement).value.replace(/^0x/i, ''), 16);
-              if (Number.isFinite(value)) setState(value >>> 0);
-            }} />
-          </label>
-          <label>
-            Byte
-            <input value={byte.toString(16).padStart(2, '0')} inputMode="text" onInput={(event) => {
-              const value = Number.parseInt((event.currentTarget as HTMLInputElement).value.replace(/^0x/i, ''), 16);
-              if (Number.isFinite(value)) setByte(value & 255);
-            }} />
-          </label>
-        </div>
-      </div>
-      <canvas ref={canvas} class="experiment-crc-canvas" aria-label="CRC output state bits" />
-      <div class="experiment-metrics">
-        <Metric label="next state" value={`0x${next.toString(16).padStart(8, '0')}`} />
-        <Metric label="feedback search" value={measurement?.feedback_search?.run_status === 'completed' ? `${measurement.feedback_search.generations} generations` : undefined} />
-        <Metric label="holdout mismatches" value={measurement?.feedback_holdout_mismatches} />
-      </div>
-    </section>
-  );
-}
-
 export default function ExperimentIsland({ demo }: { demo: DemoId }) {
   if (demo === 'shader-detective') return <ShaderDetective />;
   if (demo === 'landing-lab') return <LandingLab />;
   if (demo === 'tiny-robot') return <TinyRobot />;
   if (demo === 'shader-sculptor') return <ShaderSculptor />;
-  if (demo === 'orbit-forge') return <OrbitForge />;
-  return <CksumCrc />;
+  return <OrbitForge />;
 }
