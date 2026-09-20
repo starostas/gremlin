@@ -32,7 +32,7 @@ function eventsAfter(request: Request, events: JsonObject[]) {
   return { events: events.slice(after), nextCursor: events.length };
 }
 
-export default async function handler(request: Request) {
+async function handler(request: Request) {
   if (request.method === 'OPTIONS') return options(request);
   const id = idFromRequest(request);
   if (!isJobId(id)) return privateJson(request, { error: 'Job not found.' }, 404);
@@ -70,3 +70,10 @@ export default async function handler(request: Request) {
   }
   return privateJson(request, { status: state.status }, 202);
 }
+
+// This runtime dispatches on named method exports; a default export is
+// invoked with the Node (req, res) signature and its returned Response is
+// discarded.
+export const GET = handler;
+export const DELETE = handler;
+export const OPTIONS = handler;

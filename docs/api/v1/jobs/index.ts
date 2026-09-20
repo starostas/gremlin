@@ -8,7 +8,7 @@ import { gpuTopic, queue } from '../../_lib/queue.js';
 import { readJson } from '../../_lib/request.js';
 import { assertWorkerConfiguration } from '../../_lib/worker.js';
 
-export default async function handler(request: Request) {
+async function handler(request: Request) {
   if (request.method === 'OPTIONS') return options(request);
   if (request.method !== 'POST') return json(request, { error: 'Method not allowed.' }, 405);
   if (!hasAllowedOrigin(request) || !(await admitsJobRequest(request))) {
@@ -62,3 +62,9 @@ export default async function handler(request: Request) {
 
   return json(request, { id, capability }, 202);
 }
+
+// This runtime dispatches on named method exports; a default export is
+// invoked with the Node (req, res) signature and its returned Response is
+// discarded.
+export const POST = handler;
+export const OPTIONS = handler;

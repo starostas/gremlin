@@ -23,7 +23,7 @@ function parseRequest(value: unknown) {
  * normalized RGB raster. The ticket is path- and digest-bound; it is not a
  * Blob credential and cannot be repurposed for arbitrary uploads.
  */
-export default async function handler(request: Request) {
+async function handler(request: Request) {
   if (request.method === 'OPTIONS') return options(request);
   if (request.method !== 'POST') return json(request, { error: 'Method not allowed.' }, 405);
   if (!hasAllowedOrigin(request) || !(await admitsJobRequest(request))) {
@@ -38,3 +38,9 @@ export default async function handler(request: Request) {
     return json(request, { error: 'Image uploads are unavailable.' }, 503);
   }
 }
+
+// This runtime dispatches on named method exports; a default export is
+// invoked with the Node (req, res) signature and its returned Response is
+// discarded.
+export const POST = handler;
+export const OPTIONS = handler;

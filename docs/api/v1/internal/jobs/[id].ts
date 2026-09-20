@@ -54,7 +54,7 @@ function parseUpdate(value: unknown) {
   };
 }
 
-export default async function handler(request: Request) {
+async function handler(request: Request) {
   if (request.method !== 'POST') return Response.json({ error: 'Method not allowed.' }, { status: 405 });
   const id = idFromRequest(request);
   if (!isJobId(id) || !verifiesCallbackTicket(bearerToken(request), id)) {
@@ -73,3 +73,8 @@ export default async function handler(request: Request) {
   if (!state) return Response.json({ error: 'Job not found.' }, { status: 404 });
   return Response.json({ status: state.status });
 }
+
+// This runtime dispatches on named method exports; a default export is
+// invoked with the Node (req, res) signature and its returned Response is
+// discarded.
+export const POST = handler;

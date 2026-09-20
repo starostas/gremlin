@@ -13,7 +13,7 @@ function isTokenRequest(body: HandleUploadBody) {
  * and expiry were signed by /authorize. Blob completion callbacks are checked
  * by the SDK and do not require a browser Origin header.
  */
-export default async function handler(request: Request) {
+async function handler(request: Request) {
   if (request.method === 'OPTIONS') return options(request);
   if (request.method !== 'POST') return json(request, { error: 'Method not allowed.' }, 405);
 
@@ -54,3 +54,9 @@ export default async function handler(request: Request) {
     return json(request, { error: 'Image uploads are unavailable.' }, 400);
   }
 }
+
+// This runtime dispatches on named method exports; a default export is
+// invoked with the Node (req, res) signature and its returned Response is
+// discarded.
+export const POST = handler;
+export const OPTIONS = handler;
