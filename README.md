@@ -1,52 +1,39 @@
-# gremlin
+# Gremlin
 
-gremlin searches for small integer programs matching observed behavior. This repository implements all nine milestones (M0–M2 and D1–D6) of [PLAN.md](PLAN.md): a typed language, validated CFG IR, bounded interpreter, reproducible search, isolated ELF observations, counterexample refinement, optional CUDA evaluation, and narrow binary-scoped formal verification. The expanded assignment and measured gates are tracked in [milestones](docs/milestones.md).
+Gremlin searches for small integer programs that match a function’s inputs and outputs. It evolves candidates, tests them against examples, and saves the best program as Gremlin source. Candidates can also be evaluated on CUDA, checked with Z3, or compiled through LLVM.
 
-Try [Landing Lab](apps/landing-lab/README.md), a browser demo that searches spacecraft controllers across thousands of simulated flights. Its measured GPU search is 71.7× faster than the single-thread Gremlin CPU interpreter. A labeled recording is included.
+## Use
 
-Try [Shader Detective](apps/shader-detective/README.md), a browser demo that recovers a hidden color transform and compares the same search on CPU and GPU. A labeled recorded demo is included.
-
-## Build and use
-
-Rust 1.90.0 and a system linker are required. Full integration tests additionally require Bubblewrap, Z3, Clang 18 and compiler-rt/libFuzzer; optional workflows check their prerequisites explicitly. Dependencies are pinned in `Cargo.toml` and `Cargo.lock`; execution needs no network, CUDA, LLVM, solver, or external service.
+Install Rust 1.90.0 and a system linker, then build:
 
 ```sh
-cargo run -p gremlin-cli -- --help
-cargo run -p gremlin-cli -- check examples/affine.gremlin
-cargo run -p gremlin-cli -- run examples/affine.gremlin --args 0x0000000000000005 --max-steps 256
-cargo run --release -p gremlin-cli -- synthesize --config tests/fixtures/composed_u64.toml
-cargo run --release -p gremlin-cli -- resume runs/composed_u64/checkpoint.json
+cargo build --release --locked -p gremlin-cli
 ```
 
-The composed fixture is `x * 3 + 1` with wrapping u64 arithmetic. Five mandatory fixture configurations live in `tests/fixtures/`; each is tested with seeds 1, 2, and 3. `examples/affine.toml` is a larger, non-gating benchmark. Search sees only the signature, observations, configured operators, and configured constant hints. It does not receive oracle expressions.
+Run a program or search for one:
 
-For a larger experiment with a recorded bounded-search failure and a successful synthesized component, see the [cksum CRC demo](examples/cksum-crc/README.md).
+```sh
+target/release/gremlin run examples/affine.gremlin --args 0x0000000000000005
+target/release/gremlin synthesize --config tests/fixtures/composed_u64.toml
+```
 
-Search ranking is configurable: use built-in bit-error-first ordering or a bounded custom Gremlin scoring function. See [fitness comparators](docs/comparators.md). Exact correctness checks remain independent of scoring.
+Search results go into `runs/`: generated source, a JSON report, and a resumable checkpoint. Gremlin source looks like Rust but is a separate language. Functions accept up to four integer arguments and return one integer.
 
-Normalized configuration records all defaults; unknown fields and unsupported target kinds fail. Output paths are relative to the current working directory. A run refuses to overwrite an existing directory. CLI results go to stdout as JSON, and evolution progress goes to stderr. `run` defaults to 256 steps and accepts comma-separated exact-width hexadecimal arguments. Booleans are internal; signatures accept 0–4 integer arguments.
+The default build runs on CPU. Binary targets require Linux x86-64 and Bubblewrap; CUDA, Z3, and LLVM are optional. See the [usage guide](docs/usage.md) for configuration, dependencies, CPU limits, and resuming a search.
 
-## Run artifacts and resume
+## Demos
 
-Each run writes:
+| Demo | What it does |
+| --- | --- |
+| [Shader Detective](apps/shader-detective/README.md) | Recover a hidden color transform. |
+| [Shader Sculptor](apps/shader-sculptor/README.md) | Reconstruct an image as a drawing program. |
+| [Tiny Robot](apps/tiny-robot/README.md) | Evolve a controller, then test it in a maze you draw. |
+| [Landing Lab](apps/landing-lab/README.md) | Search for a spacecraft landing controller. |
+| [Orbit Forge](apps/orbit-forge/README.md) | Evolve a numerical solver and visualize its orbits. |
+| [CRC experiment](examples/cksum-crc/README.md) | Try synthesizing part of `cksum`; includes failed searches and a working component. |
 
-- `config.json`: normalized, fully explicit configuration.
-- `corpus.json` and `provenance.json`: canonical observations and separate provenance.
-- `best.gremlin` and `best.ir.json`: candidate source and normalized IR.
-- `checkpoint.json`: a generation-boundary population, compact fitness totals, complete RNG state, best candidate, identities, and checksums.
-- `report.json`: stop reason, status, evidence scope, corpus and holdout results, execution counts, configuration, and runtime.
-- `integrity.json`: SHA-256 of every completed artifact above.
+Each browser demo documents its setup and recorded playback mode.
 
-Checkpoints are atomically replaced after each completed generation. Resume verifies the checkpoint payload checksum, static input file hashes, executable identity, semantics/PRNG versions, configuration, fixture fingerprint, corpus identity, population validity, and recalculated fitness. It continues from the last completed generation. Use the same executable build and working directory as the original run. A final checkpoint can also be resumed to reproduce its validation report. Timing telemetry may differ; population, RNG, candidate sequence, and fitness remain deterministic.
+## Documentation
 
-A `.running` file prevents concurrent writers. After an externally killed process, confirm it has stopped and remove that stale file before resuming. Temporary files can remain after a crash; the checkpoint itself is replaced by atomic rename. Population fitness stores aggregate totals, with empty `cases` arrays. Resume recomputes those totals on CPU. The final report materializes detailed per-case results for the best candidate; checkpoints do not retain the full population × corpus outcome matrix.
-
-Exit codes: 0 successful check/execution or requested tests passed; 2 invalid input/configuration; 3 exhausted search without a corpus match; 4 infrastructure failure; 5 execution trap/timeout; 6 holdout counterexample.
-
-## Evidence and limits
-
-Reports keep `run_status`, `evidence_level`, and `evidence_scope` separate. A corpus match is E1; a match also passing independently seeded holdout observations is E2. Both are `TESTED`, scoped to the configured fixture or isolated binary. They are not equivalence proofs. A known holdout mismatch returns status `counterexample_found` and exit 6, even though E1 remains recorded. Setting `holdout_cases = 0` explicitly allows E1-only success.
-
-Source supports mutable locals, structured branches and loops, and module calls/recursion with explicit depth limits. Canonical CFG source round trips preserve step counts. Search can generate bounded CFGs when structural mutation is configured. Binary execution requires Linux x86-64, Bubblewrap, and working namespaces/seccomp; see [D1](docs/design/D1.md). CUDA is opt-in and requires a toolkit build and supported NVIDIA device; see [D3](docs/design/D3.md) for configuration, parity results, timing, and limitations. Formal verification supports the documented straight-line ELF register subset; see [D4](docs/design/D4.md). Selected candidates can be lowered through LLVM after an explicit evidence gate and checked as isolated native artifacts; see [D5](docs/design/D5.md). Versioned corpus import and an external libFuzzer campaign adapter are available; see [D6](docs/design/D6.md). Search is single-threaded, bounded, and not guaranteed to find arbitrary programs or unknown constants.
-
-See the [supported-feature matrix](docs/support.md), [language semantics](docs/semantics.md), [development and search design](docs/development.md), and [validation results](docs/validation.md).
+[Usage](docs/usage.md) · [Custom scoring](docs/comparators.md) · [Language](docs/semantics.md) · [Supported features](docs/support.md) · [Development](docs/development.md) · [Test results](docs/validation.md)
