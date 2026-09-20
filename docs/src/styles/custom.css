@@ -92,6 +92,23 @@
   justify-content: space-between;
 }
 
+/*
+ * Starlight separates sibling flow content with a top margin. Inside an island
+ * that rule reaches the children of these flex and grid rows, so every item
+ * after the first sits a line lower than its neighbours, and the toolbar gains
+ * a gap only when the visually hidden human-check element precedes it. The rows
+ * space themselves with `gap`, so the inherited margin is dropped here.
+ */
+.experiment-toolbar,
+.experiment-toolbar > *,
+.experiment-fields > *,
+.experiment-actions > *,
+.experiment-metrics > *,
+.experiment-robot-controls > *,
+.experiment-canvas-grid > * {
+  margin-top: 0;
+}
+
 .experiment-human-check {
   height: 1px;
   overflow: hidden;
@@ -206,6 +223,35 @@
   color: var(--sl-color-white);
   font-size: var(--sl-text-base);
   font-weight: 500;
+}
+
+/* Target beside discovered, stacking when there is not room for two columns. */
+.experiment-code-pair {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  margin-top: 1rem;
+}
+
+.experiment-code-pair figure {
+  margin: 0;
+  min-width: 0;
+}
+
+.experiment-code-pair figcaption {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+  margin-bottom: 0.35rem;
+}
+
+.experiment-code-pair pre {
+  margin-top: 0;
+  overflow-x: auto;
+}
+
+.experiment-note {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
 }
 
 .experiment-code {

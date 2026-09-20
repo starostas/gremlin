@@ -466,6 +466,8 @@ function ShaderDetective() {
   const height = start?.height ?? 88;
   const preview = last(visible, (event) => Boolean(event.preview))?.preview;
   const program = last(visible, (event) => typeof event.program === 'string')?.program;
+  // Reported only on the terminal event: the search itself never receives it.
+  const targetSource = last(visible, (event) => typeof event.target_source === 'string')?.target_source;
   const result = last(visible, (event) => event.kind === 'done');
   // Shader Detective reports one `done` per engine rather than a `comparison`
   // event, so the CPU/GPU comparison is derived the way the original demo did:
@@ -568,7 +570,27 @@ function ShaderDetective() {
                 : 'CPU and GPU search states differ; the comparison is not validated.'}
             </p>
           )}
-          {program && <pre><code>{program}</code></pre>}
+          {(targetSource || program) && (
+            <div class="experiment-code-pair">
+              {targetSource && (
+                <figure>
+                  <figcaption>Hidden target</figcaption>
+                  <pre><code>{targetSource}</code></pre>
+                </figure>
+              )}
+              {program && (
+                <figure>
+                  <figcaption>{targetSource ? 'Discovered program' : 'Discovered'}</figcaption>
+                  <pre><code>{program}</code></pre>
+                </figure>
+              )}
+            </div>
+          )}
+          {targetSource && program && (
+            <p class="experiment-note">
+              The search was given the operators and constants but never this arrangement. A match in behaviour does not require a match in structure.
+            </p>
+          )}
         </details>
       )}
     </section>

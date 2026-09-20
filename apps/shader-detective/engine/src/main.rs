@@ -19,6 +19,22 @@ fn oracle(x: u32, preset: &str) -> u32 {
         mixed
     }
 }
+/// The hidden transform written as Gremlin source, for display once a run has
+/// finished. It is built from the same constants `oracle` applies, so the two
+/// cannot drift apart, and it is reported only on the terminal event: the
+/// search never receives it.
+fn oracle_source(preset: &str) -> String {
+    let head = format!(
+        "fn target(v0: u32) -> u32 {{\n    let v1: u32 = rotl(v0, {:#010x}u32);\n    let v2: u32 = xor(v1, {:#010x}u32);\n",
+        8u32, MASK
+    );
+    if preset == "afterglow" {
+        format!("{head}    return add(v2, {BIAS:#010x}u32);\n}}\n")
+    } else {
+        format!("{head}    return v2;\n}}\n")
+    }
+}
+
 fn picture() -> Vec<u32> {
     (0..WIDTH * HEIGHT)
         .map(|i| {
@@ -197,7 +213,7 @@ fn run(mode: &str, preset: &str, count: usize, seed: u64) -> Result<(), String> 
     let m = metrics.lock().map_err(|_| "metrics lock poisoned")?;
     let success = state.best.fitness.matches() && mismatches == 0 && image_matches;
     emit(
-        serde_json::json!({"kind":"done","mode":mode,"success":success,"generation":state.generation,"search_seconds":search_seconds,"holdout_cases":4096,"holdout_mismatches":mismatches,"image_matches":image_matches,"program":print_source(&f)?,"candidate_hash":hash(&f.canonical_bytes()?),"search_state_hash":object_hash(&state),"preview":preview,"evaluations":state.evaluation_count,"device":if mode=="gpu" {m.device.clone()}else{"CPU reference interpreter".into()},"gpu_batches":m.batches,"gpu_host_ms":m.host_ms,"gpu_kernel_ms":m.kernel_ms,"peak_device_bytes":m.bytes,"evidence":"TESTED on training + independent holdout; not a formal proof"}),
+        serde_json::json!({"kind":"done","mode":mode,"success":success,"generation":state.generation,"search_seconds":search_seconds,"holdout_cases":4096,"holdout_mismatches":mismatches,"image_matches":image_matches,"program":print_source(&f)?,"candidate_hash":hash(&f.canonical_bytes()?),"search_state_hash":object_hash(&state),"preview":preview,"evaluations":state.evaluation_count,"device":if mode=="gpu" {m.device.clone()}else{"CPU reference interpreter".into()},"gpu_batches":m.batches,"gpu_host_ms":m.host_ms,"gpu_kernel_ms":m.kernel_ms,"peak_device_bytes":m.bytes,"evidence":"TESTED on training + independent holdout; not a formal proof","target_source":oracle_source(preset)}),
     );
     if !success {
         return Err("search budget exhausted or validation mismatch".into());
