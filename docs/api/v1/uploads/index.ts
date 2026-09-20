@@ -1,7 +1,7 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
-import { hasAllowedOrigin, json, options } from '../../../src/cors.js';
-import { expectedRasterBytes, parseSculptorAsset, sculptorAssetPath } from '../../../src/sculptor-assets.js';
-import { readJson } from '../../../src/request.js';
+import { hasAllowedOrigin, json, options } from '../../_lib/cors.js';
+import { expectedRasterBytes, parseSculptorAsset, sculptorAssetPath } from '../../_lib/sculptor-assets.js';
+import { readJson } from '../../_lib/request.js';
 
 function isTokenRequest(body: HandleUploadBody) {
   return body.type === 'blob.generate-client-token';

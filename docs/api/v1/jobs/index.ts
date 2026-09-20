@@ -1,12 +1,12 @@
-import { createCapability, hashCapability } from '../../../src/auth.js';
-import { admitsJobRequest } from '../../../src/admission.js';
-import { hasAllowedOrigin, json, options } from '../../../src/cors.js';
-import type { JobState } from '../../../src/contracts.js';
-import { parseCreateJob } from '../../../src/contracts.js';
-import { createJob, releaseJobSlot, reserveJobSlot, updateJob } from '../../../src/job-store.js';
-import { gpuTopic, queue } from '../../../src/queue.js';
-import { readJson } from '../../../src/request.js';
-import { assertWorkerConfiguration } from '../../../src/worker.js';
+import { createCapability, hashCapability } from '../../_lib/auth.js';
+import { admitsJobRequest } from '../../_lib/admission.js';
+import { hasAllowedOrigin, json, options } from '../../_lib/cors.js';
+import type { JobState } from '../../_lib/contracts.js';
+import { parseCreateJob } from '../../_lib/contracts.js';
+import { createJob, releaseJobSlot, reserveJobSlot, updateJob } from '../../_lib/job-store.js';
+import { gpuTopic, queue } from '../../_lib/queue.js';
+import { readJson } from '../../_lib/request.js';
+import { assertWorkerConfiguration } from '../../_lib/worker.js';
 
 export default async function handler(request: Request) {
   if (request.method === 'OPTIONS') return options(request);

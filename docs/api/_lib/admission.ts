@@ -12,11 +12,22 @@ function localBypassEnabled() {
 }
 
 /**
+ * Running without a human check is a deliberate choice, not a consequence of
+ * forgetting to configure one. Missing Turnstile configuration still fails
+ * closed; only this explicit variable opens the routes, and what then limits
+ * abuse is the global pending-job cap plus the worker running one job at a
+ * time. Anyone who finds the endpoint can keep the GPU busy.
+ */
+function unverifiedJobsAllowed() {
+  return process.env.ALLOW_UNVERIFIED_JOBS === 'true';
+}
+
+/**
  * A GPU run is an expensive public action. Production requests must carry a
- * one-time Turnstile proof; the only bypass is explicitly local development.
+ * one-time Turnstile proof unless human verification is explicitly disabled.
  */
 export async function admitsTurnstileToken(token: string | null) {
-  if (localBypassEnabled()) return true;
+  if (localBypassEnabled() || unverifiedJobsAllowed()) return true;
 
   const secret = process.env.TURNSTILE_SECRET_KEY;
   const hostname = process.env.TURNSTILE_EXPECTED_HOSTNAME;

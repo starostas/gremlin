@@ -1,7 +1,7 @@
-import { verifiesCallbackTicket } from '../../../../src/auth.js';
-import { isJobId, isObjectValue, type JobStatus, type JsonObject } from '../../../../src/contracts.js';
-import { appendWorkerUpdate } from '../../../../src/job-store.js';
-import { readJson } from '../../../../src/request.js';
+import { verifiesCallbackTicket } from '../../../_lib/auth.js';
+import { isJobId, isObjectValue, type JobStatus, type JsonObject } from '../../../_lib/contracts.js';
+import { appendWorkerUpdate } from '../../../_lib/job-store.js';
+import { readJson } from '../../../_lib/request.js';
 
 const callbackStatuses = new Set<JobStatus>(['running', 'succeeded', 'failed', 'cancelled']);
 

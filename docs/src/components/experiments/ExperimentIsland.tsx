@@ -24,6 +24,12 @@ declare global {
   }
 }
 
+/** The job routes deploy with this site, so they are always same-origin. */
+const API_BASE = '/api';
+
+/** Live runs stay off unless the deployment opts in, keeping forks replay-only. */
+const liveRunsEnabled = import.meta.env.PUBLIC_EXPERIMENT_LIVE_RUNS === 'true';
+
 let turnstileLoader: Promise<TurnstileApi> | undefined;
 
 function loadTurnstile() {
@@ -57,10 +63,7 @@ function useHumanCheck() {
   const siteKey = import.meta.env.PUBLIC_EXPERIMENT_TURNSTILE_SITE_KEY;
 
   const requestToken = async () => {
-    if (!siteKey) {
-      if (import.meta.env.DEV) return undefined;
-      throw new Error('Live runs are not enabled for this site.');
-    }
+    if (!siteKey) return undefined;
     const target = container.current;
     if (!target) throw new Error('Human verification is not ready.');
     const turnstile = await loadTurnstile();
@@ -227,8 +230,7 @@ function useDemoRun(demo: Exclude<DemoId, 'cksum-crc'>) {
 
   const cancel = async () => {
     if (!job) return;
-    const api = import.meta.env.PUBLIC_EXPERIMENT_API_URL?.replace(/\/$/, '');
-    if (!api) return;
+    const api = API_BASE;
     const activeJob = job;
     requestEpoch.current += 1;
     requestController.current?.abort();
@@ -248,11 +250,7 @@ function useDemoRun(demo: Exclude<DemoId, 'cksum-crc'>) {
   };
 
   const runGpu = async (input: Json) => {
-    const api = import.meta.env.PUBLIC_EXPERIMENT_API_URL?.replace(/\/$/, '');
-    if (!api) {
-      setError('The GPU gateway is not configured for this deployment.');
-      return;
-    }
+    const api = API_BASE;
 
     const epoch = requestEpoch.current + 1;
     requestEpoch.current = epoch;
@@ -349,7 +347,7 @@ function useDemoRun(demo: Exclude<DemoId, 'cksum-crc'>) {
     playing,
     job,
     error,
-    gatewayReady: Boolean(import.meta.env.PUBLIC_EXPERIMENT_API_URL),
+    gatewayReady: liveRunsEnabled,
     requestHumanToken: humanCheck.requestToken,
     humanCheck: <div ref={humanCheck.container} class="experiment-human-check" aria-hidden="true" />,
     replay,
@@ -798,8 +796,7 @@ function ShaderSculptor() {
   };
 
   const run = async (input: ShaderSculptorRunInput) => {
-    const api = import.meta.env.PUBLIC_EXPERIMENT_API_URL?.replace(/\/$/, '');
-    if (!api) throw new Error('The GPU gateway is not configured for this deployment.');
+    const api = API_BASE;
     const imageAsset = input.image ? await uploadImage(api, input.image) : undefined;
     await demo.runGpu(
       imageAsset

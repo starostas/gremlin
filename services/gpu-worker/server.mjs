@@ -168,7 +168,7 @@ function validRequest(value) {
     const callbackUrl = new URL(value.callbackUrl);
     if (
       callbackUrl.origin !== gatewayOrigin ||
-      callbackUrl.pathname !== `/v1/internal/jobs/${value.jobId}` ||
+      callbackUrl.pathname !== `/api/v1/internal/jobs/${value.jobId}` ||
       callbackUrl.search ||
       callbackUrl.hash
     ) return false;

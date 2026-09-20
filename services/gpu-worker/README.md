@@ -1,9 +1,9 @@
 # Gremlin GPU worker
 
-This is the only component that runs GPU binaries. It is deliberately separate from the public docs site and Vercel gateway:
+This is the only component that runs GPU binaries, and it runs nowhere near the public site. The site and its job routes deploy together as one Vercel project; this worker is a separate host that only that project can reach:
 
 ```text
-Astro island → Vercel gateway → Vercel Queue → this HTTPS worker → signed gateway callback
+Astro island → job routes on the same Vercel project → Vercel Queue → this HTTPS worker → signed callback
 ```
 
 The browser never reaches this service. The worker accepts only Vercel-issued OIDC tokens for one exact production subject, accepts only five fixed demo schemas, derives all executable paths itself, and runs a single job at a time. It never receives an SSH key, Blob credential, Vercel Queue token, or browser request.
@@ -25,13 +25,22 @@ pnpm install --frozen-lockfile --prod
 cp .env.example /etc/gremlin-gpu-worker.env
 ```
 
-Fill in the exact issuer, audience, and production OIDC subject from the Vercel gateway project. `GATEWAY_ORIGIN` must be the gateway’s canonical HTTPS origin. Keep the listener on loopback.
+Fill in the exact issuer, audience, and production OIDC subject from the Vercel project. `GATEWAY_ORIGIN` must be that project’s canonical HTTPS origin. Keep the listener on loopback.
 
 ### Reaching the worker over HTTPS
 
-A [named Cloudflare Tunnel](./cloudflared-config.example.yml) is the supported path: it dials out, so no inbound port is opened and the GPU host’s address stays unpublished. Its hostname becomes the gateway’s `GPU_WORKER_URL`. On a host with its own public name and certificate, the [Caddy example](./Caddyfile.example) works instead. Do not expose the Node listener or a demo engine directly.
+Tailscale Funnel is the supported path. It dials out, so no inbound port is opened and the GPU host’s address stays unpublished, and it gives a stable `*.ts.net` hostname with a managed certificate. That hostname becomes `GPU_WORKER_URL`.
 
-Install the systemd unit after checking its paths, then enable it. On a rented GPU container without systemd, use [`run-container.sh`](./run-container.sh), which starts the tunnel and the worker together. The account needs access to the NVIDIA device nodes through the host’s normal GPU group configuration. Do not run the service as root.
+```sh
+# Containers without /dev/net/tun need userspace networking.
+tailscaled --tun=userspace-networking --state=/var/lib/tailscale/tailscaled.state &
+tailscale up --hostname=gremlin-gpu
+tailscale funnel --bg 8080
+```
+
+Funnel is off by default: allowing it is a tailnet policy change, so the first `tailscale funnel` prints a one-time link to enable it, and the tailnet also needs HTTPS certificates turned on. Do not expose the Node listener or a demo engine directly.
+
+Install the systemd unit after checking its paths, then enable it. On a rented GPU container without systemd, use [`run-container.sh`](./run-container.sh). The account needs access to the NVIDIA device nodes through the host’s normal GPU group configuration. Do not run the service as root.
 
 ### Optional: Orbit Forge native evidence
 

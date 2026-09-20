@@ -1,7 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm run check && mkdir -p public",
-  "outputDirectory": "public",
   "functions": {
     "api/internal/queue/dispatch.ts": {
       "experimentalTriggers": [

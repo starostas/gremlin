@@ -1,7 +1,7 @@
-import { createCallbackTicket } from '../../../src/auth.js';
-import { readJob, updateJob } from '../../../src/job-store.js';
-import { queue } from '../../../src/queue.js';
-import { dispatchToWorker } from '../../../src/worker.js';
+import { createCallbackTicket } from '../../_lib/auth.js';
+import { readJob, updateJob } from '../../_lib/job-store.js';
+import { queue } from '../../_lib/queue.js';
+import { dispatchToWorker } from '../../_lib/worker.js';
 
 type QueueMessage = { jobId?: unknown };
 

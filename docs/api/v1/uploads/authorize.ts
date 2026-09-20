@@ -1,7 +1,7 @@
-import { admitsJobRequest } from '../../../src/admission.js';
-import { hasAllowedOrigin, json, options } from '../../../src/cors.js';
-import { createSculptorAsset, expectedRasterBytes, type SculptorResolution } from '../../../src/sculptor-assets.js';
-import { readJson } from '../../../src/request.js';
+import { admitsJobRequest } from '../../_lib/admission.js';
+import { hasAllowedOrigin, json, options } from '../../_lib/cors.js';
+import { createSculptorAsset, expectedRasterBytes, type SculptorResolution } from '../../_lib/sculptor-assets.js';
+import { readJson } from '../../_lib/request.js';
 
 const resolutions = [128, 256, 512, 1024, 2048] as const;
 

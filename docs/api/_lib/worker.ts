@@ -81,7 +81,7 @@ export async function dispatchToWorker(state: JobState, callbackTicket: string) 
       jobId: state.id,
       demoId: state.demoId,
       input,
-      callbackUrl: new URL(`/v1/internal/jobs/${state.id}`, gatewayUrl).toString(),
+      callbackUrl: new URL(`/api/v1/internal/jobs/${state.id}`, gatewayUrl).toString(),
       callbackTicket
     }),
     redirect: 'error',

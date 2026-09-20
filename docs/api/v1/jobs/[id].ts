@@ -1,8 +1,8 @@
-import { hasCapability } from '../../../src/auth.js';
-import { options, privateJson } from '../../../src/cors.js';
-import { isJobId, isTerminal, type JsonObject } from '../../../src/contracts.js';
-import { expireStaleActiveJob, readJob, updateJob } from '../../../src/job-store.js';
-import { requestWorkerCancellation } from '../../../src/worker.js';
+import { hasCapability } from '../../_lib/auth.js';
+import { options, privateJson } from '../../_lib/cors.js';
+import { isJobId, isTerminal, type JsonObject } from '../../_lib/contracts.js';
+import { expireStaleActiveJob, readJob, updateJob } from '../../_lib/job-store.js';
+import { requestWorkerCancellation } from '../../_lib/worker.js';
 
 function idFromRequest(request: Request) {
   const id = new URL(request.url).pathname.split('/').at(-1) ?? '';
