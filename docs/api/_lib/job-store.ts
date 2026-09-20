@@ -152,33 +152,39 @@ export async function createJob(state: JobState) {
   });
 }
 
+/**
+ * A job document is rewritten on every worker callback, and the store does not
+ * offer read-your-writes strongly enough for an ETag precondition to hold at
+ * that rate: the ETag read back is stale within milliseconds, so a conditional
+ * write fails indefinitely rather than resolving on retry.
+ *
+ * Ordering is enforced instead by the monotonic `lastWorkerSequence` the worker
+ * stamps on every update, which rejects duplicates and out-of-order delivery —
+ * exactly what queue redelivery can produce. Writes are therefore
+ * unconditional. During a run the worker is the only writer and it awaits each
+ * callback in turn, so the remaining race is a browser cancellation landing
+ * alongside a callback; the cancel can be overwritten and is retried by the
+ * next poll. The pending-slot document keeps its precondition, because that one
+ * is genuinely contended between concurrent job creations and is written rarely
+ * enough for the precondition to behave.
+ */
 export async function updateJob(
   jobId: string,
   mutate: (state: JobState) => JobState | undefined
 ): Promise<JobState | undefined> {
-  for (let attempt = 0; attempt < retryLimit; attempt += 1) {
-    const stored = await readJob(jobId);
-    if (!stored) return undefined;
-    const next = mutate(structuredClone(stored.state));
-    if (!next) return stored.state;
-    next.updatedAt = new Date().toISOString();
-    try {
-      await put(pathname(jobId), JSON.stringify(next), {
-        access: 'private',
-        addRandomSuffix: false,
-        allowOverwrite: true,
-        ifMatch: stored.etag,
-        contentType,
-        cacheControlMaxAge: 0
-      });
-      return next;
-    } catch (error) {
-      if (!(error instanceof BlobPreconditionFailedError) || attempt === retryLimit - 1) throw error;
-      // Back off before re-reading so a racing write has time to settle.
-      await new Promise((settle) => setTimeout(settle, 50 * (attempt + 1)));
-    }
-  }
-  throw new Error('Unable to update the job after concurrent changes.');
+  const stored = await readJob(jobId);
+  if (!stored) return undefined;
+  const next = mutate(structuredClone(stored.state));
+  if (!next) return stored.state;
+  next.updatedAt = new Date().toISOString();
+  await put(pathname(jobId), JSON.stringify(next), {
+    access: 'private',
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType,
+    cacheControlMaxAge: 0
+  });
+  return next;
 }
 
 export async function appendWorkerUpdate(
