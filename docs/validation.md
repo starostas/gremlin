@@ -70,7 +70,7 @@ See [supported features](support.md) and the D1–D6 design notes. Calls remain 
 
 CUDA was slower on the measured small synthesis workload: 4.263 seconds versus CPU 0.948 seconds. Setup, transfers, serialization and fresh worker/context startup are included. No general acceleration claim is made.
 
-The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test and the complete CPU workflow (commit `9620da1`). The separately contributed documentation site builds, but GitHub Pages deployment returns 404 until Pages is enabled in repository settings; this is separate from the Rust gates.
+The supplied GPU container does not permit the user namespaces required for binary isolation. GPU evaluation was measured there; binary/proof/native integration was measured locally, including with its CUDA-enabled executable. No reduced-isolation fallback was used. GitHub Ubuntu 24.04 initially blocked Bubblewrap's network-namespace setup; a launcher-specific AppArmor userns profile now passes the CI namespace smoke test and the complete CPU workflow (commit `9620da1`). The documentation site builds as a static Astro application and is configured for Vercel deployment; this is separate from the Rust gates.
 
 ## Comparator extension
 
