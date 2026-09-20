@@ -1,3 +1,20 @@
+/*
+ * Starlight separates sibling flow content with a top margin, which lands on
+ * the children of these flex and grid rows and drops every item after the first
+ * by a line: the first sensor sat above the other three, and the drawing tools
+ * stepped down across the row. They space themselves with gap.
+ */
+.tiny-robot-sensors > *,
+.tiny-robot-tools > *,
+.tiny-robot-playback > *,
+.tiny-robot-metrics > *,
+.tiny-robot-decision > *,
+.tiny-robot-gallery > *,
+.tiny-robot-panel-heading > *,
+.tiny-robot-outcome > * {
+  margin-top: 0;
+}
+
 .tiny-robot-parity {
   margin-top: 1rem;
 }
@@ -149,21 +166,29 @@
   border-collapse: collapse;
   font-family: var(--sl-font-mono);
   font-size: var(--sl-text-xs);
-  min-width: 31rem;
+  /* Wide enough to stay readable, small enough to fit the panel rather than
+     forcing a horizontal scrollbar over six short columns. */
+  min-width: 22rem;
+  table-layout: fixed;
   width: 100%;
 }
 
 .tiny-robot-rules th {
   color: var(--sl-color-gray-3);
   font-weight: 400;
+  overflow: hidden;
   padding: 0.35rem;
   text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tiny-robot-rules td {
   border-top: 1px solid var(--sl-color-gray-5);
   color: var(--sl-color-gray-2);
+  overflow: hidden;
   padding: 0.35rem;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

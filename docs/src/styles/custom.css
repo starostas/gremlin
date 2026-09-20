@@ -297,6 +297,18 @@
   overflow-x: auto;
 }
 
+/*
+ * A discovered program may be one very long line. Wrapping keeps it inside the
+ * panel instead of scrolling sideways, and the height cap keeps a long program
+ * from pushing the rest of the page off screen.
+ */
+.experiment-code-block {
+  max-height: 32rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .experiment-code-pair .experiment-objective {
   background: var(--sl-color-gray-7, var(--sl-color-black));
   border: 1px solid var(--sl-color-gray-6);

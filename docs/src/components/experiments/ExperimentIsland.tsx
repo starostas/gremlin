@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import ShaderSculptorParity, { type ShaderSculptorRunInput } from './ShaderSculptorParity';
 import TinyRobotParity from './TinyRobotParity';
-import { Outcome, Section } from './IslandChrome';
+import { CodeBlock, Outcome, Section } from './IslandChrome';
 
 export type DemoId =
   | 'shader-detective'
@@ -416,7 +416,7 @@ function Metric({ label, value }: { label: string; value: string | number | unde
   );
 }
 
-function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number, number]>) {
+function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number, number]>, logarithmic = false) {
   if (!canvas) return;
   const width = 420;
   const height = 96;
@@ -435,13 +435,19 @@ function drawErrorChart(canvas: HTMLCanvasElement | null, values: Array<[number,
     context.stroke();
   }
   if (!values.length) return;
-  const max = Math.max(...values.map(([, value]) => value), 0.001);
+  // A solver's error falls by orders of magnitude, so plot it on a log scale;
+  // a bit-error rate is a proportion and reads better linearly.
+  const scale = (value: number) => (logarithmic ? Math.log10(Math.max(value, 1e-12)) : value);
+  const scaled = values.map(([generation, value]) => [generation, scale(value)] as [number, number]);
+  const highest = Math.max(...scaled.map(([, value]) => value));
+  const lowest = logarithmic ? Math.min(...scaled.map(([, value]) => value)) : 0;
+  const span = Math.max(highest - lowest, logarithmic ? 1 : 0.001);
   context.strokeStyle = '#d5d6d9';
   context.lineWidth = 1.5;
   context.beginPath();
-  values.forEach(([generation, error], index) => {
-    const x = 6 + ((generation - 1) / Math.max(1, values.at(-1)?.[0] ?? 1)) * (width - 12);
-    const y = height - 8 - (error / max) * (height - 22);
+  scaled.forEach(([generation, value], index) => {
+    const x = 6 + ((generation - 1) / Math.max(1, scaled.at(-1)?.[0] ?? 1)) * (width - 12);
+    const y = height - 8 - ((value - lowest) / span) * (height - 22);
     if (index === 0) context.moveTo(x, y);
     else context.lineTo(x, y);
   });
@@ -565,10 +571,10 @@ function ShaderDetective() {
       <Outcome
         targetLabel="Hidden target"
         target={targetSource
-          ? <pre><code>{targetSource}</code></pre>
+          ? <CodeBlock text={targetSource} />
           : <p class="experiment-objective">A packed-colour transform built from rotate, XOR and add. Its arrangement is revealed once a run finishes.</p>}
         resultLabel="Discovered program"
-        result={program ? <pre><code>{program}</code></pre> : undefined}
+        result={program ? <CodeBlock text={program} /> : undefined}
         note={targetSource && program
           ? 'The search was given the operators and constants but never this arrangement. A match in behaviour does not require a match in structure.'
           : undefined}
@@ -720,7 +726,7 @@ function LandingLab() {
           ? (
             <>
               {controller.description && <p class="experiment-objective">{controller.description}</p>}
-              <pre><code>{controller.source}</code></pre>
+              <CodeBlock text={controller.source} />
             </>
           )
           : undefined}
@@ -778,10 +784,10 @@ function TinyRobot() {
       <Outcome
         targetLabel="The task it runs inside"
         target={episodeSource
-          ? <pre><code>{episodeSource}</code></pre>
+          ? <CodeBlock text={episodeSource} />
           : <p class="experiment-objective">Reach the exit carrying the key, in rooms the robot has never seen, using three wall sensors and a single bit of memory.</p>}
         resultLabel="Discovered brain"
-        result={brainSource ? <pre><code>{brainSource}</code></pre> : undefined}
+        result={brainSource ? <CodeBlock text={brainSource} /> : undefined}
         note={episodeSource && brainSource
           ? 'The task program on the left is fixed and scores every candidate. Only the brain on the right was searched for.'
           : undefined}
@@ -1021,6 +1027,7 @@ function OrbitForge() {
   const demo = useDemoRun('orbit-forge');
   const orbitCanvas = useRef<HTMLCanvasElement>(null);
   const heatCanvas = useRef<HTMLCanvasElement>(null);
+  const errorCanvas = useRef<HTMLCanvasElement>(null);
   const [tolerance, setTolerance] = useState(0.0001);
   const [seed, setSeed] = useState(1);
   const [eccentricity, setEccentricity] = useState(0.7);
@@ -1031,9 +1038,34 @@ function OrbitForge() {
   const genome = current?.genome ?? done?.genome;
   const stage = last(demo.events.slice(0, Math.max(0, demo.events.indexOf(current) + 1)), (event) => event.kind === 'stage');
   const point = orbitMeasurement(genome, eccentricity, phase);
+  // While a run is live the curve comes from the progress events; once it has
+  // finished, the terminal event carries the whole history, so a replayed run
+  // shows the same shape.
+  const progressCurve = demo.events
+    .filter((event) => event.kind === 'progress' && typeof event.max_error === 'number')
+    .map((event) => [event.generation as number, event.max_error as number] as [number, number]);
+  const historyCurve = Array.isArray(done?.history)
+    ? done.history
+        .filter((entry: Json) => typeof entry?.max_error === 'number')
+        .map((entry: Json) => [entry.generation as number, entry.max_error as number] as [number, number])
+    : [];
+  const curve = progressCurve.length >= historyCurve.length ? progressCurve : historyCurve;
+  const benchmark = done?.benchmark;
+  const ratios: number[] = Array.isArray(benchmark?.summaries)
+    ? benchmark.summaries.map((entry: Json) => Number(entry.ratio)).filter((value: number) => Number.isFinite(value))
+    : [];
+  // A speedup is only claimed when every trial won; otherwise the measured
+  // range is reported so the number is not read as a result it did not earn.
+  const speedup = benchmark?.consistent_win && typeof benchmark.speedup === 'number'
+    ? `${benchmark.speedup.toFixed(2)}×`
+    : ratios.length
+      ? `${Math.min(...ratios).toFixed(2)}–${Math.max(...ratios).toFixed(2)}× (mixed)`
+      : undefined;
+  const totalGenerations = last(demo.events, (event) => typeof event.generations === 'number')?.generations;
 
   useEffect(() => drawOrbit(orbitCanvas.current, genome, eccentricity, phase), [genome, eccentricity, phase]);
   useEffect(() => drawHeatmap(heatCanvas.current, done?.grid, done?.tolerance), [done]);
+  useEffect(() => drawErrorChart(errorCanvas.current, curve, true), [curve]);
   useEffect(() => {
     if (!animating) return;
     let frame = 0;
@@ -1079,9 +1111,9 @@ function OrbitForge() {
         <label>
           Tolerance
           <select value={tolerance} onInput={(event) => setTolerance(Number((event.currentTarget as HTMLSelectElement).value))}>
-            <option value={0.001}>0.001</option>
-            <option value={0.0001}>0.0001</option>
-            <option value={0.00001}>0.00001</option>
+            <option value={0.001}>1e−3 · easiest</option>
+            <option value={0.0001}>1e−4 · default</option>
+            <option value={0.00001}>1e−5 · hardest</option>
           </select>
         </label>
         <label>
@@ -1109,11 +1141,20 @@ function OrbitForge() {
         <span class="experiment-readout">E = {point.actual.toFixed(6)} rad · error {point.error.toExponential(2)} rad</span>
       </div>
       <div class="experiment-metrics">
-        <Metric label={typeof current?.generation === 'number' ? 'generation' : 'checked'} value={typeof current?.generation === 'number' ? current.generation : formatNumber(done?.checked)} />
-        <Metric label="evaluations" value={formatNumber(current?.evaluations ?? done?.evaluations)} />
-        <Metric label="max error" value={typeof current?.max_error === 'number' ? current.max_error.toExponential(2) : undefined} />
+        <Metric
+          label="generation"
+          value={typeof current?.generation === 'number'
+            ? (totalGenerations ? `${current.generation} / ${totalGenerations}` : current.generation)
+            : done?.checked !== undefined ? `${formatNumber(done.checked)} checked` : undefined}
+        />
+        <Metric label="max error" value={typeof current?.max_error === 'number' ? `${current.max_error.toExponential(2)} rad` : undefined} />
+        <Metric label="native speedup" value={speedup} />
         <Metric label="time" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
       </div>
+      <figure class="experiment-chart">
+        <canvas ref={errorCanvas} aria-label="Worst solver error by generation" />
+        <figcaption>Worst error by generation · log scale{done?.tolerance ? ` · target ${Number(done.tolerance).toExponential(0)} rad` : ''}</figcaption>
+      </figure>
       </Section>
       <Outcome
         targetLabel="Objective"
@@ -1122,8 +1163,8 @@ function OrbitForge() {
         result={done?.source
           ? (
             <>
-              {recipe(genome) && <pre><code>{recipe(genome)}</code></pre>}
-              <pre><code>{done.source}</code></pre>
+              {recipe(genome) && <pre class="experiment-code-block"><code>{recipe(genome)}</code></pre>}
+              <CodeBlock text={done.source} />
             </>
           )
           : undefined}
@@ -1142,7 +1183,15 @@ function OrbitForge() {
           <summary>Evidence</summary>
           {stage?.message && <p>{stage.message}</p>}
           {done && <p>{done.passed ? 'All checked cases pass.' : `${done.failures} checked cases fail.`} {done.counterexamples ?? 0} counterexamples fed back.</p>}
-          {done?.benchmark?.available && <p>Compiled program matches the interpreter on {formatNumber(done.benchmark.compiled_grid_checked)} grid inputs{done.benchmark.consistent_win ? ` · ≥ ${Number(done.benchmark.speedup).toFixed(2)}× native runtime speedup.` : '.'}</p>}
+          {done?.benchmark?.available && (
+            <p>
+              Compiled program matches the interpreter on {formatNumber(done.benchmark.compiled_grid_checked)} grid inputs.{' '}
+              {done.benchmark.consistent_win
+                ? `Every trial beat the reference solver, so the speedup shown is the slowest of them: ≥ ${Number(done.benchmark.speedup).toFixed(2)}×.`
+                : 'The trials did not all beat the reference solver, so no single speedup is claimed; the measured range is shown instead.'}
+              {done.benchmark.compiler ? ` Built with ${String(done.benchmark.compiler).split(' version ')[0]}.` : ''}
+            </p>
+          )}
         </details>
       )}
     </section>

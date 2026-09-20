@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Outcome, Section } from './IslandChrome';
+import { CodeBlock, Outcome, Section } from './IslandChrome';
 
 /**
  * The portable event shape emitted by Shader Sculptor. The GPU gateway keeps
@@ -713,7 +713,7 @@ export default function ShaderSculptorParity({
           </p>
         }
         resultLabel="Discovered drawing program"
-        result={resultProgram ? <pre><code>{resultProgram}</code></pre> : undefined}
+        result={resultProgram ? <CodeBlock text={resultProgram} /> : undefined}
       />
 
       <Section title="Export">

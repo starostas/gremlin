@@ -18,6 +18,30 @@ export function Section({ title, children }: { title: string; children: Componen
   );
 }
 
+const defaultMaxLines = 100;
+
+/**
+ * Discovered programs vary from a single very long line to several thousand
+ * short ones, so both extremes are handled here rather than at each call site:
+ * long lines wrap instead of scrolling off, and a long program is cut to a
+ * readable extract that says how much was left out.
+ */
+export function CodeBlock({ text, maxLines = defaultMaxLines }: { text: string; maxLines?: number }) {
+  const lines = text.replace(/\s+$/, '').split('\n');
+  const remaining = lines.length - maxLines;
+  const shown = remaining > 0 ? lines.slice(0, maxLines).join('\n') : lines.join('\n');
+  return (
+    <>
+      <pre class="experiment-code-block"><code>{shown}</code></pre>
+      {remaining > 0 && (
+        <p class="experiment-note">
+          [… {new Intl.NumberFormat('en-US').format(remaining)} more line{remaining === 1 ? '' : 's'}. Download the program to read it in full.]
+        </p>
+      )}
+    </>
+  );
+}
+
 /**
  * The same two-panel summary on every island: what the search had to match on
  * the left, what it produced on the right. Where a reference program genuinely
