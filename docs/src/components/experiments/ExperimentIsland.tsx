@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import ShaderSculptorParity, { type ShaderSculptorRunInput } from './ShaderSculptorParity';
 import TinyRobotParity from './TinyRobotParity';
+import { Outcome, Section } from './IslandChrome';
 
 export type DemoId =
   | 'shader-detective'
@@ -374,6 +375,7 @@ function IslandToolbar({
   return (
     <>
       {gatewayReady && humanCheck}
+      <Section title="Setup">
       <div class="experiment-toolbar">
         {children && <div class="experiment-fields">{children}</div>}
         <div class="experiment-actions">
@@ -395,6 +397,7 @@ function IslandToolbar({
           ) : null}
         </div>
       </div>
+      </Section>
     </>
   );
 }
@@ -529,7 +532,7 @@ function ShaderDetective() {
           </select>
         </label>
         <label>
-          Samples
+          Cases
           <select value={cases} onInput={(event) => setCases(Number((event.currentTarget as HTMLSelectElement).value))}>
             <option value={32768}>32,768</option>
             <option value={8192}>8,192</option>
@@ -545,48 +548,40 @@ function ShaderDetective() {
         </label>
       </IslandToolbar>
       <IslandStatus error={demo.error} job={demo.job} current={current} />
-      <div class="experiment-canvas-grid experiment-canvas-grid-three">
-        <figure><canvas ref={inputCanvas} aria-label="Input image" /><figcaption>Input</figcaption></figure>
-        <figure><canvas ref={targetCanvas} aria-label="Target image" /><figcaption>Target</figcaption></figure>
-        <figure><canvas ref={previewCanvas} aria-label="Candidate image" /><figcaption>Candidate</figcaption></figure>
-      </div>
-      <div class="experiment-metrics">
-        <Metric label="generation" value={current?.generation} />
-        <Metric label="match" value={accuracy} />
-        <Metric label="evaluations" value={formatNumber(current?.evaluations)} />
-        <Metric label="time" value={typeof result?.search_seconds === 'number' ? `${result.search_seconds.toFixed(2)}s` : typeof current?.elapsed_seconds === 'number' ? `${current.elapsed_seconds.toFixed(2)}s` : undefined} />
-      </div>
-      <figure class="experiment-chart"><canvas ref={chartCanvas} aria-label="Bit error rate by generation" /><figcaption>Bit error rate</figcaption></figure>
-      {(result || program || comparison) && (
+      <Section title="View">
+        <div class="experiment-canvas-grid experiment-canvas-grid-three">
+          <figure><canvas ref={inputCanvas} aria-label="Input image" /><figcaption>Input</figcaption></figure>
+          <figure><canvas ref={targetCanvas} aria-label="Target image" /><figcaption>Target</figcaption></figure>
+          <figure><canvas ref={previewCanvas} aria-label="Candidate image" /><figcaption>Candidate</figcaption></figure>
+        </div>
+        <div class="experiment-metrics">
+          <Metric label="generation" value={current?.generation} />
+          <Metric label="match" value={accuracy} />
+          <Metric label="evaluations" value={formatNumber(current?.evaluations)} />
+          <Metric label="time" value={typeof result?.search_seconds === 'number' ? `${result.search_seconds.toFixed(2)}s` : typeof current?.elapsed_seconds === 'number' ? `${current.elapsed_seconds.toFixed(2)}s` : undefined} />
+        </div>
+        <figure class="experiment-chart"><canvas ref={chartCanvas} aria-label="Bit error rate by generation" /><figcaption>Bit error rate</figcaption></figure>
+      </Section>
+      <Outcome
+        targetLabel="Hidden target"
+        target={targetSource
+          ? <pre><code>{targetSource}</code></pre>
+          : <p class="experiment-objective">A packed-colour transform built from rotate, XOR and add. Its arrangement is revealed once a run finishes.</p>}
+        resultLabel="Discovered program"
+        result={program ? <pre><code>{program}</code></pre> : undefined}
+        note={targetSource && program
+          ? 'The search was given the operators and constants but never this arrangement. A match in behaviour does not require a match in structure.'
+          : undefined}
+      />
+      {(result || comparison) && (
         <details class="experiment-details">
-          <summary>Search result</summary>
+          <summary>Evidence</summary>
           {result && <p>{result.success ? 'Validated.' : 'Not validated.'} {result.holdout_mismatches ?? '—'} mismatches across {formatNumber(result.holdout_cases)} fresh colors; preview {result.image_matches ? 'matches' : 'differs'}.</p>}
           {comparison && (
             <p>
               {comparison.matching
                 ? `Identical search · CPU ${comparison.cpu_seconds.toFixed(2)}s / GPU ${comparison.gpu_seconds.toFixed(2)}s · ${comparison.speedup.toFixed(2)}× GPU speedup.`
                 : 'CPU and GPU search states differ; the comparison is not validated.'}
-            </p>
-          )}
-          {(targetSource || program) && (
-            <div class="experiment-code-pair">
-              {targetSource && (
-                <figure>
-                  <figcaption>Hidden target</figcaption>
-                  <pre><code>{targetSource}</code></pre>
-                </figure>
-              )}
-              {program && (
-                <figure>
-                  <figcaption>{targetSource ? 'Discovered program' : 'Discovered'}</figcaption>
-                  <pre><code>{program}</code></pre>
-                </figure>
-              )}
-            </div>
-          )}
-          {targetSource && program && (
-            <p class="experiment-note">
-              The search was given the operators and constants but never this arrangement. A match in behaviour does not require a match in structure.
             </p>
           )}
         </details>
@@ -689,7 +684,7 @@ function LandingLab() {
           </select>
         </label>
         <label>
-          Flights
+          Cases
           <select value={cases} onInput={(event) => setCases(Number((event.currentTarget as HTMLSelectElement).value))}>
             <option value={8192}>8,192</option>
             <option value={2048}>2,048</option>
@@ -705,9 +700,10 @@ function LandingLab() {
         </label>
       </IslandToolbar>
       <IslandStatus error={demo.error} job={demo.job} current={current} />
+      <Section title="View">
       <div class="experiment-canvas-grid">
         <figure><canvas ref={baselineCanvas} aria-label="Baseline landing trajectories" /><figcaption>Baseline</figcaption></figure>
-        <figure><canvas ref={bestCanvas} aria-label="Selected-controller landing trajectories" /><figcaption>Best controller</figcaption></figure>
+        <figure><canvas ref={bestCanvas} aria-label="Selected-controller landing trajectories" /><figcaption>Selected controller</figcaption></figure>
       </div>
       <div class="experiment-metrics">
         <Metric label="tested" value={typeof current?.tested === 'number' ? `${current.tested} / 128` : result?.programs ? `${result.programs} / 128` : undefined} />
@@ -715,13 +711,25 @@ function LandingLab() {
         <Metric label="search" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
         <Metric label="speedup" value={typeof comparison?.speedup === 'number' ? `${comparison.speedup.toFixed(1)}×` : undefined} />
       </div>
-      {(controller || result || comparison) && (
+      </Section>
+      <Outcome
+        targetLabel="Objective"
+        target={<p class="experiment-objective">Land every flight safely: touch down on the pad below the impact speed, against delayed thrusters, wind and a fixed fuel budget. No reference controller is supplied — the baseline above is what the untuned starting point achieves.</p>}
+        resultLabel="Selected controller"
+        result={controller?.source
+          ? (
+            <>
+              {controller.description && <p class="experiment-objective">{controller.description}</p>}
+              <pre><code>{controller.source}</code></pre>
+            </>
+          )
+          : undefined}
+      />
+      {(result || comparison) && (
         <details class="experiment-details">
-          <summary>Controller and evidence</summary>
-          {controller?.description && <p>{controller.description}</p>}
+          <summary>Evidence</summary>
           {result && <p>Holdout: {formatNumber(result.holdout_safe)} / {formatNumber(result.holdout_cases)} safe. {formatNumber(result.executed_steps)} interpreted instructions; {typeof result.total_seconds === 'number' ? `${result.total_seconds.toFixed(2)}s including validation.` : ''}</p>}
           {comparison && <p>{comparison.matching ? `Exact CPU/GPU outcome and step-count parity · ${Number(comparison.total_speedup).toFixed(1)}× including setup and holdout.` : 'CPU/GPU parity did not validate.'}</p>}
-          {controller?.source && <pre><code>{controller.source}</code></pre>}
         </details>
       )}
     </section>
@@ -732,6 +740,10 @@ function TinyRobot() {
   const demo = useDemoRun('tiny-robot');
   const [cases, setCases] = useState(128);
   const [seed, setSeed] = useState(1);
+  // The episode program is the fixed task every candidate is scored against;
+  // only the brain is searched for.
+  const episodeSource = last(demo.events, (event) => typeof event.episode_source === 'string')?.episode_source;
+  const brainSource = last(demo.events, (event) => typeof event.brain_source === 'string')?.brain_source;
 
   return (
     <section class="experiment-island" aria-label="Tiny Robot interactive demo">
@@ -744,7 +756,7 @@ function TinyRobot() {
         gatewayReady={demo.gatewayReady}
       >
         <label>
-          Training rooms
+          Cases
           <select value={cases} onInput={(event) => setCases(Number((event.currentTarget as HTMLSelectElement).value))}>
             <option value={128}>128</option>
             <option value={512}>512</option>
@@ -760,7 +772,20 @@ function TinyRobot() {
         </label>
       </IslandToolbar>
       <IslandStatus error={demo.error} job={demo.job} current={demo.current} />
-      <TinyRobotParity recording={demo.data} events={demo.events} current={demo.current} />
+      <Section title="View">
+        <TinyRobotParity recording={demo.data} events={demo.events} current={demo.current} />
+      </Section>
+      <Outcome
+        targetLabel="The task it runs inside"
+        target={episodeSource
+          ? <pre><code>{episodeSource}</code></pre>
+          : <p class="experiment-objective">Reach the exit carrying the key, in rooms the robot has never seen, using three wall sensors and a single bit of memory.</p>}
+        resultLabel="Discovered brain"
+        result={brainSource ? <pre><code>{brainSource}</code></pre> : undefined}
+        note={episodeSource && brainSource
+          ? 'The task program on the left is fixed and scores every candidate. Only the brain on the right was searched for.'
+          : undefined}
+      />
     </section>
   );
 }
@@ -1052,7 +1077,7 @@ function OrbitForge() {
         gatewayReady={demo.gatewayReady}
       >
         <label>
-          Error budget
+          Tolerance
           <select value={tolerance} onInput={(event) => setTolerance(Number((event.currentTarget as HTMLSelectElement).value))}>
             <option value={0.001}>0.001</option>
             <option value={0.0001}>0.0001</option>
@@ -1069,17 +1094,19 @@ function OrbitForge() {
         </label>
       </IslandToolbar>
       <IslandStatus error={demo.error} job={demo.job} current={current} />
+      <Section title="View">
       <div class="experiment-canvas-grid">
         <figure>
           <canvas ref={orbitCanvas} aria-label="Orbit solver visualization" />
-          <figcaption>
-            <label class="experiment-range">Eccentricity <input type="range" min="0" max="0.95" step="0.01" value={eccentricity} onInput={(event) => { setEccentricity(Number((event.currentTarget as HTMLInputElement).value)); setAnimating(false); }} /></label>
-            <label class="experiment-range">Phase <input type="range" min="0" max="6.28" step="0.01" value={phase} onInput={(event) => { setPhase(Number((event.currentTarget as HTMLInputElement).value)); setAnimating(false); }} /></label>
-            <button type="button" class="experiment-button" onClick={() => setAnimating((value) => !value)}>{animating ? 'Pause' : 'Animate'}</button>
-            <span>E = {point.actual.toFixed(6)} rad · error {point.error.toExponential(2)} rad</span>
-          </figcaption>
+          <figcaption>Orbit</figcaption>
         </figure>
         <figure><canvas ref={heatCanvas} onClick={selectHeatPoint} aria-label="Solver error map; click to inspect a point" /><figcaption>Error map · click to inspect</figcaption></figure>
+      </div>
+      <div class="experiment-viewer-controls">
+        <button type="button" class="experiment-button" onClick={() => setAnimating((value) => !value)}>{animating ? 'Pause' : 'Play'}</button>
+        <label class="experiment-range">Eccentricity <input type="range" min="0" max="0.95" step="0.01" value={eccentricity} onInput={(event) => { setEccentricity(Number((event.currentTarget as HTMLInputElement).value)); setAnimating(false); }} /></label>
+        <label class="experiment-range">Phase <input type="range" min="0" max="6.28" step="0.01" value={phase} onInput={(event) => { setPhase(Number((event.currentTarget as HTMLInputElement).value)); setAnimating(false); }} /></label>
+        <span class="experiment-readout">E = {point.actual.toFixed(6)} rad · error {point.error.toExponential(2)} rad</span>
       </div>
       <div class="experiment-metrics">
         <Metric label={typeof current?.generation === 'number' ? 'generation' : 'checked'} value={typeof current?.generation === 'number' ? current.generation : formatNumber(done?.checked)} />
@@ -1087,19 +1114,35 @@ function OrbitForge() {
         <Metric label="max error" value={typeof current?.max_error === 'number' ? current.max_error.toExponential(2) : undefined} />
         <Metric label="time" value={typeof current?.seconds === 'number' ? `${current.seconds.toFixed(2)}s` : undefined} />
       </div>
+      </Section>
+      <Outcome
+        targetLabel="Objective"
+        target={<p class="experiment-objective">Solve Kepler's equation E − e·sin(E) = M for the eccentric anomaly E, within the chosen tolerance, across the whole domain. There is no reference program to copy: accuracy is judged against double-precision bisection.</p>}
+        resultLabel="Discovered solver"
+        result={done?.source
+          ? (
+            <>
+              {recipe(genome) && <pre><code>{recipe(genome)}</code></pre>}
+              <pre><code>{done.source}</code></pre>
+            </>
+          )
+          : undefined}
+      />
       {done?.source && (
-        <button type="button" class="experiment-button" onClick={() => downloadText('discovered-orbit-solver.gremlin', done.source)}>
-          Download program
-        </button>
+        <Section title="Export">
+          <div class="experiment-exports">
+            <button type="button" class="experiment-button" onClick={() => downloadText('discovered-orbit-solver.gremlin', done.source)}>
+              Download .gremlin
+            </button>
+          </div>
+        </Section>
       )}
-      {(done?.source || recipe(genome) || done?.benchmark || stage) && (
+      {(done || stage) && (
         <details class="experiment-details">
-          <summary>Solver and validation</summary>
+          <summary>Evidence</summary>
           {stage?.message && <p>{stage.message}</p>}
           {done && <p>{done.passed ? 'All checked cases pass.' : `${done.failures} checked cases fail.`} {done.counterexamples ?? 0} counterexamples fed back.</p>}
           {done?.benchmark?.available && <p>Compiled program matches the interpreter on {formatNumber(done.benchmark.compiled_grid_checked)} grid inputs{done.benchmark.consistent_win ? ` · ≥ ${Number(done.benchmark.speedup).toFixed(2)}× native runtime speedup.` : '.'}</p>}
-          {recipe(genome) && <pre><code>{recipe(genome)}</code></pre>}
-          {done?.source && <pre><code>{done.source}</code></pre>}
         </details>
       )}
     </section>

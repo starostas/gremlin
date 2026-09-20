@@ -1,5 +1,6 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { Outcome, Section } from './IslandChrome';
 
 /**
  * The portable event shape emitted by Shader Sculptor. The GPU gateway keeps
@@ -600,6 +601,7 @@ export default function ShaderSculptorParity({
   return (
     <section class="experiment-island" aria-label="Shader Sculptor interactive demo">
       {humanCheck}
+      <Section title="Setup">
       <div class="experiment-toolbar">
         <div class="experiment-fields">
           <label>
@@ -666,44 +668,63 @@ export default function ShaderSculptorParity({
               disabled={!onRun || !gatewayReady}
               onClick={() => void run()}
             >
-              Run on GPU
+              Run
             </button>
           )}
         </div>
       </div>
+      </Section>
 
       {error ? <p class="experiment-status experiment-status-error" aria-live="polite">{error}</p> : active ? <p class="experiment-status" aria-live="polite">{constructing ? 'Replaying construction…' : running || submitting ? 'Running…' : 'Replaying…'}</p> : null}
 
-      <div class="experiment-canvas-grid">
-        <figure>
-          <canvas ref={targetCanvas} aria-label="Target image" />
-          <figcaption>{target.label} · {target.size} × {target.size}</figcaption>
-        </figure>
-        <figure>
-          <canvas ref={outputCanvas} aria-label="Discovered drawing output" />
-          <figcaption>{constructing ? 'Construction replay' : result ? 'Discovered drawing' : 'Awaiting a search'}</figcaption>
-        </figure>
-      </div>
+      <Section title="View">
+        <div class="experiment-canvas-grid">
+          <figure>
+            <canvas ref={targetCanvas} aria-label="Target image" />
+            <figcaption>{target.label} · {target.size} × {target.size}</figcaption>
+          </figure>
+          <figure>
+            <canvas ref={outputCanvas} aria-label="Discovered drawing output" />
+            <figcaption>{constructing ? 'Construction replay' : result ? 'Discovered drawing' : 'Awaiting a search'}</figcaption>
+          </figure>
+        </div>
 
-      <div class="experiment-metrics">
-        <div class="experiment-metric"><span>layers</span><strong>{formatNumber(layers)}</strong></div>
-        <div class="experiment-metric"><span>candidate-pixel tests</span><strong>{pixelEvaluations ? `${(pixelEvaluations / 1_000_000_000).toFixed(2)} billion` : '—'}</strong></div>
-        <div class="experiment-metric"><span>search wall time</span><strong>{seconds !== undefined ? `${seconds.toFixed(2)}s` : '—'}</strong></div>
-        <div class="experiment-metric"><span>color error reduction</span><strong>{quality ?? '—'}</strong></div>
-      </div>
+        <div class="experiment-viewer-controls">
+          <button type="button" class="experiment-button" disabled={!canConstruct || active} onClick={replayConstruction}>
+            {constructing ? 'Replaying…' : 'Replay construction'}
+          </button>
+        </div>
 
-      <div class="experiment-actions" style={{ marginTop: '1rem' }}>
-        <button type="button" class="experiment-button" disabled={!canConstruct || active} onClick={replayConstruction}>Replay construction</button>
-        <button type="button" class="experiment-button" disabled={!resultProgram} onClick={() => resultProgram && downloadText('discovered-pixel.gremlin', resultProgram)}>Download .gremlin</button>
-        <button type="button" class="experiment-button" disabled={!result?.image} onClick={() => downloadCanvas(`drawing-${resultSize}.png`, outputCanvas.current)}>Download PNG</button>
-      </div>
+        <div class="experiment-metrics">
+          <div class="experiment-metric"><span>layers</span><strong>{formatNumber(layers)}</strong></div>
+          <div class="experiment-metric"><span>candidate-pixel tests</span><strong>{pixelEvaluations ? `${(pixelEvaluations / 1_000_000_000).toFixed(2)} billion` : '—'}</strong></div>
+          <div class="experiment-metric"><span>search wall time</span><strong>{seconds !== undefined ? `${seconds.toFixed(2)}s` : '—'}</strong></div>
+          <div class="experiment-metric"><span>color error reduction</span><strong>{quality ?? '—'}</strong></div>
+        </div>
+      </Section>
+
+      <Outcome
+        targetLabel="Objective"
+        target={
+          <p class="experiment-objective">
+            Reproduce the target image on the left using only a bounded list of drawn shapes — ellipses,
+            rectangles and diamonds with colour, opacity and order. No reference drawing program exists;
+            the target is pixels, and the search must invent a program that paints them.
+          </p>
+        }
+        resultLabel="Discovered drawing program"
+        result={resultProgram ? <pre><code>{resultProgram}</code></pre> : undefined}
+      />
+
+      <Section title="Export">
+        <div class="experiment-exports">
+          <button type="button" class="experiment-button" disabled={!resultProgram} onClick={() => resultProgram && downloadText('discovered-pixel.gremlin', resultProgram)}>Download .gremlin</button>
+          <button type="button" class="experiment-button" disabled={!result?.image} onClick={() => downloadCanvas(`drawing-${resultSize}.png`, outputCanvas.current)}>Download PNG</button>
+        </div>
+      </Section>
 
       <details>
-        <summary>Inspect the complete program</summary>
-        <pre class="experiment-code">{resultProgram ?? 'Waiting for a program…'}</pre>
-      </details>
-      <details>
-        <summary>Search evidence</summary>
+        <summary>Evidence</summary>
         <p>{resultSize} × {resultSize} pixels. {seconds !== undefined ? `${seconds.toFixed(2)} s search` : 'No completed search yet'}{asNumber(finished?.total_seconds) !== undefined ? ` / ${asNumber(finished?.total_seconds)?.toFixed(2)} s through source validation.` : '.'}</p>
         {asNumber(finished?.kernel_ms) !== undefined && <p>GPU scoring kernels: {asNumber(finished?.kernel_ms)?.toFixed(0)} ms. Working buffers: {asNumber(finished?.device_bytes) !== undefined ? `${(asNumber(finished?.device_bytes)! / 1024).toFixed(0)} KiB` : 'not reported'}.</p>}
         {asNumber(finished?.native_pixels_checked) !== undefined && <p>Final GPU image: {formatNumber(asNumber(finished?.native_pixels_checked))} checked pixels. Gremlin export: {formatNumber(asNumber(finished?.gremlin_pixels_checked))} sampled pixels.</p>}

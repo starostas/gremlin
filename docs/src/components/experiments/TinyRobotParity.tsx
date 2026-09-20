@@ -622,7 +622,7 @@ export default function TinyRobotParity({ recording, events, current }: TinyRobo
           </div>
           <div class="experiment-robot-controls tiny-robot-playback">
             <button type="button" class="experiment-button experiment-button-primary" onClick={togglePlayback} disabled={!trace}>
-              {playing ? 'Pause' : 'Run this brain'}
+              {playing ? 'Pause' : 'Play'}
             </button>
             <button type="button" class="experiment-button" onClick={step} disabled={!trace}>Step</button>
             <button type="button" class="experiment-button" onClick={reset} disabled={!trace}>Reset</button>

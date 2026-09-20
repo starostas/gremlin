@@ -226,6 +226,53 @@
   font-weight: 500;
 }
 
+/*
+ * Every island is laid out in the same three bands so the controls read as
+ * groups rather than one undifferentiated row of widgets: setup (what the
+ * search is given, ending in Seed), view (controls that move the picture, never
+ * the search), and result (what came out, including any download).
+ */
+.experiment-section {
+  border-top: 1px solid var(--sl-color-gray-6);
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+}
+
+.experiment-section:first-of-type {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.experiment-section-title {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+}
+
+.experiment-viewer-controls,
+.experiment-exports {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.experiment-viewer-controls > *,
+.experiment-exports > * {
+  margin-top: 0;
+}
+
+.experiment-readout {
+  color: var(--sl-color-gray-3);
+  font-size: var(--sl-text-xs);
+  margin-left: auto;
+}
+
 /* Target beside discovered, stacking when there is not room for two columns. */
 .experiment-code-pair {
   display: grid;
@@ -248,6 +295,17 @@
 .experiment-code-pair pre {
   margin-top: 0;
   overflow-x: auto;
+}
+
+.experiment-code-pair .experiment-objective {
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: 0.375rem;
+  color: var(--sl-color-gray-2);
+  font-size: var(--sl-text-xs);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0.75rem 0.9rem;
 }
 
 .experiment-note {
